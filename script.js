@@ -199,7 +199,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const maxTilt = parseFloat(card.getAttribute('data-tilt-max') || 4);
 
             card.addEventListener('mouseenter', () => {
+                // Let JS lerp control transform; only transition box-shadow via CSS
                 card.style.transition = 'box-shadow 0.3s ease';
+                // Stop any CSS animation on this card
+                card.style.animation = 'none';
             });
 
             card.addEventListener('mousemove', (e) => {
@@ -370,13 +373,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isDesktop && !prefersReducedMotion) {
         const heroVisual = document.querySelector('.terminal-card');
         if (heroVisual) {
+            let isHovering = false;
             let parallaxRaf = null;
+
+            // Track hover state so parallax doesn't fight with tilt
+            heroVisual.addEventListener('mouseenter', () => { isHovering = true; });
+            heroVisual.addEventListener('mouseleave', () => { isHovering = false; });
+
             window.addEventListener('scroll', () => {
-                if (parallaxRaf) return;
+                if (parallaxRaf || isHovering) return;
                 parallaxRaf = requestAnimationFrame(() => {
                     const scrolled = window.scrollY;
-                    const rate = scrolled * 0.12;
-                    heroVisual.style.transform = `translateY(-${rate}px) rotateX(${scrolled * 0.01}deg)`;
+                    const rate = scrolled * 0.1;
+                    if (!isHovering) {
+                        heroVisual.style.transform = `perspective(1200px) rotateX(1deg) rotateY(-0.5deg) translateY(-${rate}px)`;
+                    }
                     parallaxRaf = null;
                 });
             }, { passive: true });

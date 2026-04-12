@@ -484,14 +484,8 @@ img { max-width: 100%; height: auto; display: block; }
     overflow: hidden;
     box-shadow: var(--shadow-3d);
     backdrop-filter: blur(16px);
-    transform-style: preserve-3d;
-    transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
-    animation: termFloat 8s ease-in-out infinite;
-}
-
-@keyframes termFloat {
-    0%, 100% { transform: translateY(0) rotateX(1deg) rotateY(-0.5deg); }
-    50% { transform: translateY(-10px) rotateX(-1deg) rotateY(0.5deg); }
+    transform: perspective(1200px) rotateX(1deg) rotateY(-0.5deg) translateZ(0);
+    transition: transform 0.5s var(--ease-out), box-shadow 0.4s var(--ease-out);
 }
 
 .terminal-card:hover {
@@ -949,6 +943,25 @@ img { max-width: 100%; height: auto; display: block; }
     box-shadow: 0 4px 12px rgba(201, 169, 110, 0.2);
 }
 
+/* Live Demo variant */
+.project-card-link--demo {
+    width: auto;
+    padding: 6px 14px;
+    gap: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 8px;
+    background: rgba(163, 217, 209, 0.08);
+    border-color: rgba(163, 217, 209, 0.2);
+    color: var(--accent-soft);
+}
+
+.project-card-link--demo:hover {
+    background: var(--accent-soft);
+    color: #0e0f13;
+    border-color: var(--accent-soft);
+}
+
 .project-card-desc {
     font-size: 1rem;
     color: var(--text-secondary);
@@ -1404,7 +1417,12 @@ img { max-width: 100%; height: auto; display: block; }
 
 [data-animate].visible {
     opacity: 1;
-    transform: translate(0, 0);
+    transform: none;
+}
+
+/* Once visible AND has tilt, let tilt JS control transform */
+[data-animate][data-tilt].visible {
+    transform: perspective(1200px) rotateX(0deg) rotateY(0deg) translateZ(0);
 }
 
 /* ── Performance: Reduced Motion ────────────────────────── */
