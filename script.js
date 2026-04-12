@@ -1,45 +1,56 @@
 /* ═══════════════════════════════════════════════════════════
-   PORTFOLIO — Gadhiya Kathan — V2 Interactive JavaScript
-   Smooth animations, typewriter, carousel, form handling
+   PORTFOLIO — Gadhiya Kathan — V3 Interactive JavaScript
+   Smooth animations, 3D tilt, typewriter, carousel, perf-first
    ═══════════════════════════════════════════════════════════ */
 
 document.addEventListener('DOMContentLoaded', () => {
+
+    // ── Detect capabilities ────────────────────────────────
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isDesktop = window.innerWidth > 768 && !isTouchDevice;
 
     // ── Navbar Scroll ───────────────────────────────────────
     const navbar = document.getElementById('navbar');
     const navLinks = document.querySelectorAll('.nav-link');
     const sections = document.querySelectorAll('.section, .hero');
 
-    let lastScroll = 0;
+    let ticking = false;
 
-    window.addEventListener('scroll', () => {
-        const scrollY = window.scrollY;
+    function onScroll() {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+            const scrollY = window.scrollY;
 
-        // Navbar background
-        if (scrollY > 40) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-
-        // Active nav link
-        let current = '';
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop - 150;
-            if (scrollY >= sectionTop) {
-                current = section.getAttribute('id');
+            // Navbar background
+            if (scrollY > 40) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
             }
-        });
 
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === '#' + current) {
-                link.classList.add('active');
-            }
-        });
+            // Active nav link
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 150;
+                if (scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
 
-        lastScroll = scrollY;
-    });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+
+            ticking = false;
+        });
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
 
     // ── Mobile Navigation ───────────────────────────────────
     const navToggle = document.getElementById('navToggle');
@@ -160,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / duration, 1);
 
-            // Easing function — ease out cubic
+            // Easing — ease out cubic
             const eased = 1 - Math.pow(1 - progress, 3);
 
             current = Math.floor(eased * target);
@@ -174,6 +185,64 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         requestAnimationFrame(update);
+    }
+
+    // ── 3D Card Tilt (Desktop only, performance-safe) ───────
+    if (isDesktop && !prefersReducedMotion) {
+        const tiltCards = document.querySelectorAll('[data-tilt]');
+
+        tiltCards.forEach(card => {
+            let rafId = null;
+            let currentX = 0, currentY = 0;
+            let targetX = 0, targetY = 0;
+
+            const maxTilt = parseFloat(card.getAttribute('data-tilt-max') || 4);
+
+            card.addEventListener('mouseenter', () => {
+                card.style.transition = 'box-shadow 0.3s ease';
+            });
+
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+
+                // Normalized -1 to 1
+                const normalX = (e.clientX - centerX) / (rect.width / 2);
+                const normalY = (e.clientY - centerY) / (rect.height / 2);
+
+                targetX = -normalY * maxTilt; // rotateX
+                targetY = normalX * maxTilt;  // rotateY
+
+                if (!rafId) {
+                    rafId = requestAnimationFrame(function updateTilt() {
+                        // Smooth lerp
+                        currentX += (targetX - currentX) * 0.12;
+                        currentY += (targetY - currentY) * 0.12;
+
+                        card.style.transform = `perspective(1200px) rotateX(${currentX}deg) rotateY(${currentY}deg) translateZ(5px)`;
+
+                        if (Math.abs(targetX - currentX) > 0.01 || Math.abs(targetY - currentY) > 0.01) {
+                            rafId = requestAnimationFrame(updateTilt);
+                        } else {
+                            rafId = null;
+                        }
+                    });
+                }
+            });
+
+            card.addEventListener('mouseleave', () => {
+                targetX = 0;
+                targetY = 0;
+                card.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s ease';
+                card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) translateZ(0)';
+
+                if (rafId) {
+                    cancelAnimationFrame(rafId);
+                    rafId = null;
+                }
+            });
+        });
     }
 
     // ── Chart Carousel ──────────────────────────────────────
@@ -276,7 +345,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const submitBtn = document.getElementById('formSubmit');
             const originalHTML = submitBtn.innerHTML;
             submitBtn.innerHTML = '<span>✓ Opening Email Client…</span>';
-            submitBtn.style.background = 'linear-gradient(135deg, #27c93f, #5ce0d2)';
+            submitBtn.style.background = 'linear-gradient(135deg, #5bba6f, #a3d9d1)';
 
             setTimeout(() => {
                 submitBtn.innerHTML = originalHTML;
@@ -297,24 +366,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ── Staggered hover glow on skill tiles ─────────────────
-    document.querySelectorAll('.skill-tile').forEach(tile => {
-        tile.addEventListener('mouseenter', () => {
-            tile.style.boxShadow = '0 0 40px rgba(232, 168, 73, 0.08), 0 8px 32px rgba(0,0,0,0.4)';
-        });
-        tile.addEventListener('mouseleave', () => {
-            tile.style.boxShadow = '';
-        });
-    });
-
-    // ── Parallax on hero visual ─────────────────────────────
-    const heroVisual = document.querySelector('.terminal-card');
-    if (heroVisual && window.innerWidth > 768) {
-        window.addEventListener('scroll', () => {
-            const scrolled = window.scrollY;
-            const rate = scrolled * 0.15;
-            heroVisual.style.transform = `translateY(-${rate}px)`;
-        });
+    // ── Parallax on hero visual (Desktop only) ──────────────
+    if (isDesktop && !prefersReducedMotion) {
+        const heroVisual = document.querySelector('.terminal-card');
+        if (heroVisual) {
+            let parallaxRaf = null;
+            window.addEventListener('scroll', () => {
+                if (parallaxRaf) return;
+                parallaxRaf = requestAnimationFrame(() => {
+                    const scrolled = window.scrollY;
+                    const rate = scrolled * 0.12;
+                    heroVisual.style.transform = `translateY(-${rate}px) rotateX(${scrolled * 0.01}deg)`;
+                    parallaxRaf = null;
+                });
+            }, { passive: true });
+        }
     }
 
 });

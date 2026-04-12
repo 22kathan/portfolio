@@ -14,6 +14,13 @@
 </head>
 <body>
 
+    <!-- Floating 3D orbs -->
+    <div class="floating-orbs" aria-hidden="true">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
     <!-- Animated mesh gradient background -->
     <div class="mesh-gradient" id="meshGradient"></div>
     <div class="noise-overlay"></div>
@@ -88,7 +95,7 @@
             </div>
         </div>
         <div class="hero-visual" data-animate="fade-left" data-delay="300">
-            <div class="terminal-card">
+            <div class="terminal-card" data-tilt data-tilt-max="5">
                 <div class="terminal-bar">
                     <div class="terminal-dots">
                         <span class="tdot tdot-r"></span>
@@ -282,7 +289,7 @@
                 </a>
             </div>
 
-            <div class="project-card" data-animate="fade-up" data-delay="200">
+            <div class="project-card" data-animate="fade-up" data-delay="200" data-tilt data-tilt-max="3">
                 <div class="project-card-header">
                     <div class="project-card-meta">
                         <span class="project-num">01</span>
@@ -405,7 +412,7 @@
                 </div>
             </div>
 
-            <div class="project-card" data-animate="fade-up" data-delay="300">
+            <div class="project-card" data-animate="fade-up" data-delay="300" data-tilt data-tilt-max="3">
                 <div class="project-card-header">
                     <div class="project-card-meta">
                         <span class="project-num">02</span>
