@@ -382,8 +382,11 @@
 
   <!-- OS Control Instructions -->
   <div id="os-instructions">
+    <span id="close-os-instructions" style="position: absolute; top: 10px; right: 12px; cursor: pointer; color: rgba(255,255,255,0.4); font-size: 14px;" title="Close instructions">❌</span>
     <h3>🖱️ OS Control Active</h3>
-    <p><span class="key">Move:</span> Point strictly with Index Finger</p>
+    <p><span class="key">Move:</span> Index Finger</p>
+    <p><span class="key">Scroll:</span> Index + Middle Fingers</p>
+    <p><span class="key">Zoom:</span> Open/Close Whole Hand</p>
     <p><span class="key">Hover 2s:</span> Right-click at pointer</p>
     <p><span class="key">Pinch:</span> Standard Left-click</p>
     <p style="margin-top: 8px; font-size: 0.65rem; color: rgba(255,255,255,0.4);">
@@ -1178,18 +1181,46 @@
         if (hand) {
           const indexTip = hand[8];
           const thumbTip = hand[4];
+          const pinkyTip = hand[20];
+          
           const pinchDist = Math.sqrt(Math.pow(indexTip.x - thumbTip.x, 2) + Math.pow(indexTip.y - thumbTip.y, 2));
+          const handSize = Math.sqrt(Math.pow(pinkyTip.x - thumbTip.x, 2) + Math.pow(pinkyTip.y - thumbTip.y, 2));
+          
+          const iExt = isFingerExtended(hand, 1);
+          const mExt = isFingerExtended(hand, 2);
+          const rExt = isFingerExtended(hand, 3);
+          const pExt = isFingerExtended(hand, 4);
+
+          let currentGesture = 'move';
+          let outY = indexTip.y;
+
+          if (iExt && mExt && rExt && pExt) {
+             currentGesture = 'zoom';
+             outY = handSize; // Pass hand dimension to Python
+          } else if (iExt && mExt && !rExt && !pExt) {
+             currentGesture = 'scroll';
+             outY = (hand[8].y + hand[12].y) / 2.0; // average Y height
+          }
 
           if (osWebSocket && osWebSocket.readyState === WebSocket.OPEN) {
              osWebSocket.send(JSON.stringify({
                 action: 'tracking',
                 x: 1 - indexTip.x,
-                y: indexTip.y,
-                isPinching: pinchDist < 0.045
+                y: outY,
+                isPinching: pinchDist < 0.045,
+                gesture: currentGesture
              }));
           }
-          // Visual feedback for OS cursor
-          drawCursorIndicator(lm(hand, 8));
+          // Visual feedback for OS tracking
+          if (currentGesture === 'scroll') {
+             drawCursorIndicator(lm(hand, 12));
+             drawCursorIndicator(lm(hand, 8));
+          } else if (currentGesture === 'zoom') {
+             drawCursorIndicator(lm(hand, 4));
+             drawCursorIndicator(lm(hand, 20));
+          } else {
+             drawCursorIndicator(lm(hand, 8));
+          }
         }
       } else {
         // Stop any leftover drawing state
@@ -1434,6 +1465,11 @@
       clearBtn.addEventListener('click', () => {
         clearDrawCanvas();
         spawnParticles(canvas.width / 2, canvas.height / 2, COLORS.white, 40);
+      });
+
+      // Close instruction panel
+      document.getElementById('close-os-instructions').addEventListener('click', () => {
+        document.getElementById('os-instructions').classList.remove('visible');
       });
 
       // Close panel when clicking outside
