@@ -960,9 +960,10 @@
         return;
       }
 
-      // STRICT restriction: Index extended, but Thumb, Middle, Ring, Pinky must be curled.
+      // Relaxed restriction: Index extended, but Middle, Ring, Pinky must be curled. 
+      // (Ignoring thumb to prevent jitter/lag when camera misreads the thumb angle)
       const iExt = isFingerExtended(hand, 1);
-      const curled = !isFingerExtended(hand, 0) && !isFingerExtended(hand, 2) && !isFingerExtended(hand, 3) && !isFingerExtended(hand, 4);
+      const curled = !isFingerExtended(hand, 2) && !isFingerExtended(hand, 3) && !isFingerExtended(hand, 4);
 
       if (iExt && curled) {
         const rawTip = lm(hand, 8);
@@ -971,7 +972,7 @@
         if (!smoothedDrawPos) {
            smoothedDrawPos = { x: rawTip.x, y: rawTip.y };
         } else {
-           const alpha = 0.35; // Lower alpha = smoother tracking
+           const alpha = 0.75; // Increased alpha = faster tracking, less lag
            smoothedDrawPos.x += (rawTip.x - smoothedDrawPos.x) * alpha;
            smoothedDrawPos.y += (rawTip.y - smoothedDrawPos.y) * alpha;
         }
