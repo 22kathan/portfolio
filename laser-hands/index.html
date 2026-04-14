@@ -454,19 +454,19 @@
       humGain = audioCtx.createGain();
       humGain.gain.value = 0;  // starts silent
 
-      // Drone oscillator 1 — low sine
+      // Drone oscillator 1 — aggressive sawtooth
       humOsc1 = audioCtx.createOscillator();
-      humOsc1.type = 'sine';
-      humOsc1.frequency.value = 80;
+      humOsc1.type = 'sawtooth';
+      humOsc1.frequency.value = 55;
       humOsc1.connect(humFilter);
       humOsc1.start();
 
-      // Drone oscillator 2 — soft triangle harmonic
+      // Drone oscillator 2 — detuned square
       humOsc2 = audioCtx.createOscillator();
-      humOsc2.type = 'triangle';
-      humOsc2.frequency.value = 160;
+      humOsc2.type = 'square';
+      humOsc2.frequency.value = 110;
       const osc2Gain = audioCtx.createGain();
-      osc2Gain.gain.value = 0.3;
+      osc2Gain.gain.value = 0.15;
       humOsc2.connect(osc2Gain);
       osc2Gain.connect(humFilter);
       humOsc2.start();
@@ -529,15 +529,15 @@
     function updateHum(count) {
       if (!audioCtx || !humGain) return;
       const t = audioCtx.currentTime;
-      // Volume: 0 when no beams, soft max ~0.07 at 5 beams
-      const targetVol = Math.min(count * 0.014, 0.07);
-      humGain.gain.linearRampToValueAtTime(targetVol, t + 0.15);
-      // Pitch shifts up slightly with more beams
-      const basePitch = 80 + count * 8;
-      humOsc1.frequency.linearRampToValueAtTime(basePitch, t + 0.15);
-      humOsc2.frequency.linearRampToValueAtTime(basePitch * 2, t + 0.15);
-      // Open filter more with more beams
-      humFilter.frequency.linearRampToValueAtTime(200 + count * 60, t + 0.15);
+      // Volume: 0 when no beams
+      const targetVol = Math.min(count * 0.015, 0.08);
+      humGain.gain.linearRampToValueAtTime(targetVol, t + 0.1);
+      // Pitch shifts up with more beams
+      const basePitch = 55 + count * 15;
+      humOsc1.frequency.linearRampToValueAtTime(basePitch, t + 0.1);
+      humOsc2.frequency.linearRampToValueAtTime(basePitch * 2.01, t + 0.1); // slightly detuned
+      // Open filter more aggressively with more beams
+      humFilter.frequency.linearRampToValueAtTime(100 + count * 350, t + 0.1);
     }
 
     /** Play a short laser-zap sound at a given pitch colour index */
@@ -545,38 +545,45 @@
       if (!audioCtx) return;
       const now = audioCtx.currentTime;
 
-      // Cooldown: don't re-trigger for same finger within 250ms
-      if (now - zapCooldowns[colorIdx] < 0.25) return;
+      // Cooldown: don't re-trigger for same finger within 150ms
+      if (now - zapCooldowns[colorIdx] < 0.15) return;
       zapCooldowns[colorIdx] = now;
 
       // Base pitches per finger for variety
-      const pitches = [520, 660, 784, 880, 1047];
+      const pitches = [400, 600, 800, 1000, 1200];
       const freq = pitches[colorIdx];
 
-      // Short sine blip
+      // Sci-fi zap (sawtooth with rapid pitch drop and filter sweep)
       const osc = audioCtx.createOscillator();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, now);
-      osc.frequency.exponentialRampToValueAtTime(freq * 0.5, now + 0.18);
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(freq * 2, now);
+      osc.frequency.exponentialRampToValueAtTime(freq * 0.1, now + 0.15);
 
       const gain = audioCtx.createGain();
-      gain.gain.setValueAtTime(0.12, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+      gain.gain.setValueAtTime(0.1, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
 
-      // Slight reverb-like tail via delay
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(freq * 3, now);
+      filter.frequency.exponentialRampToValueAtTime(100, now + 0.15);
+      filter.Q.value = 6;
+
+      // Reverb-like tail via delay
       const delay = audioCtx.createDelay();
-      delay.delayTime.value = 0.06;
+      delay.delayTime.value = 0.08;
       const delayGain = audioCtx.createGain();
-      delayGain.gain.value = 0.3;
+      delayGain.gain.value = 0.25;
 
-      osc.connect(gain);
+      osc.connect(filter);
+      filter.connect(gain);
       gain.connect(audioCtx.destination);
       gain.connect(delay);
       delay.connect(delayGain);
       delayGain.connect(audioCtx.destination);
 
       osc.start(now);
-      osc.stop(now + 0.25);
+      osc.stop(now + 0.2);
     }
 
     /* ────────────────────────────────────────────
@@ -704,9 +711,9 @@
 
       hands.setOptions({
         maxNumHands: 2,
-        modelComplexity: 1,
-        minDetectionConfidence: 0.7,
-        minTrackingConfidence: 0.6,
+        modelComplexity: 0,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5,
       });
 
       hands.onResults(onResults);
