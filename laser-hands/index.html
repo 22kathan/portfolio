@@ -384,9 +384,13 @@
   <div id="os-instructions">
     <h3>🖱️ OS Control Active</h3>
     <p><span class="key">Move:</span> Point strictly with Index Finger</p>
-    <p><span class="key">Click:</span> Pinch Thumb and Index together</p>
+    <p><span class="key">Hover 2s:</span> Right-click at pointer</p>
+    <p><span class="key">Pinch:</span> Standard Left-click</p>
     <p style="margin-top: 8px; font-size: 0.65rem; color: rgba(255,255,255,0.4);">
-      Make sure <i>os_controller.py</i> is running locally.
+      A Picture-in-Picture window will spawn so tracking continues even if you switch tabs! You can move it anywhere.
+    </p>
+    <p style="margin-top: 8px; font-size: 0.65rem; color: rgba(255,255,255,0.4);">
+      Make sure <i>os_controller.py</i> is running.
     </p>
   </div>
 
@@ -1352,8 +1356,16 @@
         settingsBtn.classList.toggle('open', open);
       });
 
+      // Helper to cleanly exit PiP when switching away from OS mode
+      const exitPiP = () => {
+        if (document.pictureInPictureElement) {
+          document.exitPictureInPicture().catch(() => {});
+        }
+      };
+
       // Mode buttons
       modeLaserBtn.addEventListener('click', () => {
+        exitPiP();
         appMode = 'laser';
         modeLaserBtn.classList.add('active');
         modeWriteBtn.classList.remove('active');
@@ -1369,6 +1381,7 @@
       });
 
       modeWriteBtn.addEventListener('click', () => {
+        exitPiP();
         appMode = 'write';
         modeWriteBtn.classList.add('active');
         modeLaserBtn.classList.remove('active');
@@ -1378,7 +1391,7 @@
         clearSection.style.display = 'block';
       });
 
-      document.getElementById('mode-os').addEventListener('click', () => {
+      document.getElementById('mode-os').addEventListener('click', async () => {
         appMode = 'os';
         document.getElementById('mode-os').classList.add('active');
         modeLaserBtn.classList.remove('active');
@@ -1391,6 +1404,15 @@
         lastDrawPos = null;
         smoothedDrawPos = null;
         stopPenSound();
+        
+        // Spawn Picture-in-Picture to prevent browser heavy background throttling
+        try {
+          if (video && document.pictureInPictureEnabled && !video.disablePictureInPicture) {
+            await video.requestPictureInPicture();
+          }
+        } catch(e) {
+          console.warn("Could not start PiP, background tracking may pause:", e);
+        }
       });
 
       // Build color picker dots
