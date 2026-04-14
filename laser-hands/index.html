@@ -1097,17 +1097,17 @@
         drawHud.classList.remove('visible');
       }
 
-      // ── Background: deep midnight blue gradient ──
+      // ── Background: dark neutral gradient ──
       const bg = ctx.createRadialGradient(W * 0.5, H * 0.5, 0, W * 0.5, H * 0.5, W * 0.7);
-      bg.addColorStop(0, "#0e1628");
-      bg.addColorStop(1, "#060a14");
+      bg.addColorStop(0, "#1a1a1a");
+      bg.addColorStop(1, "#000000");
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, W, H);
 
       // ── Draw subtle silhouette from video feed ──
       if (video.readyState >= 2) {
         ctx.save();
-        ctx.globalAlpha = 0.12;
+        ctx.globalAlpha = 0.7; // Increased opacity for a clearer camera view
         ctx.translate(W, 0);
         ctx.scale(-1, 1);  // mirror
         ctx.drawImage(video, 0, 0, W, H);
