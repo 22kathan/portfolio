@@ -312,6 +312,45 @@
       background: rgba(255,80,80,0.2);
       color: rgba(255,120,120,0.9);
     }
+
+    /* ── OS Instructions Panel ── */
+    #os-instructions {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 25;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      padding: 16px 20px;
+      border-radius: 12px;
+      background: rgba(10, 10, 26, 0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(100,180,255,0.2);
+      box-shadow: 0 0 20px rgba(100, 180, 255, 0.1);
+      font-family: 'Consolas', monospace;
+      color: rgba(255,255,255,0.8);
+      pointer-events: none;
+      animation: panelIn 0.3s ease-out;
+    }
+    #os-instructions.visible { display: flex; }
+    #os-instructions h3 {
+      font-size: 0.9rem;
+      color: #64b4ff;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    #os-instructions p {
+      font-size: 0.75rem;
+      line-height: 1.4;
+      margin: 0;
+    }
+    #os-instructions .key {
+      color: #00ffe5;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -336,6 +375,16 @@
   <div id="draw-hud">
     <div class="color-dot" id="draw-color-dot"></div>
     <span class="mode-label" id="draw-mode-label">⚡ LASER</span>
+  </div>
+
+  <!-- OS Control Instructions -->
+  <div id="os-instructions">
+    <h3>🖱️ OS Control Active</h3>
+    <p><span class="key">Move:</span> Point strictly with Index Finger</p>
+    <p><span class="key">Click:</span> Pinch Thumb and Index together</p>
+    <p style="margin-top: 8px; font-size: 0.65rem; color: rgba(255,255,255,0.4);">
+      Make sure <i>os_controller.py</i> is running locally.
+    </p>
   </div>
 
   <!-- Settings gear button -->
@@ -1305,6 +1354,7 @@
         modeLaserBtn.classList.add('active');
         modeWriteBtn.classList.remove('active');
         document.getElementById('mode-os').classList.remove('active');
+        document.getElementById('os-instructions').classList.remove('visible');
         colorSection.style.display = 'none';
         clearSection.style.display = 'none';
         // Stop any active writing
@@ -1319,6 +1369,7 @@
         modeWriteBtn.classList.add('active');
         modeLaserBtn.classList.remove('active');
         document.getElementById('mode-os').classList.remove('active');
+        document.getElementById('os-instructions').classList.remove('visible');
         colorSection.style.display = 'block';
         clearSection.style.display = 'block';
       });
@@ -1328,6 +1379,7 @@
         document.getElementById('mode-os').classList.add('active');
         modeLaserBtn.classList.remove('active');
         modeWriteBtn.classList.remove('active');
+        document.getElementById('os-instructions').classList.add('visible');
         colorSection.style.display = 'none';
         clearSection.style.display = 'none';
         initOSControl(); // Connect to Python backend
