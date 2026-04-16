@@ -549,6 +549,7 @@
     let canvasOffset   = { x: 0, y: 0 };
     let lastRedrawOffset = { x: 0, y: 0 }; // Used for high-performance panning
     let isMovingCanvas = false;
+    let selectedStroke = null;     // THE SPECIFIC OBJECT being moved
     let lastPinchPos   = null;
     let smoothedPinchPos = null;
 
@@ -1024,7 +1025,14 @@
       lastDrawPos = null;
       
       if (currentStroke.points.length > 1) {
-        // Create an optimized image cache for this specific stroke
+        // Calculate bounding box for faster hit detection later
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        for (const p of currentStroke.points) {
+          if (p.x < minX) minX = p.x; if (p.x > maxX) maxX = p.x;
+          if (p.y < minY) minY = p.y; if (p.y > maxY) maxY = p.y;
+        }
+        currentStroke.bounds = { minX, minY, maxX, maxY };
+        
         const cache = document.createElement('canvas');
         cache.width = drawCanvas.width;
         cache.height = drawCanvas.height;
@@ -1039,6 +1047,43 @@
       
       drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
       currentStroke = null;
+    }
+
+    /** Find which stroke is closest to the pinch point */
+    function findStrokeAt(screenX, screenY) {
+      // 100pk threshold for easier selection
+      const threshold = 60; 
+      let bestStroke = null;
+      let minDist = Infinity;
+      
+      for (const s of strokes) {
+        if (!s.bounds) continue;
+        
+        // World position of pinch
+        const wx = screenX - canvasOffset.x;
+        const wy = screenY - canvasOffset.y;
+        
+        // Relative to the stroke's bake offset
+        const rx = wx + (canvasOffset.x - s.offsetAtBake.x);
+        const ry = wy + (canvasOffset.y - s.offsetAtBake.y);
+
+        // Broad-phase bounding box check (+ padding)
+        if (rx < s.bounds.minX - threshold || rx > s.bounds.maxX + threshold ||
+            ry < s.bounds.minY - threshold || ry > s.bounds.maxY + threshold) {
+          continue;
+        }
+        
+        // Fine-phase point check
+        for (let i = 0; i < s.points.length; i += 5) { // Step for speed
+          const p = s.points[i];
+          const dist = Math.sqrt(Math.pow(p.x - rx, 2) + Math.pow(p.y - ry, 2));
+          if (dist < threshold && dist < minDist) {
+            minDist = dist;
+            bestStroke = s;
+          }
+        }
+      }
+      return bestStroke;
     }
 
     function clearDrawCanvas() {
@@ -1086,9 +1131,10 @@
     /** Process writing mode — support panning and stroke storage */
     function processWritingMode(hand) {
       if (!hand) {
-        if (isMovingCanvas) redrawStrokes(); // Final bake on release
-        finishStroke(); // Consolidated helper
+        if (isMovingCanvas) redrawStrokes();
+        finishStroke();
         isMovingCanvas = false;
+        selectedStroke = null;
         lastPinchPos = null;
         return;
       }
@@ -1111,29 +1157,39 @@
       // RELAXED CURL: Only require middle and ring to be closed. Pinky can be neutral.
       const curled = !isFingerExtended(hand, 2) && !isFingerExtended(hand, 3);
 
-      // --- PINCH TO MOVE ---
+      // --- PINCH TO MOVE OBJECT ---
       if (isPinching && curled) {
-        finishStroke(); // finish current stroke if we were drawing
+        finishStroke();
 
         const currentPinch = { x: (thumbTip.x + indexTip.x)/2, y: (thumbTip.y + indexTip.y)/2 };
         
         if (!isMovingCanvas) {
-          isMovingCanvas = true;
-          lastPinchPos = currentPinch;
-        } else {
+          // SELECT THE OBJECT UNDER PINCH
+          selectedStroke = findStrokeAt(currentPinch.x, currentPinch.y);
+          if (selectedStroke) {
+            isMovingCanvas = true;
+            lastPinchPos = currentPinch;
+          }
+        } else if (selectedStroke) {
+          // MOVE ONLY THE SELECTED OBJECT
           const dx = currentPinch.x - lastPinchPos.x;
           const dy = currentPinch.y - lastPinchPos.y;
-          canvasOffset.x += dx;
-          canvasOffset.y += dy;
+          
+          // Applying delta to the object's relative offset
+          selectedStroke.offsetAtBake.x -= dx;
+          selectedStroke.offsetAtBake.y -= dy;
+          
           lastPinchPos = currentPinch;
+          // Trigger O(N_strokes) redraw for visual feedback
+          redrawStrokes();
         }
         
-        // Visual indicator for moving
-        drawCursorIndicator(currentPinch);
+        if (isMovingCanvas) drawCursorIndicator(currentPinch);
         return; 
       } else {
-        if (isMovingCanvas) redrawStrokes(); // Final bake on release
+        if (isMovingCanvas) redrawStrokes();
         isMovingCanvas = false;
+        selectedStroke = null;
         lastPinchPos = null;
       }
 
