@@ -1451,7 +1451,11 @@
       }
 
       // ── Render stored strokes (relative to pan offset) ──
-      // Dynamic rendering only for current stroke; background is already baked
+      // 90 FPS Optimization: Use baked background for resting/drawing
+      // But switch to active redrawing for smooth panning
+      if (isMovingCanvas) {
+        redrawStrokes();
+      }
       ctx.drawImage(bakedCanvas, 0, 0);
       ctx.drawImage(drawCanvas, 0, 0);
 
