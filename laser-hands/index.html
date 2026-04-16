@@ -547,6 +547,7 @@
     let strokes        = [];       // Array of { points: [{x,y}], colorIdx: 0 }
     let currentStroke  = null;     // Current stroke being drawn
     let canvasOffset   = { x: 0, y: 0 };
+    let lastRedrawOffset = { x: 0, y: 0 }; // Used for high-performance panning
     let isMovingCanvas = false;
     let lastPinchPos   = null;
     let smoothedPinchPos = null;
@@ -1015,6 +1016,9 @@
       }
       drawColorIdx = oldIdx;
       lastDrawPos = null;
+      
+      // Update the offset marker to represent the current baked state
+      lastRedrawOffset = { x: canvasOffset.x, y: canvasOffset.y };
     }
 
     function finishStroke() {
@@ -1080,6 +1084,7 @@
     /** Process writing mode — support panning and stroke storage */
     function processWritingMode(hand) {
       if (!hand) {
+        if (isMovingCanvas) redrawStrokes(); // Final bake on release
         finishStroke(); // Consolidated helper
         isMovingCanvas = false;
         lastPinchPos = null;
@@ -1125,6 +1130,7 @@
         drawCursorIndicator(currentPinch);
         return; 
       } else {
+        if (isMovingCanvas) redrawStrokes(); // Final bake on release
         isMovingCanvas = false;
         lastPinchPos = null;
       }
@@ -1451,12 +1457,13 @@
       }
 
       // ── Render stored strokes (relative to pan offset) ──
-      // 90 FPS Optimization: Use baked background for resting/drawing
-      // But switch to active redrawing for smooth panning
-      if (isMovingCanvas) {
-        redrawStrokes();
-      }
-      ctx.drawImage(bakedCanvas, 0, 0);
+      // ULTRA-PERFORMANCE PANNING:
+      // Instead of redrawing all points (O(N)), we just shift the baked image (O(1)).
+      // The screen redraw only happens ONCE when the pinch is released.
+      const dx = canvasOffset.x - lastRedrawOffset.x;
+      const dy = canvasOffset.y - lastRedrawOffset.y;
+      
+      ctx.drawImage(bakedCanvas, dx, dy);
       ctx.drawImage(drawCanvas, 0, 0);
 
       // ── Draw hand skeletons (thin lighting in Writing Mode) ──
