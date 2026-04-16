@@ -1102,6 +1102,72 @@ img { max-width: 100%; height: auto; display: block; }
     margin-bottom: 16px;
 }
 
+/* Floating Preview Badges */
+.project-preview-wrapper {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: var(--t-med);
+}
+
+.project-preview-wrapper:hover {
+    border-color: var(--accent);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+}
+
+.preview-badge {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: rgba(14, 15, 19, 0.75);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-pill);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    z-index: 10;
+    pointer-events: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.badge-top-left {
+    top: 16px;
+    left: 16px;
+    border-left: 2px solid var(--accent-rose);
+}
+
+.badge-bottom-right {
+    bottom: 16px;
+    right: 16px;
+    border-right: 2px solid var(--accent-soft);
+}
+
+.badge-pulse {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+}
+
+.badge-top-left .badge-pulse { background: var(--accent-rose); box-shadow: 0 0 10px var(--accent-rose); animation: pulse-rose 2s infinite; }
+.badge-bottom-right .badge-pulse { background: var(--accent-soft); box-shadow: 0 0 10px var(--accent-soft); animation: pulse-soft 2s infinite; }
+
+@keyframes pulse-rose {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulse-soft {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
 .chart-carousel {
     position: relative;
     overflow: hidden;
