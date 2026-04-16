@@ -1051,32 +1051,28 @@
 
     /** Find which stroke is closest to the pinch point */
     function findStrokeAt(screenX, screenY) {
-      // 100pk threshold for easier selection
-      const threshold = 60; 
+      // 80px threshold for a "magnetic" selection feel
+      const threshold = 80; 
       let bestStroke = null;
       let minDist = Infinity;
+      
+      // Target position in the Global World Space
+      const wx = screenX - canvasOffset.x;
+      const wy = screenY - canvasOffset.y;
       
       for (const s of strokes) {
         if (!s.bounds) continue;
         
-        // World position of pinch
-        const wx = screenX - canvasOffset.x;
-        const wy = screenY - canvasOffset.y;
-        
-        // Relative to the stroke's bake offset
-        const rx = wx + (canvasOffset.x - s.offsetAtBake.x);
-        const ry = wy + (canvasOffset.y - s.offsetAtBake.y);
-
-        // Broad-phase bounding box check (+ padding)
-        if (rx < s.bounds.minX - threshold || rx > s.bounds.maxX + threshold ||
-            ry < s.bounds.minY - threshold || ry > s.bounds.maxY + threshold) {
+        // Broad-phase bounding box check (World Space)
+        if (wx < s.bounds.minX - threshold || wx > s.bounds.maxX + threshold ||
+            wy < s.bounds.minY - threshold || wy > s.bounds.maxY + threshold) {
           continue;
         }
         
         // Fine-phase point check
-        for (let i = 0; i < s.points.length; i += 5) { // Step for speed
+        for (let i = 0; i < s.points.length; i += 4) { // Step for speed
           const p = s.points[i];
-          const dist = Math.sqrt(Math.pow(p.x - rx, 2) + Math.pow(p.y - ry, 2));
+          const dist = Math.sqrt(Math.pow(p.x - wx, 2) + Math.pow(p.y - wy, 2));
           if (dist < threshold && dist < minDist) {
             minDist = dist;
             bestStroke = s;
@@ -1180,7 +1176,7 @@
           selectedStroke.offsetAtBake.y -= dy;
           
           lastPinchPos = currentPinch;
-          // Trigger O(N_strokes) redraw for visual feedback
+          // Trigger instant redraw of the history layer
           redrawStrokes();
         }
         
