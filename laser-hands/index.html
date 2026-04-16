@@ -1179,7 +1179,10 @@
           console.log('Connected to OS Mouse Controller!');
           // Visual feedback in HUD & Instructions
           const h3 = document.querySelector('#os-instructions h3');
-          if (h3) h3.innerHTML = '✅ OS Control Connected';
+          if (h3) {
+            h3.innerHTML = '✅ OS Control Connected';
+            h3.style.color = '#00ffa3';
+          }
           
           const bs = document.getElementById('backend-status');
           if (bs) {
@@ -1192,9 +1195,11 @@
 
         osWebSocket.onclose = () => {
           if (appMode === 'os') {
-            console.log('OS Controller disconnected. Retrying in 3s...');
             const h3 = document.querySelector('#os-instructions h3');
-            if (h3) h3.innerHTML = '⏳ Waiting for Controller...';
+            if (h3) {
+              h3.innerHTML = '⏳ Waiting for Controller...';
+              h3.style.color = '#ffcc00';
+            }
             
             const bs = document.getElementById('backend-status');
             if (bs) {
@@ -1203,15 +1208,13 @@
               bs.querySelector('.status-msg').textContent = 'Backend Offline';
               bs.querySelector('.status-msg').style.color = 'rgba(255,255,255,0.5)';
             }
-            setTimeout(initOSControl, 3000);
+            // Retry faster (every 2s)
+            setTimeout(initOSControl, 2000);
           }
         };
 
         osWebSocket.onerror = () => {
-          // Handled by onclose usually, but strictly check here too
-          if (osWebSocket.readyState === 3 && appMode === 'os') {
-             // Silence errors to keep console clean during wait
-          }
+          // Silent catch
         };
       }
     }
@@ -1700,27 +1703,28 @@ powershell -Command "Write-Host '      [OK] Modules check complete.' -Foreground
 echo.
 timeout /t 1 >nul
 
-echo [3/3] Downloading OS Controller Python script...
+echo [3/3] Downloading Standalone OS Controller...
 echo --------------------------------------------------
 :: Download script to current folder
 curl -L -O https://raw.githubusercontent.com/22kathan/portfolio/main/laser-hands/os_controller.py
 echo --------------------------------------------------
-powershell -Command "Write-Host '      [OK] Script downloaded.' -ForegroundColor Green"
+powershell -Command "Write-Host '      [OK] Standalone script ready.' -ForegroundColor Green"
 echo.
 timeout /t 1 >nul
 
 echo ==================================================
-powershell -Command "Write-Host '  [V] SETUP COMPLETE! YOU ARE READY TO USE OS CONTROL.' -ForegroundColor Green"
+powershell -Command "Write-Host '  [V] BACKEND IS READY!' -ForegroundColor Green"
 echo ==================================================
 echo.
-echo Starting Laser Hands OS Daemon...
+echo Launching OS Controller Daemon...
 echo.
-echo (Keep this window open while using OS Control)
+echo NOTE: If you see an "index.html missing" message, it is OKAY.
+echo Keep your current browser tab open to use OS Control.
 echo.
 %PY_CMD% os_controller.py
 if %errorlevel% neq 0 (
   echo.
-  powershell -Command "Write-Host 'The controller crashed or was stopped.' -ForegroundColor Yellow"
+  powershell -Command "Write-Host 'The controller stopped.' -ForegroundColor Yellow"
   pause
 )
 `;
