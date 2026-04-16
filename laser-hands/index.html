@@ -378,6 +378,10 @@
   <div id="draw-hud">
     <div class="color-dot" id="draw-color-dot"></div>
     <span class="mode-label" id="draw-mode-label">⚡ LASER</span>
+    <div class="backend-status" id="backend-status" style="display:none; align-items:center; gap:8px; margin-left:14px; padding-left:14px; border-left: 1px solid rgba(255,255,255,0.1);">
+      <span class="status-indicator" style="width:8px; height:8px; border-radius:50%; background:#ff4d4d; box-shadow:0 0 8px #ff4d4d;"></span>
+      <span class="status-msg" style="color:rgba(255,255,255,0.5); font-size:0.7rem;">Backend Offline</span>
+    </div>
   </div>
 
   <!-- OS Control Instructions -->
@@ -489,6 +493,18 @@
     let smoothedDrawPos = null;  // EMA smoothing
     let osWebSocket    = null;   // websocket for OS Control mode
     const ERASE_RADIUS = 28;
+
+    // --- SMOOTHING CONFIG ---
+    let smoothedIndexPos = { x: 0, y: 0 };
+    let smoothedThumbPos = { x: 0, y: 0 };
+    const EMA_ALPHA      = 0.35; // Lower = smoother but more lag (0.35 is sweet spot)
+
+    function smoothPoint(prev, curr, alpha) {
+        return {
+            x: prev.x + (curr.x - prev.x) * alpha,
+            y: prev.y + (curr.y - prev.y) * alpha
+        };
+    }
 
     /* ── Writing storage & Panning ── */
     let strokes        = [];       // Array of { points: [{x,y}], colorIdx: 0 }
@@ -763,7 +779,7 @@
       drawCanvas.height = window.innerHeight;
       
       // redraw strokes if any exist to maintain correct position/scale
-      if (typeof strokes !== 'undefined' && strokes.length > 0) {
+      if (typeof strokes !== 'undefined') {
         redrawStrokes();
       }
     }
@@ -982,7 +998,6 @@
         if (isDrawing) {
           isDrawing = false;
           lastDrawPos = null;
-          smoothedDrawPos = null;
           if (currentStroke) {
             strokes.push(currentStroke);
             currentStroke = null;
@@ -993,8 +1008,15 @@
         return;
       }
 
-      const thumbTip = lm(hand, 4);
-      const indexTip = lm(hand, 8);
+      // Pre-smooth the critical landmarks for this frame
+      const rawThumb = lm(hand, 4);
+      const rawIndex = lm(hand, 8);
+      
+      smoothedThumbPos = smoothPoint(smoothedThumbPos, rawThumb, EMA_ALPHA);
+      smoothedIndexPos = smoothPoint(smoothedIndexPos, rawIndex, EMA_ALPHA);
+
+      const thumbTip = smoothedThumbPos;
+      const indexTip = smoothedIndexPos;
       
       // Use Normalized Distance for resolution-independent accuracy
       const pinchDistNorm = normDist(hand, 4, hand, 8);
@@ -1012,17 +1034,7 @@
           lastDrawPos = null;
         }
 
-        const rawPinch = { x: (thumbTip.x + indexTip.x)/2, y: (thumbTip.y + indexTip.y)/2 };
-        
-        if (!smoothedPinchPos) {
-          smoothedPinchPos = { x: rawPinch.x, y: rawPinch.y };
-        } else {
-          const alpha = 0.45; // Heavier smoothing for panning to feel stable
-          smoothedPinchPos.x += (rawPinch.x - smoothedPinchPos.x) * alpha;
-          smoothedPinchPos.y += (rawPinch.y - smoothedPinchPos.y) * alpha;
-        }
-
-        const currentPinch = smoothedPinchPos;
+        const currentPinch = { x: (thumbTip.x + indexTip.x)/2, y: (thumbTip.y + indexTip.y)/2 };
         
         if (!isMovingCanvas) {
           isMovingCanvas = true;
@@ -1033,7 +1045,6 @@
           canvasOffset.x += dx;
           canvasOffset.y += dy;
           lastPinchPos = currentPinch;
-          redrawStrokes(); // Refresh canvas position
         }
         
         // Visual indicator for moving
@@ -1042,21 +1053,10 @@
       } else {
         isMovingCanvas = false;
         lastPinchPos = null;
-        smoothedPinchPos = null;
       }
 
       // --- INDEX FINGER TO DRAW ---
       if (iExt && curled) {
-        const rawTip = lm(hand, 8);
-        
-        if (!smoothedDrawPos) {
-           smoothedDrawPos = { x: rawTip.x, y: rawTip.y };
-        } else {
-           const alpha = 0.75;
-           smoothedDrawPos.x += (rawTip.x - smoothedDrawPos.x) * alpha;
-           smoothedDrawPos.y += (rawTip.y - smoothedDrawPos.y) * alpha;
-        }
-
         if (!isDrawing) {
           isDrawing = true;
           currentStroke = { colorIdx: drawColorIdx, points: [] };
@@ -1064,28 +1064,27 @@
 
         // Store point relative to offset
         currentStroke.points.push({ 
-          x: smoothedDrawPos.x - canvasOffset.x, 
-          y: smoothedDrawPos.y - canvasOffset.y 
+          x: indexTip.x - canvasOffset.x, 
+          y: indexTip.y - canvasOffset.y 
         });
 
-        drawStrokeSegment(smoothedDrawPos.x, smoothedDrawPos.y);
-        drawCursorIndicator(smoothedDrawPos);
+        drawStrokeSegment(indexTip.x, indexTip.y);
+        drawCursorIndicator(indexTip);
 
         if (Math.random() < 0.25) {
-          spawnParticles(smoothedDrawPos.x, smoothedDrawPos.y, DRAW_COLORS[drawColorIdx], 1);
+          spawnParticles(indexTip.x, indexTip.y, DRAW_COLORS[drawColorIdx], 1);
         }
       } else {
         if (isDrawing) {
           isDrawing = false;
           lastDrawPos = null;
-          smoothedDrawPos = null;
           if (currentStroke) {
             strokes.push(currentStroke);
             currentStroke = null;
           }
         }
         if (iExt) {
-          drawCursorIndicator(lm(hand, 8));
+          drawCursorIndicator(indexTip);
         }
       }
     }
@@ -1098,14 +1097,32 @@
         
         osWebSocket.onopen = () => {
           console.log('Connected to OS Mouse Controller!');
-          // Visual feedback in HUD
-          document.querySelector('#os-instructions h3').innerHTML = '✅ OS Control Connected';
+          // Visual feedback in HUD & Instructions
+          const h3 = document.querySelector('#os-instructions h3');
+          if (h3) h3.innerHTML = '✅ OS Control Connected';
+          
+          const bs = document.getElementById('backend-status');
+          if (bs) {
+            bs.querySelector('.status-indicator').style.background = '#00ffa3';
+            bs.querySelector('.status-indicator').style.boxShadow = '0 0 8px #00ffa3';
+            bs.querySelector('.status-msg').textContent = 'Backend Online';
+            bs.querySelector('.status-msg').style.color = '#00ffa3';
+          }
         };
 
         osWebSocket.onclose = () => {
           if (appMode === 'os') {
             console.log('OS Controller disconnected. Retrying in 3s...');
-            document.querySelector('#os-instructions h3').innerHTML = '⏳ Waiting for Controller...';
+            const h3 = document.querySelector('#os-instructions h3');
+            if (h3) h3.innerHTML = '⏳ Waiting for Controller...';
+            
+            const bs = document.getElementById('backend-status');
+            if (bs) {
+              bs.querySelector('.status-indicator').style.background = '#ff4d4d';
+              bs.querySelector('.status-indicator').style.boxShadow = '0 0 8px #ff4d4d';
+              bs.querySelector('.status-msg').textContent = 'Backend Offline';
+              bs.querySelector('.status-msg').style.color = 'rgba(255,255,255,0.5)';
+            }
             setTimeout(initOSControl, 3000);
           }
         };
@@ -1277,50 +1294,57 @@
         processWritingMode(writeHand);
       } else if (appMode === 'os') {
         if (isDrawing) { isDrawing = false; lastDrawPos = null; smoothedDrawPos = null; }
-        const hand = rightHand || leftHand;
-        if (hand) {
-          const indexTip = hand[8];
-          const thumbTip = hand[4];
-          const pinkyTip = hand[20];
-          
-          const pinchDist = Math.sqrt(Math.pow(indexTip.x - thumbTip.x, 2) + Math.pow(indexTip.y - thumbTip.y, 2));
-          const handSize = Math.sqrt(Math.pow(pinkyTip.x - thumbTip.x, 2) + Math.pow(pinkyTip.y - thumbTip.y, 2));
-          
-          const iExt = isFingerExtended(hand, 1);
-          const mExt = isFingerExtended(hand, 2);
-          const rExt = isFingerExtended(hand, 3);
-          const pExt = isFingerExtended(hand, 4);
+          const hand = rightHand || leftHand;
+          if (hand) {
+            const rawIndex = hand[8];
+            const rawThumb = hand[4];
+            const rawPinky = hand[20];
+            
+            // Re-use smoothing variables for OS too
+            smoothedIndexPos = smoothPoint(smoothedIndexPos, rawIndex, EMA_ALPHA);
+            
+            const indexTip = smoothedIndexPos;
+            const thumbTip = rawThumb;
+            const pinkyTip = rawPinky;
+            
+            const pinchDist = Math.sqrt(Math.pow(indexTip.x - thumbTip.x, 2) + Math.pow(indexTip.y - thumbTip.y, 2));
+            const handSize = Math.sqrt(Math.pow(pinkyTip.x - thumbTip.x, 2) + Math.pow(pinkyTip.y - thumbTip.y, 2));
+            
+            const iExt = isFingerExtended(hand, 1);
+            const mExt = isFingerExtended(hand, 2);
+            const rExt = isFingerExtended(hand, 3);
+            const pExt = isFingerExtended(hand, 4);
 
-          let currentGesture = 'move';
-          let outY = indexTip.y;
+            let currentGesture = 'move';
+            let outY = indexTip.y;
 
-          if (iExt && mExt && rExt && pExt) {
-             currentGesture = 'zoom';
-             outY = handSize;
-          } else if (iExt && mExt && !rExt && !pExt) {
-             currentGesture = 'scroll';
-             outY = (hand[8].y + hand[12].y) / 2.0;
-          }
+            if (iExt && mExt && rExt && pExt) {
+               currentGesture = 'zoom';
+               outY = handSize;
+            } else if (iExt && mExt && !rExt && !pExt) {
+               currentGesture = 'scroll';
+               outY = (hand[8].y + hand[12].y) / 2.0;
+            }
 
-          if (osWebSocket && osWebSocket.readyState === WebSocket.OPEN) {
-             osWebSocket.send(JSON.stringify({
-                action: 'tracking',
-                x: 1 - indexTip.x,
-                y: outY,
-                isPinching: pinchDist < 0.055,
-                gesture: currentGesture
-             }));
+            if (osWebSocket && osWebSocket.readyState === WebSocket.OPEN) {
+               osWebSocket.send(JSON.stringify({
+                  action: 'tracking',
+                  x: 1 - indexTip.x,
+                  y: outY,
+                  isPinching: pinchDist < 0.055,
+                  gesture: currentGesture
+               }));
+            }
+            if (currentGesture === 'scroll') {
+               drawCursorIndicator(lm(hand, 12));
+               drawCursorIndicator(lm(hand, 8));
+            } else if (currentGesture === 'zoom') {
+               drawCursorIndicator(lm(hand, 4));
+               drawCursorIndicator(lm(hand, 20));
+            } else {
+               drawCursorIndicator(lm(hand, 8));
+            }
           }
-          if (currentGesture === 'scroll') {
-             drawCursorIndicator(lm(hand, 12));
-             drawCursorIndicator(lm(hand, 8));
-          } else if (currentGesture === 'zoom') {
-             drawCursorIndicator(lm(hand, 4));
-             drawCursorIndicator(lm(hand, 20));
-          } else {
-             drawCursorIndicator(lm(hand, 8));
-          }
-        }
       } else {
         if (isDrawing) {
           isDrawing = false;
@@ -1522,6 +1546,10 @@
         document.getElementById('os-instructions').classList.remove('visible');
         colorSection.style.display = 'none';
         clearSection.style.display = 'none';
+        
+        const bs = document.getElementById('backend-status');
+        if (bs) bs.style.display = 'none';
+
         // Stop any active writing
         isDrawing = false;
         lastDrawPos = null;
@@ -1542,6 +1570,9 @@
 
       document.getElementById('mode-os').addEventListener('click', async () => {
         appMode = 'os';
+        
+        const bs = document.getElementById('backend-status');
+        if (bs) bs.style.display = 'flex';
         document.getElementById('mode-os').classList.add('active');
         modeLaserBtn.classList.remove('active');
         modeWriteBtn.classList.remove('active');

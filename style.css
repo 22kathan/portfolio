@@ -1734,4 +1734,13 @@ img { max-width: 100%; height: auto; display: block; }
     /* No orbs on very small screens */
     .orb-2, .orb-3 { display: none; }
     .orb-1 { width: 300px; height: 300px; }
+
+    /* Shrink floating badges to keep image visible */
+    .preview-badge {
+        padding: 4px 8px;
+        font-size: 0.6rem;
+        gap: 4px;
+    }
+    .badge-top-left { top: 8px; left: 8px; }
+    .badge-bottom-right { bottom: 8px; right: 8px; }
 }
