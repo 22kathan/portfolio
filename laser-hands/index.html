@@ -112,6 +112,15 @@
       font-family: 'Consolas', monospace;
       letter-spacing: 1px;
       pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    #fps-counter {
+      color: #00ffe5;
+      font-weight: bold;
+      opacity: 0.8;
+      font-size: 0.68rem;
     }
     #hud .dot {
       display: inline-block;
@@ -371,7 +380,8 @@
 
   <!-- HUD -->
   <div id="hud" style="display:none;">
-    <span class="dot"></span>TRACKING ACTIVE
+    <div><span class="dot"></span>TRACKING ACTIVE</div>
+    <div id="fps-counter">FPS: 00</div>
   </div>
 
   <!-- Draw-mode status HUD -->
@@ -475,6 +485,11 @@
     let particles = [];
     let frameTime = 0;
     let activeBeamCount = 0;
+    
+    // FPS counter state
+    let lastFpsUpdateTime = 0;
+    let frameCount = 0;
+    const fpsElement = document.getElementById('fps-counter');
 
     /* ── Drawing state ── */
     const DRAW_COLORS = [
@@ -1308,6 +1323,19 @@
     function render(timestamp) {
       frameTime = timestamp * 0.001;
       const W = canvas.width, H = canvas.height;
+
+      // Update FPS counter
+      frameCount++;
+      if (timestamp - lastFpsUpdateTime >= 1000) {
+        const fps = Math.round((frameCount * 1000) / (timestamp - lastFpsUpdateTime));
+        if (fpsElement) {
+          fpsElement.textContent = `FPS: ${fps}`;
+          // Change color slightly if it drops
+          fpsElement.style.color = fps >= 80 ? '#00ffe5' : (fps >= 50 ? '#ffe600' : '#ff4d4d');
+        }
+        frameCount = 0;
+        lastFpsUpdateTime = timestamp;
+      }
 
       // ── Process based on selected mode ──
       if (appMode === 'write') {
