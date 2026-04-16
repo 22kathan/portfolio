@@ -1006,18 +1006,15 @@
       drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
       bakedCtx.clearRect(0, 0, bakedCanvas.width, bakedCanvas.height);
       
-      const oldIdx = drawColorIdx;
+      // O(N_strokes) PERFORMANCE FIX:
+      // Instead of iterating through thousands of points, draw pre-rendered stroke images.
       for (const s of strokes) {
-        drawColorIdx = s.colorIdx;
-        lastDrawPos = null;
-        for (const p of s.points) {
-          drawStrokeSegment(bakedCtx, p.x + canvasOffset.x, p.y + canvasOffset.y, true);
+        if (s.cache) {
+          // Re-align the cached image to the current global offset
+          bakedCtx.drawImage(s.cache, canvasOffset.x - s.offsetAtBake.x, canvasOffset.y - s.offsetAtBake.y);
         }
       }
-      drawColorIdx = oldIdx;
-      lastDrawPos = null;
       
-      // Update the offset marker to represent the current baked state
       lastRedrawOffset = { x: canvasOffset.x, y: canvasOffset.y };
     }
 
@@ -1026,12 +1023,17 @@
       isDrawing = false;
       lastDrawPos = null;
       
-      // Only store if we actually drew something
       if (currentStroke.points.length > 1) {
+        // Create an optimized image cache for this specific stroke
+        const cache = document.createElement('canvas');
+        cache.width = drawCanvas.width;
+        cache.height = drawCanvas.height;
+        cache.getContext('2d').drawImage(drawCanvas, 0, 0);
+        
+        currentStroke.cache = cache;
+        currentStroke.offsetAtBake = { x: canvasOffset.x, y: canvasOffset.y };
+        
         strokes.push(currentStroke);
-        // 90 FPS PERFORMANCE FIX:
-        // Use direct image transfer for baking instead of iterating through points.
-        // This is O(1) instead of O(N), preventing browser freezes on long strokes.
         bakedCtx.drawImage(drawCanvas, 0, 0);
       }
       
