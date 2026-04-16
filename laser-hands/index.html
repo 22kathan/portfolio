@@ -6,7 +6,7 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cat's Cradle — Laser Hands (v2)</title>
+  <title>Cat's Cradle — Laser Hands (v2) [90 FPS]</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -361,7 +361,7 @@
   <!-- Splash Screen -->
   <div id="splash">
     <h1>LASER HANDS</h1>
-    <p>Cat's Cradle — Interactive Hand Tracking</p>
+    <p>Cat's Cradle — Interactive Hand Tracking [90 FPS]</p>
     <button id="start-btn">LAUNCH EXPERIENCE</button>
   </div>
 
@@ -494,10 +494,14 @@
     let osWebSocket    = null;   // websocket for OS Control mode
     const ERASE_RADIUS = 28;
 
+    // --- BAKING CANVAS (for 90 FPS) ---
+    const bakedCanvas = document.createElement('canvas');
+    const bakedCtx = bakedCanvas.getContext('2d');
+
     // --- SMOOTHING CONFIG ---
     let smoothedIndexPos = { x: 0, y: 0 };
     let smoothedThumbPos = { x: 0, y: 0 };
-    const EMA_ALPHA      = 0.35; // Lower = smoother but more lag (0.35 is sweet spot)
+    const EMA_ALPHA      = 0.4; // Slightly increased for more responsiveness at 90fps
 
     function smoothPoint(prev, curr, alpha) {
         return {
@@ -778,6 +782,9 @@
       drawCanvas.width  = window.innerWidth;
       drawCanvas.height = window.innerHeight;
       
+      bakedCanvas.width = window.innerWidth;
+      bakedCanvas.height = window.innerHeight;
+      
       // redraw strokes if any exist to maintain correct position/scale
       if (typeof strokes !== 'undefined') {
         redrawStrokes();
@@ -797,9 +804,9 @@
 
       hands.setOptions({
         maxNumHands: 2,
-        modelComplexity: 0,
-        minDetectionConfidence: 0.5,
-        minTrackingConfidence: 0.5,
+        modelComplexity: 1, // Increased from 0 for better accuracy (90fps target)
+        minDetectionConfidence: 0.6, // Slightly higher for stability
+        minTrackingConfidence: 0.6,
       });
 
       hands.onResults(onResults);
@@ -875,12 +882,14 @@
     function isFingerExtended(hand, fingerIdx) {
       const tipId = FINGERTIP_IDS[fingerIdx];
       const pipId = FINGER_PIP_IDS[fingerIdx];
+      const mcpId = FINGER_MCP_IDS[fingerIdx];
+      const wrist = hand[0];
+
       if (fingerIdx === 0) {
-        // Thumb: angle-based check at IP joint (landmark 3)
+        // Thumb: Vector-based angle check + distance check
         const a = hand[2]; // MCP
         const b = hand[3]; // IP
         const c = hand[4]; // Tip
-        // Vectors b→a and b→c
         const bax = a.x - b.x, bay = a.y - b.y, baz = a.z - b.z;
         const bcx = c.x - b.x, bcy = c.y - b.y, bcz = c.z - b.z;
         const dot = bax * bcx + bay * bcy + baz * bcz;
@@ -888,71 +897,87 @@
         const magBC = Math.sqrt(bcx * bcx + bcy * bcy + bcz * bcz);
         if (magBA === 0 || magBC === 0) return false;
         const angle = Math.acos(Math.min(1, Math.max(-1, dot / (magBA * magBC))));
-        // angle ≈ π (3.14) when straight, smaller when curled
-        // Threshold ~150° = 2.618 rad
-        return angle > 2.6;
+        return angle > 2.2; 
       }
-      // Other fingers: tip farther from wrist than PIP
-      return lmDist(hand, tipId, 0) > lmDist(hand, pipId, 0);
+      
+      const tipToWrist = lmDist(hand, tipId, 0);
+      const pipToWrist = lmDist(hand, pipId, 0);
+      const mcpToWrist = lmDist(hand, mcpId, 0);
+      return (tipToWrist > pipToWrist * 1.05) && (tipToWrist > mcpToWrist * 1.1);
     }
 
     /* ────────────────────────────────────────────
        Drawing engine
     ──────────────────────────────────────────── */
 
-    function drawStrokeSegment(x, y, isRedraw = false) {
+    function drawStrokeSegment(targetCtx, x, y, isRedraw = false) {
       const c = DRAW_COLORS[drawColorIdx];
-      drawCtx.save();
-      drawCtx.lineCap = 'round';
-      drawCtx.lineJoin = 'round';
+      targetCtx.save();
+      targetCtx.lineCap = 'round';
+      targetCtx.lineJoin = 'round';
 
-      // If we are redrawing, 'lastDrawPos' is handled externally per stroke
       const startX = isRedraw ? lastDrawPos.x : (lastDrawPos ? lastDrawPos.x : x);
       const startY = isRedraw ? lastDrawPos.y : (lastDrawPos ? lastDrawPos.y : y);
 
       if (isRedraw || lastDrawPos) {
-        // Outer glow
-        drawCtx.strokeStyle = `rgba(${c.r},${c.g},${c.b},0.3)`;
-        drawCtx.shadowColor = `rgba(${c.r},${c.g},${c.b},0.8)`;
-        drawCtx.shadowBlur = 20;
-        drawCtx.lineWidth = 10; // Extra bold for Writing Mode
-        drawCtx.beginPath();
-        drawCtx.moveTo(startX, startY);
-        drawCtx.lineTo(x, y);
-        drawCtx.stroke();
+        // 90 FPS OPTIMIZATION: Replace expensive shadowBlur with layered glow
+        // Outer glow layer
+        targetCtx.strokeStyle = `rgba(${c.r},${c.g},${c.b},0.15)`;
+        targetCtx.lineWidth = 14;
+        targetCtx.beginPath();
+        targetCtx.moveTo(startX, startY);
+        targetCtx.lineTo(x, y);
+        targetCtx.stroke();
+
+        // Mid glow layer
+        targetCtx.strokeStyle = `rgba(${c.r},${c.g},${c.b},0.35)`;
+        targetCtx.lineWidth = 8;
+        targetCtx.beginPath();
+        targetCtx.moveTo(startX, startY);
+        targetCtx.lineTo(x, y);
+        targetCtx.stroke();
 
         // Core stroke
-        drawCtx.strokeStyle = `rgba(${c.r},${c.g},${c.b},0.9)`;
-        drawCtx.shadowBlur = 10;
-        drawCtx.lineWidth = 4;
-        drawCtx.beginPath();
-        drawCtx.moveTo(startX, startY);
-        drawCtx.lineTo(x, y);
-        drawCtx.stroke();
+        targetCtx.strokeStyle = `rgba(${c.r},${c.g},${c.b},0.9)`;
+        targetCtx.lineWidth = 3.5;
+        targetCtx.beginPath();
+        targetCtx.moveTo(startX, startY);
+        targetCtx.lineTo(x, y);
+        targetCtx.stroke();
+        
+        // White highlight for premium feel
+        targetCtx.strokeStyle = `rgba(255,255,255,0.4)`;
+        targetCtx.lineWidth = 1;
+        targetCtx.beginPath();
+        targetCtx.moveTo(startX, startY);
+        targetCtx.lineTo(x, y);
+        targetCtx.stroke();
       }
 
-      drawCtx.restore();
+      targetCtx.restore();
       lastDrawPos = { x, y };
     }
 
     function redrawStrokes() {
+      // Clear dynamic canvas and baked canvas
       drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
-      const oldIdx = drawColorIdx;
+      bakedCtx.clearRect(0, 0, bakedCanvas.width, bakedCanvas.height);
       
+      const oldIdx = drawColorIdx;
       for (const s of strokes) {
         drawColorIdx = s.colorIdx;
         lastDrawPos = null;
         for (const p of s.points) {
-          drawStrokeSegment(p.x + canvasOffset.x, p.y + canvasOffset.y, true);
+          drawStrokeSegment(bakedCtx, p.x + canvasOffset.x, p.y + canvasOffset.y, true);
         }
       }
-      
       drawColorIdx = oldIdx;
       lastDrawPos = null;
     }
 
     function clearDrawCanvas() {
       drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+      bakedCtx.clearRect(0, 0, bakedCanvas.width, bakedCanvas.height);
       strokes = [];
       currentStroke = null;
     }
@@ -1000,6 +1025,12 @@
           lastDrawPos = null;
           if (currentStroke) {
             strokes.push(currentStroke);
+            // Bake the finished stroke to the background canvas to save performance
+            lastDrawPos = null;
+            for(let p of currentStroke.points) {
+               drawStrokeSegment(bakedCtx, p.x + canvasOffset.x, p.y + canvasOffset.y, true);
+            }
+            drawCtx.clearRect(0,0,drawCanvas.width, drawCanvas.height);
             currentStroke = null;
           }
         }
@@ -1068,7 +1099,7 @@
           y: indexTip.y - canvasOffset.y 
         });
 
-        drawStrokeSegment(indexTip.x, indexTip.y);
+        drawStrokeSegment(drawCtx, indexTip.x, indexTip.y);
         drawCursorIndicator(indexTip);
 
         if (Math.random() < 0.25) {
@@ -1080,6 +1111,12 @@
           lastDrawPos = null;
           if (currentStroke) {
             strokes.push(currentStroke);
+            // Bake to background
+            lastDrawPos = null;
+            for(let p of currentStroke.points) {
+               drawStrokeSegment(bakedCtx, p.x + canvasOffset.x, p.y + canvasOffset.y, true);
+            }
+            drawCtx.clearRect(0,0,drawCanvas.width, drawCanvas.height);
             currentStroke = null;
           }
         }
@@ -1169,9 +1206,8 @@
         const alpha = p.life;
         ctx.save();
         ctx.globalAlpha = alpha;
-        ctx.shadowColor = `rgba(${p.r},${p.g},${p.b},${alpha})`;
-        ctx.shadowBlur = 12;
-        ctx.fillStyle = `rgb(${p.r},${p.g},${p.b})`;
+        // 90 FPS Optimization: No more shadowBlur for particles
+        ctx.fillStyle = `rgba(${p.r},${p.g},${p.b}, 0.8)`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
         ctx.fill();
@@ -1186,18 +1222,16 @@
     // Glow dot on a joint
     function drawJointDot(pos, color, radius = 5) {
       ctx.save();
-      ctx.shadowColor = `rgb(${color.r},${color.g},${color.b})`;
-      ctx.shadowBlur = 18;
+      // Simulating glow with multiple arcs instead of shadowBlur
+      ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},0.3)`;
+      ctx.beginPath(); ctx.arc(pos.x, pos.y, radius * 2.5, 0, Math.PI * 2); ctx.fill();
+      
       ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},0.9)`;
-      ctx.beginPath();
-      ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2); ctx.fill();
+
       // Bright core
-      ctx.shadowBlur = 0;
       ctx.fillStyle = `rgba(255,255,255,0.85)`;
-      ctx.beginPath();
-      ctx.arc(pos.x, pos.y, radius * 0.4, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(pos.x, pos.y, radius * 0.4, 0, Math.PI * 2); ctx.fill();
       ctx.restore();
     }
 
@@ -1207,13 +1241,11 @@
       if (thin) {
         ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},0.3)`;
         ctx.lineWidth = 0.5;
-        ctx.shadowBlur = 0;
       } else {
-        ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},0.25)`;
-        ctx.shadowColor = `rgba(${color.r},${color.g},${color.b},0.4)`;
-        ctx.shadowBlur = 8;
+        ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},0.35)`;
         ctx.lineWidth = 2.5;
       }
+      // Optimized skeleton: no shadowBlur on skeletons either
       for (const chain of FINGER_CHAINS) {
         ctx.beginPath();
         for (let j = 0; j < chain.length; j++) {
@@ -1236,43 +1268,32 @@
     // Laser beam between two points
     function drawLaserBeam(a, b, color, distPx) {
       const maxDist = canvas.width * 0.6;
-      const t = Math.min(distPx / maxDist, 1);  // 0 = close, 1 = far
-
-      // Bold Thickness: thicker when close, thinner when far
+      const t = Math.min(distPx / maxDist, 1);
       const thickness = 7.5 - t * 4.5;
-      // Vibrant Glow intensity
-      const glowSize = 45 - t * 25;
-      // High-energy pulsation
       const pulse = 0.9 + 0.1 * Math.sin(frameTime * 12 + a.x * 0.01);
-
-      ctx.save();
-
-      // Outer bold glow
-      ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${(0.4 - t * 0.2) * pulse})`;
-      ctx.shadowColor = `rgba(${color.r},${color.g},${color.b},0.9)`;
-      ctx.shadowBlur = glowSize;
-      ctx.lineWidth = thickness + 8;
-      ctx.beginPath();
-      ctx.moveTo(a.x, a.y);
-      // Slight elastic curve via quadratic bezier
       const midX = (a.x + b.x) / 2;
       const midY = (a.y + b.y) / 2 + distPx * 0.04 * Math.sin(frameTime * 3);
+
+      ctx.save();
+      // Outer glow layer (Fast alternative to shadowBlur)
+      ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${(0.2 - t * 0.1) * pulse})`;
+      ctx.lineWidth = thickness + 15;
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
       ctx.quadraticCurveTo(midX, midY, b.x, b.y);
       ctx.stroke();
 
-      // Inner vibrant core
-      ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${(1.0 - t * 0.4) * pulse})`;
-      ctx.shadowBlur = glowSize * 0.5;
-      ctx.lineWidth = thickness;
+      // Mid vibrant core layer
+      ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${(0.8 - t * 0.3) * pulse})`;
+      ctx.lineWidth = thickness + 4;
       ctx.beginPath();
       ctx.moveTo(a.x, a.y);
       ctx.quadraticCurveTo(midX, midY, b.x, b.y);
       ctx.stroke();
 
       // Hot white center
-      ctx.strokeStyle = `rgba(255,255,255,${(0.8 - t * 0.4) * pulse})`;
-      ctx.shadowBlur = 4;
-      ctx.lineWidth = Math.max(thickness * 0.4, 1.2);
+      ctx.strokeStyle = `rgba(255,255,255,${(0.9 - t * 0.4) * pulse})`;
+      ctx.lineWidth = Math.max(thickness * 0.4, 1.5);
       ctx.beginPath();
       ctx.moveTo(a.x, a.y);
       ctx.quadraticCurveTo(midX, midY, b.x, b.y);
@@ -1384,11 +1405,8 @@
       }
 
       // ── Render stored strokes (relative to pan offset) ──
-      if (appMode === 'write' && (isMovingCanvas || strokes.length > 0)) {
-         redrawStrokes();
-      }
-
-      // ── Composite draw canvas ──
+      // Dynamic rendering only for current stroke; background is already baked
+      ctx.drawImage(bakedCanvas, 0, 0);
       ctx.drawImage(drawCanvas, 0, 0);
 
       // ── Draw hand skeletons (thin lighting in Writing Mode) ──
