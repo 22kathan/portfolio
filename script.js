@@ -325,36 +325,67 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ── Contact Form (mailto fallback) ──────────────────────
+    // ── Functional Contact Form (Web3Forms AJAX) ───────────
     const contactForm = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('formSubmit');
 
-    if (contactForm) {
+    if (contactForm && submitBtn) {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            const name = document.getElementById('formName').value.trim();
-            const email = document.getElementById('formEmail').value.trim();
-            const message = document.getElementById('formMessage').value.trim();
+            // Check if user has updated the key (optional validation)
+            const accessKey = contactForm.querySelector('input[name="access_key"]').value;
+            if (accessKey === 'YOUR_ACCESS_KEY_HERE') {
+                alert('Website configuration in progress. Please use the direct email link for now.');
+                return;
+            }
 
-            if (!name || !email || !message) return;
-
-            const subject = encodeURIComponent(`Portfolio Contact from ${name}`);
-            const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
-            const mailtoLink = `mailto:gadhiyakathan10@gmail.com?subject=${subject}&body=${body}`;
-
-            window.location.href = mailtoLink;
-
-            // Visual feedback
-            const submitBtn = document.getElementById('formSubmit');
+            // Visual feedback - Loading
             const originalHTML = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<span>✓ Opening Email Client…</span>';
-            submitBtn.style.background = 'linear-gradient(135deg, #5bba6f, #a3d9d1)';
+            submitBtn.innerHTML = '<span>⏳ Sending to Inbox…</span>';
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
 
-            setTimeout(() => {
-                submitBtn.innerHTML = originalHTML;
-                submitBtn.style.background = '';
-                contactForm.reset();
-            }, 3000);
+            const formData = new FormData(contactForm);
+            const object = Object.fromEntries(formData);
+            const json = JSON.stringify(object);
+
+            fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: json
+            })
+            .then(async (response) => {
+                let json = await response.json();
+                if (response.status == 200) {
+                    // Success
+                    submitBtn.innerHTML = '<span>🚀 Message Sent Successfully!</span>';
+                    submitBtn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
+                    contactForm.reset();
+                } else {
+                    // Error from API
+                    console.log(response);
+                    submitBtn.innerHTML = '<span>❌ Error. Please Try Again.</span>';
+                    submitBtn.style.background = 'linear-gradient(135deg, #e74c3c, #c0392b)';
+                }
+            })
+            .catch(error => {
+                // Network error
+                console.log(error);
+                submitBtn.innerHTML = '<span>❌ Connection Error.</span>';
+            })
+            .then(() => {
+                // Revert button after delay
+                setTimeout(() => {
+                    submitBtn.innerHTML = originalHTML;
+                    submitBtn.style.background = '';
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('loading');
+                }, 4000);
+            });
         });
     }
 

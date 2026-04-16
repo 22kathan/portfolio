@@ -612,20 +612,24 @@
                     </div>
                 </div>
                 <div class="contact-right" data-animate="fade-left">
-                    <form class="contact-form" id="contactForm">
+                    <form class="contact-form" id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+                        <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
+                        <input type="hidden" name="subject" value="New Portfolio Message">
+                        <input type="hidden" name="from_name" value="Portfolio Service">
+                        
                         <div class="form-row">
                             <div class="form-field">
                                 <label for="formName">Name</label>
-                                <input type="text" id="formName" placeholder="Your name" required>
+                                <input type="text" id="formName" name="name" placeholder="Your name" required>
                             </div>
                             <div class="form-field">
                                 <label for="formEmail">Email</label>
-                                <input type="email" id="formEmail" placeholder="your@email.com" required>
+                                <input type="email" id="formEmail" name="email" placeholder="your@email.com" required>
                             </div>
                         </div>
                         <div class="form-field">
                             <label for="formMessage">Message</label>
-                            <textarea id="formMessage" placeholder="Tell me about your project or idea..." rows="5" required></textarea>
+                            <textarea id="formMessage" name="message" placeholder="Tell me about your project or idea..." rows="5" required></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary btn-full" id="formSubmit">
                             <span>Send Message</span>
