@@ -1017,6 +1017,24 @@
       lastDrawPos = null;
     }
 
+    function finishStroke() {
+      if (!isDrawing || !currentStroke) return;
+      isDrawing = false;
+      lastDrawPos = null;
+      
+      // Only store if we actually drew something
+      if (currentStroke.points.length > 1) {
+        strokes.push(currentStroke);
+        // 90 FPS PERFORMANCE FIX:
+        // Use direct image transfer for baking instead of iterating through points.
+        // This is O(1) instead of O(N), preventing browser freezes on long strokes.
+        bakedCtx.drawImage(drawCanvas, 0, 0);
+      }
+      
+      drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+      currentStroke = null;
+    }
+
     function clearDrawCanvas() {
       drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
       bakedCtx.clearRect(0, 0, bakedCanvas.width, bakedCanvas.height);
@@ -1062,20 +1080,7 @@
     /** Process writing mode — support panning and stroke storage */
     function processWritingMode(hand) {
       if (!hand) {
-        if (isDrawing) {
-          isDrawing = false;
-          lastDrawPos = null;
-          if (currentStroke) {
-            strokes.push(currentStroke);
-            // Bake the finished stroke to the background canvas to save performance
-            lastDrawPos = null;
-            for(let p of currentStroke.points) {
-               drawStrokeSegment(bakedCtx, p.x + canvasOffset.x, p.y + canvasOffset.y, true);
-            }
-            drawCtx.clearRect(0,0,drawCanvas.width, drawCanvas.height);
-            currentStroke = null;
-          }
-        }
+        finishStroke(); // Consolidated helper
         isMovingCanvas = false;
         lastPinchPos = null;
         return;
@@ -1101,12 +1106,7 @@
 
       // --- PINCH TO MOVE ---
       if (isPinching && curled) {
-        if (isDrawing) { // finish current stroke if we were drawing
-          isDrawing = false;
-          if (currentStroke) strokes.push(currentStroke);
-          currentStroke = null;
-          lastDrawPos = null;
-        }
+        finishStroke(); // finish current stroke if we were drawing
 
         const currentPinch = { x: (thumbTip.x + indexTip.x)/2, y: (thumbTip.y + indexTip.y)/2 };
         
@@ -1149,20 +1149,7 @@
           spawnParticles(indexTip.x, indexTip.y, DRAW_COLORS[drawColorIdx], 1);
         }
       } else {
-        if (isDrawing) {
-          isDrawing = false;
-          lastDrawPos = null;
-          if (currentStroke) {
-            strokes.push(currentStroke);
-            // Bake to background
-            lastDrawPos = null;
-            for(let p of currentStroke.points) {
-               drawStrokeSegment(bakedCtx, p.x + canvasOffset.x, p.y + canvasOffset.y, true);
-            }
-            drawCtx.clearRect(0,0,drawCanvas.width, drawCanvas.height);
-            currentStroke = null;
-          }
-        }
+        finishStroke();
         if (iExt) {
           drawCursorIndicator(indexTip);
         }
