@@ -114,13 +114,28 @@
       pointer-events: none;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
     }
     #fps-counter {
       color: #00ffe5;
       font-weight: bold;
       opacity: 0.8;
       font-size: 0.68rem;
+    }
+    .hand-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+      font-size: 0.6rem;
+      color: rgba(255,255,255,0.2);
+    }
+    .hand-status.active { color: #00ffe5; }
+    .hand-icon {
+      width: 10px; height: 10px;
+      border: 1px solid currentColor;
+      border-radius: 2px;
+      display: inline-block;
     }
     #hud .dot {
       display: inline-block;
@@ -382,6 +397,8 @@
   <div id="hud" style="display:none;">
     <div><span class="dot"></span>TRACKING ACTIVE</div>
     <div id="fps-counter">FPS: 00</div>
+    <div class="hand-status" id="hand-l-status"><span class="hand-icon"></span> LEFT HAND</div>
+    <div class="hand-status" id="hand-r-status"><span class="hand-icon"></span> RIGHT HAND</div>
   </div>
 
   <!-- Draw-mode status HUD -->
@@ -514,11 +531,12 @@
     const bakedCtx = bakedCanvas.getContext('2d');
 
     // --- SMOOTHING CONFIG ---
-    let smoothedIndexPos = { x: 0, y: 0 };
-    let smoothedThumbPos = { x: 0, y: 0 };
-    const EMA_ALPHA      = 0.4; // Slightly increased for more responsiveness at 90fps
+    let smoothedIndexPos = null;
+    let smoothedThumbPos = null;
+    const EMA_ALPHA      = 0.45; // Increased for even better responsiveness
 
     function smoothPoint(prev, curr, alpha) {
+        if (!prev) return { x: curr.x, y: curr.y }; // INITIAL SNAP: No more lag!
         return {
             x: prev.x + (curr.x - prev.x) * alpha,
             y: prev.y + (curr.y - prev.y) * alpha
@@ -898,13 +916,10 @@
       const tipId = FINGERTIP_IDS[fingerIdx];
       const pipId = FINGER_PIP_IDS[fingerIdx];
       const mcpId = FINGER_MCP_IDS[fingerIdx];
-      const wrist = hand[0];
 
       if (fingerIdx === 0) {
-        // Thumb: Vector-based angle check + distance check
-        const a = hand[2]; // MCP
-        const b = hand[3]; // IP
-        const c = hand[4]; // Tip
+        // Thumb: Vector-based angle check (still reliable for thumb)
+        const a = hand[2]; const b = hand[3]; const c = hand[4];
         const bax = a.x - b.x, bay = a.y - b.y, baz = a.z - b.z;
         const bcx = c.x - b.x, bcy = c.y - b.y, bcz = c.z - b.z;
         const dot = bax * bcx + bay * bcy + baz * bcz;
@@ -915,10 +930,22 @@
         return angle > 2.2; 
       }
       
-      const tipToWrist = lmDist(hand, tipId, 0);
-      const pipToWrist = lmDist(hand, pipId, 0);
-      const mcpToWrist = lmDist(hand, mcpId, 0);
-      return (tipToWrist > pipToWrist * 1.05) && (tipToWrist > mcpToWrist * 1.1);
+      // Other fingers: Use 2D Distance + Straightness Cosine (Avoid noisy Z)
+      const tip = hand[tipId], pip = hand[pipId], mcp = hand[mcpId], wrist = hand[0];
+      
+      // 1. Distance check (2D)
+      const distTip   = Math.sqrt(Math.pow(tip.x-wrist.x,2) + Math.pow(tip.y-wrist.y,2));
+      const distPip   = Math.sqrt(Math.pow(pip.x-wrist.x,2) + Math.pow(pip.y-wrist.y,2));
+      if (distTip < distPip * 1.05) return false;
+
+      // 2. Straightness check (Vector dot product of segments)
+      const v1x = tip.x - pip.x, v1y = tip.y - pip.y;
+      const v2x = pip.x - mcp.x, v2y = pip.y - mcp.y;
+      const magV1 = Math.sqrt(v1x*v1x + v1y*v1y);
+      const magV2 = Math.sqrt(v2x*v2x + v2y*v2y);
+      const cos = (v1x*v2x + v1y*v2y) / (magV1 * magV2);
+      
+      return cos > 0.85; // Lowered from 0.9 for better forgiveness
     }
 
     /* ────────────────────────────────────────────
@@ -1069,7 +1096,8 @@
       const isPinching = pinchDistNorm < 0.055; 
 
       const iExt = isFingerExtended(hand, 1);
-      const curled = !isFingerExtended(hand, 2) && !isFingerExtended(hand, 3) && !isFingerExtended(hand, 4);
+      // RELAXED CURL: Only require middle and ring to be closed. Pinky can be neutral.
+      const curled = !isFingerExtended(hand, 2) && !isFingerExtended(hand, 3);
 
       // --- PINCH TO MOVE ---
       if (isPinching && curled) {
@@ -1453,6 +1481,12 @@
           }
         }
       }
+
+      // Update HUD Hand Status
+      const handLIndicator = document.getElementById('hand-l-status');
+      const handRIndicator = document.getElementById('hand-r-status');
+      if (handLIndicator) handLIndicator.classList.toggle('active', !!leftHand);
+      if (handRIndicator) handRIndicator.classList.toggle('active', !!rightHand);
 
       if (rightHand) {
         drawSkeleton(rightHand, COLORS.magenta, isThin);
