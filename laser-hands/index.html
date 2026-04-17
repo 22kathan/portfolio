@@ -533,16 +533,15 @@
     // --- SMOOTHING CONFIG ---
     let smoothedIndexPos = null;
     let smoothedThumbPos = null;
-    const EMA_ALPHA      = 0.45; // Increased for even better responsiveness
+    const EMA_ALPHA      = 0.55; // Boosted for slightly snappier micro-adjustments
 
     function smoothPoint(prev, curr, alpha) {
         if (!prev) return { x: curr.x, y: curr.y }; // INITIAL SNAP
         
         // ADAPTIVE SMOOTHING:
         const dist = Math.sqrt(Math.pow(curr.x - prev.x, 2) + Math.pow(curr.y - prev.y, 2));
-        // Use more smoothing (lower alpha) when moving slowly for precision, 
-        // more responsiveness (higher alpha) when moving fast.
-        const adaptiveAlpha = Math.max(0.12, Math.min(0.65, alpha * (dist / 12 + 0.1)));
+        // Use tighter smoothing at low speeds for high-accuracy laser targeting
+        const adaptiveAlpha = Math.max(0.08, Math.min(0.70, alpha * (dist / 10 + 0.1)));
 
         return {
             x: prev.x + (curr.x - prev.x) * adaptiveAlpha,
@@ -847,8 +846,8 @@
       hands.setOptions({
         maxNumHands: 2,
         modelComplexity: 1, // Increased from 0 for better accuracy (90fps target)
-        minDetectionConfidence: 0.6, // Slightly higher for stability
-        minTrackingConfidence: 0.6,
+        minDetectionConfidence: 0.8, // Raised for much higher lock-on stability
+        minTrackingConfidence: 0.8,  // Raised to prevent snap-jitters
       });
 
       hands.onResults(onResults);
@@ -1070,16 +1069,24 @@
       for (const s of strokes) {
         if (!s.bounds) continue;
         
-        // Broad-phase bounding box check (World Space)
-        if (wx < s.bounds.minX - threshold || wx > s.bounds.maxX + threshold ||
-            wy < s.bounds.minY - threshold || wy > s.bounds.maxY + threshold) {
+        // Calculate how much THIS specific stroke has been visually shifted
+        const tx = canvasOffset.x - s.offsetAtBake.x;
+        const ty = canvasOffset.y - s.offsetAtBake.y;
+        
+        // Shift hit-test coordinates inversely into Object-local space
+        const objWx = wx - tx;
+        const objWy = wy - ty;
+        
+        // Broad-phase bounding box check (Local Space)
+        if (objWx < s.bounds.minX - threshold || objWx > s.bounds.maxX + threshold ||
+            objWy < s.bounds.minY - threshold || objWy > s.bounds.maxY + threshold) {
           continue;
         }
         
         // Fine-phase point check
         for (let i = 0; i < s.points.length; i += 4) { // Step for speed
           const p = s.points[i];
-          const dist = Math.sqrt(Math.pow(p.x - wx, 2) + Math.pow(p.y - wy, 2));
+          const dist = Math.sqrt(Math.pow(p.x - objWx, 2) + Math.pow(p.y - objWy, 2));
           if (dist < threshold && dist < minDist) {
             minDist = dist;
             bestStroke = s;
@@ -1685,6 +1692,8 @@
 
       // ── Particles ──
       updateAndDrawParticles();
+
+      // ZOOMS REMOVED PER USER REQUEST
 
       requestAnimationFrame(render);
     }
