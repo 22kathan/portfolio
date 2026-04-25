@@ -68,8 +68,66 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ── Typewriter Effect ───────────────────────────────────
-    // Removed for minimalist man-made UI
+    // ── Hero Text Rotator ───────────────────────────────────
+    const heroEyebrow = document.querySelector('.hero-eyebrow span:last-child');
+    const heroTitle = document.querySelector('.hero-title');
+    const heroTagline = document.querySelector('.hero-tagline');
+
+    if (heroEyebrow && heroTitle && heroTagline) {
+        const heroVariations = [
+            {
+                eyebrow: "Open to Opportunities",
+                title: "AI Engineer &<br><span class='text-highlight'>Data Scientist</span>",
+                tagline: "A passionate developer building impactful data-driven solutions."
+            },
+            {
+                eyebrow: "Available for Hire",
+                title: "ML & Deep Learning<br><span class='text-highlight'>Specialist</span>",
+                tagline: "Turning complex data into actionable business intelligence."
+            },
+            {
+                eyebrow: "Collaborative Mind",
+                title: "Full Stack Data<br><span class='text-highlight'>Developer</span>",
+                tagline: "Designing scalable AI products with precision and purpose."
+            }
+        ];
+
+        let currentVar = 0;
+
+        function rotateHeroText() {
+            currentVar = (currentVar + 1) % heroVariations.length;
+            const v = heroVariations[currentVar];
+
+            // Transition out
+            [heroEyebrow, heroTitle, heroTagline].forEach(el => {
+                el.style.opacity = 0;
+                el.style.transform = 'translateY(10px)';
+                el.style.filter = 'blur(4px)';
+            });
+
+            setTimeout(() => {
+                heroEyebrow.textContent = v.eyebrow;
+                heroTitle.innerHTML = v.title;
+                heroTagline.textContent = v.tagline;
+
+                // Transition in
+                [heroEyebrow, heroTitle, heroTagline].forEach(el => {
+                    el.style.opacity = 1;
+                    el.style.transform = 'translateY(0)';
+                    el.style.filter = 'blur(0)';
+                });
+            }, 600);
+        }
+
+        // Initialize styles for transition
+        [heroEyebrow, heroTitle, heroTagline].forEach(el => {
+            el.style.transition = 'all 0.8s cubic-bezier(0.15, 1, 0.3, 1)';
+            el.style.willChange = 'transform, opacity, filter';
+        });
+
+        // Set interval
+        setInterval(rotateHeroText, 5000);
+    }
 
     // ── Scroll Animations (Intersection Observer) ───────────
     const animatedElements = document.querySelectorAll('[data-animate]');
