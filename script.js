@@ -82,13 +82,23 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             {
                 eyebrow: "Available for Hire",
-                title: "ML & Deep Learning<br><span class='text-highlight'>Specialist</span>",
+                title: "ML & Deep Learning<br><span class='text-highlight'>Developer</span>",
                 tagline: "Turning complex data into actionable business intelligence."
             },
             {
-                eyebrow: "Collaborative Mind",
-                title: "Full Stack Data<br><span class='text-highlight'>Developer</span>",
-                tagline: "Designing scalable AI products with precision and purpose."
+                eyebrow: "Creative Mind",
+                title: "Data Visualizer &<br><span class='text-highlight'>Analyst</span>",
+                tagline: "Bridging the gap between raw numbers and visual stories."
+            },
+            {
+                eyebrow: "Impact Driven",
+                title: "Python & Machine<br><span class='text-highlight'>Learning</span>",
+                tagline: "Architecting intelligent systems for real-world challenges."
+            },
+            {
+                eyebrow: "Detail Oriented",
+                title: "Business<br><span class='text-highlight'>Intelligence</span>",
+                tagline: "Empowering organizations with data-backed strategic decisions."
             }
         ];
 
@@ -125,8 +135,8 @@ document.addEventListener('DOMContentLoaded', () => {
             el.style.willChange = 'transform, opacity, filter';
         });
 
-        // Set interval
-        setInterval(rotateHeroText, 5000);
+        // Set interval - Changed to 3 seconds
+        setInterval(rotateHeroText, 3000);
     }
 
     // ── Scroll Animations (Intersection Observer) ───────────
