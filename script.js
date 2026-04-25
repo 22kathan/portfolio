@@ -69,45 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ── Typewriter Effect ───────────────────────────────────
-    const typewriterEl = document.getElementById('typewriter');
-    const phrases = [
-        'Data Science Enthusiast',
-        'Python Developer',
-        'Visualization Specialist',
-        'Problem Solver',
-        'Continuous Learner'
-    ];
-    let phraseIndex = 0;
-    let charIndex = 0;
-    let isDeleting = false;
-    let typeSpeed = 80;
-
-    function typewrite() {
-        const currentPhrase = phrases[phraseIndex];
-
-        if (isDeleting) {
-            typewriterEl.textContent = currentPhrase.substring(0, charIndex - 1);
-            charIndex--;
-            typeSpeed = 35;
-        } else {
-            typewriterEl.textContent = currentPhrase.substring(0, charIndex + 1);
-            charIndex++;
-            typeSpeed = 75;
-        }
-
-        if (!isDeleting && charIndex === currentPhrase.length) {
-            typeSpeed = 2200;
-            isDeleting = true;
-        } else if (isDeleting && charIndex === 0) {
-            isDeleting = false;
-            phraseIndex = (phraseIndex + 1) % phrases.length;
-            typeSpeed = 400;
-        }
-
-        setTimeout(typewrite, typeSpeed);
-    }
-
-    typewrite();
+    // Removed for minimalist man-made UI
 
     // ── Scroll Animations (Intersection Observer) ───────────
     const animatedElements = document.querySelectorAll('[data-animate]');
@@ -187,66 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(update);
     }
 
-    // ── 3D Card Tilt (Desktop only, performance-safe) ───────
-    if (isDesktop && !prefersReducedMotion) {
-        const tiltCards = document.querySelectorAll('[data-tilt]');
-
-        tiltCards.forEach(card => {
-            let rafId = null;
-            let currentX = 0, currentY = 0;
-            let targetX = 0, targetY = 0;
-
-            const maxTilt = parseFloat(card.getAttribute('data-tilt-max') || 4);
-
-            card.addEventListener('mouseenter', () => {
-                // Let JS lerp control transform; only transition box-shadow via CSS
-                card.style.transition = 'box-shadow 0.3s ease';
-                // Stop any CSS animation on this card
-                card.style.animation = 'none';
-            });
-
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const centerX = rect.left + rect.width / 2;
-                const centerY = rect.top + rect.height / 2;
-
-                // Normalized -1 to 1
-                const normalX = (e.clientX - centerX) / (rect.width / 2);
-                const normalY = (e.clientY - centerY) / (rect.height / 2);
-
-                targetX = -normalY * maxTilt; // rotateX
-                targetY = normalX * maxTilt;  // rotateY
-
-                if (!rafId) {
-                    rafId = requestAnimationFrame(function updateTilt() {
-                        // Smooth lerp
-                        currentX += (targetX - currentX) * 0.12;
-                        currentY += (targetY - currentY) * 0.12;
-
-                        card.style.transform = `perspective(1200px) rotateX(${currentX}deg) rotateY(${currentY}deg) translateZ(5px)`;
-
-                        if (Math.abs(targetX - currentX) > 0.01 || Math.abs(targetY - currentY) > 0.01) {
-                            rafId = requestAnimationFrame(updateTilt);
-                        } else {
-                            rafId = null;
-                        }
-                    });
-                }
-            });
-
-            card.addEventListener('mouseleave', () => {
-                targetX = 0;
-                targetY = 0;
-                card.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s ease';
-                card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) translateZ(0)';
-
-                if (rafId) {
-                    cancelAnimationFrame(rafId);
-                    rafId = null;
-                }
-            });
-        });
-    }
+    // ── 3D Card Tilt ────────────────────────────────────────
+    // Disabled in minimal UI mode
 
     // ── Chart Carousel ──────────────────────────────────────
     const track = document.getElementById('carouselTrack');
@@ -400,29 +304,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ── Parallax on hero visual (Desktop only) ──────────────
-    if (isDesktop && !prefersReducedMotion) {
-        const heroVisual = document.querySelector('.terminal-card');
-        if (heroVisual) {
-            let isHovering = false;
-            let parallaxRaf = null;
-
-            // Track hover state so parallax doesn't fight with tilt
-            heroVisual.addEventListener('mouseenter', () => { isHovering = true; });
-            heroVisual.addEventListener('mouseleave', () => { isHovering = false; });
-
-            window.addEventListener('scroll', () => {
-                if (parallaxRaf || isHovering) return;
-                parallaxRaf = requestAnimationFrame(() => {
-                    const scrolled = window.scrollY;
-                    const rate = scrolled * 0.1;
-                    if (!isHovering) {
-                        heroVisual.style.transform = `perspective(1200px) rotateX(1deg) rotateY(-0.5deg) translateY(-${rate}px)`;
-                    }
-                    parallaxRaf = null;
-                });
-            }, { passive: true });
-        }
-    }
+    // Parallax disabled for minimal UI
 
 });

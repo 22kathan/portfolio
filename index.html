@@ -14,20 +14,12 @@
 </head>
 <body>
 
-    <!-- Floating 3D orbs -->
-    <div class="floating-orbs" aria-hidden="true">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
-    </div>
 
-    <!-- Animated mesh gradient background -->
-    <div class="mesh-gradient" id="meshGradient"></div>
-    <div class="noise-overlay"></div>
 
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
-        <a href="#hero" class="nav-logo" id="navLogo">
+        <div class="container">
+            <a href="#hero" class="nav-logo" id="navLogo">
             <span class="logo-icon">⬡</span>
             <span class="logo-text">Gadhiya Kathan</span>
         </a>
@@ -52,11 +44,12 @@
         <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
             <span></span><span></span><span></span>
         </button>
+        </div>
     </nav>
 
     <!-- Hero Section -->
     <section class="hero" id="hero">
-        <div class="hero-inner">
+        <div class="container">
             <div class="hero-eyebrow" data-animate="fade-up">
                 <span class="status-dot"></span>
                 <span>Open to Opportunities</span>
@@ -66,25 +59,9 @@
                 <span class="text-highlight">Data Scientist</span>
             </h1>
             <p class="hero-tagline" data-animate="fade-up" data-delay="200">
-                <span class="typewriter-wrap">
-                    <span id="typewriter"></span><span class="typewriter-cursor">_</span>
-                </span>
+                A passionate developer building impactful data-driven solutions.
             </p>
-            <p class="hero-description" data-animate="fade-up" data-delay="300">
-                Hi, I'm <strong>Gadhiya Kathan</strong> — specialized in building high-performance 
-                AI products and extracting strategic business value from complex data ecosystems.
-            </p>
-            <div class="hero-actions" data-animate="fade-up" data-delay="400">
-                <a href="#projects" class="btn btn-primary" id="heroViewWork">
-                    <span>Explore My Work</span>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
-                </a>
-                <a href="resume.pdf" download class="btn btn-ghost" id="heroDownloadResume">
-                    <span>Download CV</span>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                </a>
-            </div>
-            <div class="hero-metrics" data-animate="fade-up" data-delay="500">
+            <div class="hero-metrics" data-animate="fade-up" data-delay="300">
                 <div class="metric">
                     <span class="metric-value" data-count="2">0</span>
                     <span class="metric-label">Projects Done</span>
@@ -97,6 +74,20 @@
                     <span class="metric-value" data-count="100">0</span>
                     <span class="metric-label">% Passion</span>
                 </div>
+            </div>
+            <p class="hero-description" data-animate="fade-up" data-delay="400">
+                Hi, I'm <strong>Gadhiya Kathan</strong> — specialized in building high-performance 
+                AI products and extracting strategic business value from complex data ecosystems.
+            </p>
+            <div class="hero-actions" data-animate="fade-up" data-delay="500">
+                <a href="#projects" class="btn btn-primary" id="heroViewWork">
+                    <span>Explore My Work</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+                </a>
+                <a href="resume.pdf" download class="btn btn-ghost" id="heroDownloadResume">
+                    <span>Download CV</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                </a>
             </div>
         </div>
         <div class="hero-visual" data-animate="fade-left" data-delay="300">
@@ -127,9 +118,6 @@
         <span class="t-keyword">return</span> <span class="t-str">"Data tells the truth"</span></code></pre>
             </div>
         </div>
-        <div class="scroll-cue" aria-hidden="true">
-            <div class="scroll-line"></div>
-            <span class="scroll-text">Scroll</span>
         </div>
     </section>
 
@@ -147,15 +135,6 @@
                     </h2>
                 </div>
                 <div class="about-right" data-animate="fade-left">
-                    <p class="about-text">
-                        I'm a 20-year-old intermediate developer from <strong>India</strong>, currently pursuing my <strong>BTech in Artificial Intelligence</strong> at <strong>Gandhinagar University</strong>. I have a deep curiosity for 
-                        data and technology, specializing in building solutions that bridge the gap between raw numbers and real-world impact.
-                    </p>
-                    <p class="about-text">
-                        My journey in tech started with a fascination for how data shapes decisions. From analyzing 
-                        employee performance metrics to building predictive models — every dataset has a story 
-                        and I'm here to tell it clearly and beautifully.
-                    </p>
                     <div class="about-info-grid">
                         <div class="info-chip">
                             <span class="info-icon">📍</span>
@@ -186,6 +165,16 @@
                             </div>
                         </div>
                     </div>
+                    <br>
+                    <p class="about-text">
+                        I'm a 20-year-old intermediate developer from <strong>India</strong>, currently pursuing my <strong>BTech in Artificial Intelligence</strong> at <strong>Gandhinagar University</strong>. I have a deep curiosity for 
+                        data and technology, specializing in building solutions that bridge the gap between raw numbers and real-world impact.
+                    </p>
+                    <p class="about-text">
+                        My journey in tech started with a fascination for how data shapes decisions. From analyzing 
+                        employee performance metrics to building predictive models — every dataset has a story 
+                        and I'm here to tell it clearly and beautifully.
+                    </p>
                 </div>
             </div>
         </div>
@@ -358,12 +347,6 @@
                     </a>
                 </div>
 
-                <p class="project-card-desc">
-                    A complete data science pipeline that generates <strong>100 realistic synthetic employee records</strong> 
-                    and performs in-depth exploratory data analysis — uncovering insights about salary distributions, 
-                    department demographics, gender pay equity, and education impact on career growth.
-                </p>
-
                 <div class="project-stats-row">
                     <div class="project-stat">
                         <span class="project-stat-val">0.72</span>
@@ -390,6 +373,12 @@
                     <span class="tech-tag">Matplotlib</span>
                     <span class="tech-tag">Seaborn</span>
                 </div>
+
+                <p class="project-card-desc">
+                    A complete data science pipeline that generates <strong>100 realistic synthetic employee records</strong> 
+                    and performs in-depth exploratory data analysis — uncovering insights about salary distributions, 
+                    department demographics, gender pay equity, and education impact on career growth.
+                </p>
 
                 <!-- Key Findings -->
                 <div class="findings-section">
@@ -489,32 +478,6 @@
                     </a>
                 </div>
 
-                <p class="project-card-desc">
-                    A real-time interactive web experience that uses <strong>MediaPipe hand tracking</strong> to create 
-                    futuristic laser strings, a <strong>Pure Black Writing Mode</strong> with infinite panning, 
-                    and <strong>OS Gesture Control</strong> for hands-free computer navigation.
-                </p>
-
-                <!-- Preview Image with Floating Badges -->
-                <div class="chart-section">
-                    <h4 class="chart-heading">Live Preview</h4>
-                    <div class="project-preview-wrapper">
-                        <!-- Writing Mode Badge -->
-                        <div class="preview-badge badge-top-left">
-                            <span class="badge-pulse"></span>
-                            <span>✏️ Writing Mode: Infinite Canvas</span>
-                        </div>
-                        
-                        <!-- OS Control Badge -->
-                        <div class="preview-badge badge-bottom-right">
-                            <span class="badge-pulse"></span>
-                            <span>🖱️ OS Control: Hands-Free Mouse</span>
-                        </div>
-
-                        <img src="assets/laser_hands_writing_preview.png" alt="Laser Hands Writing Mode Preview" style="width:100%; display:block;" loading="lazy">
-                    </div>
-                </div>
-
                 <div class="project-stats-row">
                     <div class="project-stat">
                         <span class="project-stat-val">21</span>
@@ -540,6 +503,32 @@
                     <span class="tech-tag">Web Audio API</span>
                     <span class="tech-tag">Canvas 2D</span>
                     <span class="tech-tag">HTML5</span>
+                </div>
+
+                <p class="project-card-desc">
+                    A real-time interactive web experience that uses <strong>MediaPipe hand tracking</strong> to create 
+                    futuristic laser strings, a <strong>Pure Black Writing Mode</strong> with infinite panning, 
+                    and <strong>OS Gesture Control</strong> for hands-free computer navigation.
+                </p>
+
+                <!-- Preview Image with Floating Badges -->
+                <div class="chart-section">
+                    <h4 class="chart-heading">Live Preview</h4>
+                    <div class="project-preview-wrapper">
+                        <!-- Writing Mode Badge -->
+                        <div class="preview-badge badge-top-left">
+                            <span class="badge-pulse"></span>
+                            <span>✏️ Writing Mode: Infinite Canvas</span>
+                        </div>
+                        
+                        <!-- OS Control Badge -->
+                        <div class="preview-badge badge-bottom-right">
+                            <span class="badge-pulse"></span>
+                            <span>🖱️ OS Control: Hands-Free Mouse</span>
+                        </div>
+
+                        <img src="assets/laser_hands_preview.png" alt="Laser Hands Writing Mode Preview" style="width:100%; display:block;" loading="lazy">
+                    </div>
                 </div>
 
                 <!-- Key Features -->
