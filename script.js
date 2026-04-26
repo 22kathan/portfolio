@@ -59,12 +59,14 @@ document.addEventListener('DOMContentLoaded', () => {
     navToggle.addEventListener('click', () => {
         navToggle.classList.toggle('active');
         navLinksContainer.classList.toggle('open');
+        document.body.classList.toggle('no-scroll');
     });
 
     navLinksContainer.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', () => {
             navToggle.classList.remove('active');
             navLinksContainer.classList.remove('open');
+            document.body.classList.remove('no-scroll');
         });
     });
 

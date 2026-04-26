@@ -21,6 +21,7 @@ body {
     font-family: var(--ff-body);
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
 }
 
 /* Hidden decorative elements from old AI designs */
@@ -172,7 +173,20 @@ body {
 .btn-ghost:hover { background: var(--border); }
 
 /* About & Info Chips */
-.about-grid { display: flex; flex-direction: column; gap: 40px; }
+/* About Section Layout */
+.about-layout {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 64px;
+    align-items: flex-start;
+}
+
+.about-heading {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
 .about-text { font-size: 1.1rem; color: var(--text-light); margin-bottom: 24px; }
 .about-text strong { color: var(--text); font-weight: 600; }
 
@@ -252,6 +266,15 @@ body {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
+}
+
+@media (max-width: 480px) {
+    .visual-mosaic {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .visual-mosaic .mosaic-item:last-child {
+        display: none;
+    }
 }
 .mosaic-item {
     aspect-ratio: 1;
@@ -560,6 +583,10 @@ body {
     transform: none;
 }
 
+body.no-scroll {
+    overflow: hidden;
+}
+
 @media (max-width: 768px) {
     .nav-toggle { display: flex; }
     
@@ -600,13 +627,23 @@ body {
     .skills-mosaic { grid-template-columns: 1fr; }
     .project-stats-row { grid-template-columns: repeat(2, 1fr); gap: 20px; }
     
+    .about-layout {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+    .about-heading { font-size: 2rem; }
+    
     .timeline-grid { grid-template-columns: 1fr; }
     
     .project-card { padding: 0; }
-    .project-card-title { font-size: 2rem; }
+    .projects-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
     
-    .section { padding: 60px 0; }
-    .hero { padding: 100px 0 60px; }
+    .nav-logo { font-size: 1.1rem; }
+    .logo-text { display: inline-block; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom; }
 }
 
 @media (max-width: 480px) {
