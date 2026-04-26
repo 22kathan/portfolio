@@ -74,7 +74,40 @@ body {
 .nav-social { color: var(--text-light); transition: color 0.2s ease; display: flex; align-items: center; }
 .nav-social:hover { color: var(--text); }
 
-.menu-toggle { display: none; }
+/* Navigation Toggle */
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 110;
+}
+
+.nav-toggle span {
+    width: 100%;
+    height: 2px;
+    background-color: var(--text);
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+.nav-toggle.active span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+}
+
+.nav-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.nav-toggle.active span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+}
+
 
 /* Sections */
 .section { padding: 100px 0; border-bottom: 1px solid var(--border); }
@@ -109,7 +142,7 @@ body {
 .metric-value { font-size: 2rem; font-weight: 700; display: block; }
 .metric-label { font-size: 0.85rem; color: var(--text-light); text-transform: uppercase; }
 
-.hero-actions { display: flex; gap: 16px; margin-top: 24px; }
+.hero-actions { display: flex; gap: 16px; margin-top: 24px; flex-wrap: wrap; }
 .hero-visual { display: none; } /* Hide complex 3D terminal from simple design */
 
 /* Buttons */
@@ -528,8 +561,57 @@ body {
 }
 
 @media (max-width: 768px) {
+    .nav-toggle { display: flex; }
+    
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        height: 100vh;
+        background: var(--bg);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+        transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+        z-index: 105;
+        border-left: 1px solid var(--border);
+        box-shadow: -20px 0 60px rgba(0,0,0,0.5);
+    }
+
+    .nav-links.open {
+        right: 0;
+    }
+
+    .nav-link {
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .nav-actions {
+        display: none; /* Hide social links on mobile menu for cleaner look, or move them */
+    }
+
     .hero-title { font-size: 2.5rem; }
+    .hero-metrics { flex-direction: row; flex-wrap: wrap; gap: 24px; }
+    
+    .about-info-grid { grid-template-columns: 1fr; }
+    .skills-mosaic { grid-template-columns: 1fr; }
+    .project-stats-row { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    
+    .timeline-grid { grid-template-columns: 1fr; }
+    
+    .project-card { padding: 0; }
+    .project-card-title { font-size: 2rem; }
+    
+    .section { padding: 60px 0; }
+    .hero { padding: 100px 0 60px; }
+}
+
+@media (max-width: 480px) {
+    .hero-title { font-size: 2rem; }
+    .project-stats-row { grid-template-columns: 1fr; }
     .hero-metrics { flex-direction: column; gap: 16px; }
-    .about-info-grid, .skills-mosaic, .project-stats-row { grid-template-columns: 1fr; }
-    .project-card { padding: 24px; }
+    .hero-actions .btn { width: 100%; justify-content: center; }
 }
