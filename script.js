@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════
-   PORTFOLIO — Gadhiya Kathan — V3 Interactive JavaScript
-   Smooth animations, 3D tilt, typewriter, carousel, perf-first
+   PORTFOLIO — Gadhiya Kathan — Handcrafted 3D UI Engine
+   Smooth animations, 3D tilt, parallax, carousel, perf-first
    ═══════════════════════════════════════════════════════════ */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -23,14 +23,12 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(() => {
             const scrollY = window.scrollY;
 
-            // Navbar background
             if (scrollY > 40) {
                 navbar.classList.add('scrolled');
             } else {
                 navbar.classList.remove('scrolled');
             }
 
-            // Active nav link
             let current = '';
             sections.forEach(section => {
                 const sectionTop = section.offsetTop - 150;
@@ -110,11 +108,10 @@ document.addEventListener('DOMContentLoaded', () => {
             currentVar = (currentVar + 1) % heroVariations.length;
             const v = heroVariations[currentVar];
 
-            // Transition out
             [heroEyebrow, heroTitle, heroTagline].forEach(el => {
                 el.style.opacity = 0;
-                el.style.transform = 'translateY(10px)';
-                el.style.filter = 'blur(4px)';
+                el.style.transform = 'translateY(12px)';
+                el.style.filter = 'blur(6px)';
             });
 
             setTimeout(() => {
@@ -122,31 +119,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 heroTitle.innerHTML = v.title;
                 heroTagline.textContent = v.tagline;
 
-                // Transition in
                 [heroEyebrow, heroTitle, heroTagline].forEach(el => {
                     el.style.opacity = 1;
                     el.style.transform = 'translateY(0)';
                     el.style.filter = 'blur(0)';
                 });
-            }, 600);
+            }, 500);
         }
 
-        // Initialize styles for transition
         [heroEyebrow, heroTitle, heroTagline].forEach(el => {
-            el.style.transition = 'all 0.8s cubic-bezier(0.15, 1, 0.3, 1)';
+            el.style.transition = 'all 0.7s cubic-bezier(0.15, 1, 0.3, 1)';
             el.style.willChange = 'transform, opacity, filter';
         });
 
-        // Set interval - Changed to 3 seconds
-        setInterval(rotateHeroText, 3000);
+        setInterval(rotateHeroText, 3500);
     }
 
     // ── Scroll Animations (Intersection Observer) ───────────
     const animatedElements = document.querySelectorAll('[data-animate]');
 
     const observerOptions = {
-        threshold: 0.12,
-        rootMargin: '0px 0px -40px 0px'
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -170,12 +164,13 @@ document.addEventListener('DOMContentLoaded', () => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const width = entry.target.getAttribute('data-width');
-                entry.target.style.setProperty('--fill-width', width + '%');
-                entry.target.classList.add('animated');
+                setTimeout(() => {
+                    entry.target.style.width = width + '%';
+                }, 200);
                 skillObserver.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.5 });
+    }, { threshold: 0.3 });
 
     tileFills.forEach(fill => skillObserver.observe(fill));
 
@@ -196,14 +191,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function animateCounter(element, target) {
         let current = 0;
-        const duration = 1200;
+        const duration = 1400;
         const startTime = performance.now();
 
         function update(currentTime) {
             const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / duration, 1);
-
-            // Easing — ease out cubic
             const eased = 1 - Math.pow(1 - progress, 3);
 
             current = Math.floor(eased * target);
@@ -219,8 +212,63 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(update);
     }
 
-    // ── 3D Card Tilt ────────────────────────────────────────
-    // Disabled in minimal UI mode
+    // ── 3D Card Tilt Effect ─────────────────────────────────
+    if (isDesktop && !prefersReducedMotion) {
+        const tiltCards = document.querySelectorAll('[data-tilt]');
+        
+        tiltCards.forEach(card => {
+            const maxTilt = parseFloat(card.getAttribute('data-tilt-max')) || 6;
+            
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * -maxTilt;
+                const rotateY = ((x - centerX) / centerX) * maxTilt;
+                
+                card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                card.style.transition = 'transform 0.1s ease';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+                card.style.transition = 'transform 0.5s cubic-bezier(0.15, 1, 0.3, 1)';
+            });
+        });
+
+        // Subtle parallax on skill tiles
+        const skillTiles = document.querySelectorAll('.skill-tile');
+        skillTiles.forEach(tile => {
+            tile.addEventListener('mousemove', (e) => {
+                const rect = tile.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                tile.style.transform = `translateY(-4px) rotateX(${y * -4}deg) rotateY(${x * 4}deg)`;
+                tile.style.transition = 'transform 0.15s ease';
+            });
+            tile.addEventListener('mouseleave', () => {
+                tile.style.transform = '';
+                tile.style.transition = 'all 0.4s cubic-bezier(0.15,1,0.3,1)';
+            });
+        });
+
+        // Info chips micro-tilt
+        const infoChips = document.querySelectorAll('.info-chip');
+        infoChips.forEach(chip => {
+            chip.addEventListener('mousemove', (e) => {
+                const rect = chip.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                chip.style.transform = `translateY(-3px) rotateX(${y * -3}deg) rotateY(${x * 3}deg)`;
+            });
+            chip.addEventListener('mouseleave', () => {
+                chip.style.transform = '';
+            });
+        });
+    }
 
     // ── Chart Carousel ──────────────────────────────────────
     const track = document.getElementById('carouselTrack');
@@ -258,13 +306,8 @@ document.addEventListener('DOMContentLoaded', () => {
         resetAutoplay();
     }
 
-    function nextSlide() {
-        goToSlide((currentSlide + 1) % slides.length);
-    }
-
-    function prevSlide() {
-        goToSlide((currentSlide - 1 + slides.length) % slides.length);
-    }
+    function nextSlide() { goToSlide((currentSlide + 1) % slides.length); }
+    function prevSlide() { goToSlide((currentSlide - 1 + slides.length) % slides.length); }
 
     function resetAutoplay() {
         clearInterval(autoplayInterval);
@@ -277,26 +320,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (nextBtn) nextBtn.addEventListener('click', nextSlide);
         autoplayInterval = setInterval(nextSlide, 5000);
 
-        // Touch / Swipe support
         let touchStartX = 0;
-
         track.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
         }, { passive: true });
 
         track.addEventListener('touchend', (e) => {
-            const touchEndX = e.changedTouches[0].screenX;
-            const diff = touchStartX - touchEndX;
-            if (Math.abs(diff) > 50) {
-                diff > 0 ? nextSlide() : prevSlide();
-            }
+            const diff = touchStartX - e.changedTouches[0].screenX;
+            if (Math.abs(diff) > 50) { diff > 0 ? nextSlide() : prevSlide(); }
         }, { passive: true });
-
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') prevSlide();
-            if (e.key === 'ArrowRight') nextSlide();
-        });
     }
 
     // ── Functional Contact Form (Web3Forms AJAX) ───────────
@@ -307,14 +339,12 @@ document.addEventListener('DOMContentLoaded', () => {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            // Check if user has updated the key (optional validation)
             const accessKey = contactForm.querySelector('input[name="access_key"]').value;
             if (accessKey === 'YOUR_ACCESS_KEY_HERE') {
                 alert('Website configuration in progress. Please use the direct email link for now.');
                 return;
             }
 
-            // Visual feedback - Loading
             const originalHTML = submitBtn.innerHTML;
             submitBtn.innerHTML = '<span>⏳ Sending to Inbox…</span>';
             submitBtn.classList.add('loading');
@@ -326,33 +356,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
             fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                 body: json
             })
             .then(async (response) => {
-                let json = await response.json();
+                let result = await response.json();
                 if (response.status == 200) {
-                    // Success
                     submitBtn.innerHTML = '<span>🚀 Message Sent Successfully!</span>';
-                    submitBtn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
+                    submitBtn.style.background = '#28c840';
                     contactForm.reset();
                 } else {
-                    // Error from API
-                    console.log(response);
                     submitBtn.innerHTML = '<span>❌ Error. Please Try Again.</span>';
-                    submitBtn.style.background = 'linear-gradient(135deg, #e74c3c, #c0392b)';
+                    submitBtn.style.background = '#e74c3c';
                 }
             })
             .catch(error => {
-                // Network error
-                console.log(error);
                 submitBtn.innerHTML = '<span>❌ Connection Error.</span>';
             })
             .then(() => {
-                // Revert button after delay
                 setTimeout(() => {
                     submitBtn.innerHTML = originalHTML;
                     submitBtn.style.background = '';
@@ -374,6 +395,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Parallax disabled for minimal UI
+    // ── Custom cursor glow (desktop only) ───────────────────
+    if (isDesktop && !prefersReducedMotion) {
+        const cursor = document.createElement('div');
+        cursor.style.cssText = `
+            position: fixed; width: 300px; height: 300px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(232,168,56,0.06) 0%, transparent 70%);
+            pointer-events: none; z-index: 9999; transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease;
+        `;
+        document.body.appendChild(cursor);
+
+        let cursorX = 0, cursorY = 0, currentX = 0, currentY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            cursorX = e.clientX;
+            cursorY = e.clientY;
+        });
+
+        function updateCursor() {
+            currentX += (cursorX - currentX) * 0.08;
+            currentY += (cursorY - currentY) * 0.08;
+            cursor.style.left = currentX + 'px';
+            cursor.style.top = currentY + 'px';
+            requestAnimationFrame(updateCursor);
+        }
+        updateCursor();
+    }
 
 });
