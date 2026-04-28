@@ -416,13 +416,12 @@
   <div id="os-instructions">
     <span id="close-os-instructions" style="position: absolute; top: 10px; right: 12px; cursor: pointer; color: rgba(255,255,255,0.4); font-size: 14px;" title="Close instructions">❌</span>
     <h3>🖱️ OS Control Active</h3>
-    <p><span class="key">Move:</span> Index Finger</p>
-    <p><span class="key">Scroll:</span> Index + Middle Fingers</p>
-    <p><span class="key">Zoom:</span> Open/Close Whole Hand</p>
-    <p><span class="key">Hover 2s:</span> Right-click at pointer</p>
-    <p><span class="key">Pinch:</span> Standard Left-click</p>
+    <p><span class="key">Move:</span> Index Finger (point)</p>
+    <p><span class="key">Left Click:</span> Pinch Thumb + Index</p>
+    <p><span class="key">Scroll:</span> Pinch Thumb + Middle</p>
+    <p><span class="key">Right Click:</span> Double-pinch Thumb + Middle</p>
     <p style="margin-top: 8px; font-size: 0.65rem; color: rgba(255,255,255,0.4);">
-      A Picture-in-Picture window will spawn so tracking continues even if you switch tabs! You can move it anywhere.
+      PiP window keeps tracking active across tabs.
     </p>
     <p style="margin-top: 8px; font-size: 0.65rem; color: rgba(255,255,255,0.4);">
       Make sure <i>os_controller.py</i> is running.
@@ -534,7 +533,19 @@
     // --- SMOOTHING CONFIG ---
     let smoothedIndexPos = null;
     let smoothedThumbPos = null;
-    const EMA_ALPHA      = 0.45; // Slightly lower for more stability
+    let smoothedMiddlePos = null;
+    const EMA_ALPHA      = 0.45;
+
+    // --- OS CONTROL STATE ---
+    let osSmoothedX = null;
+    let osSmoothedY = null;
+    let osVelocity = 0;
+    let lastMiddlePinchTime = 0;
+    let middlePinchCount = 0;
+    let wasMiddlePinching = false;
+    let middlePinchReleaseTime = 0;
+    let isScrolling = false;
+    let scrollBaseY = null; // Slightly lower for more stability
 
     function smoothPoint(prev, curr, alpha) {
         if (!prev) return { x: curr.x, y: curr.y };
@@ -1455,51 +1466,113 @@
         if (isDrawing) { isDrawing = false; lastDrawPos = null; smoothedDrawPos = null; }
           const hand = rightHand || leftHand;
           if (hand) {
-            const rawIndex = hand[8];
-            const rawThumb = hand[4];
-            const rawPinky = hand[20];
-            
-            // Re-use smoothing variables for OS too
-            smoothedIndexPos = smoothPoint(smoothedIndexPos, rawIndex, EMA_ALPHA);
-            
-            const indexTip = smoothedIndexPos;
-            const thumbTip = rawThumb;
-            const pinkyTip = rawPinky;
-            
-            const pinchDist = Math.sqrt(Math.pow(indexTip.x - thumbTip.x, 2) + Math.pow(indexTip.y - thumbTip.y, 2));
-            const handSize = Math.sqrt(Math.pow(pinkyTip.x - thumbTip.x, 2) + Math.pow(pinkyTip.y - thumbTip.y, 2));
-            
-            const iExt = isFingerExtended(hand, 1);
-            const mExt = isFingerExtended(hand, 2);
-            const rExt = isFingerExtended(hand, 3);
-            const pExt = isFingerExtended(hand, 4);
+            // ── Smooth ALL critical landmarks with dual EMA ──
+            const rawIndex  = hand[8];
+            const rawThumb  = hand[4];
+            const rawMiddle = hand[12];
 
+            // OS-specific heavier smoothing for cursor precision
+            const OS_ALPHA = 0.35;
+            smoothedIndexPos  = smoothPoint(smoothedIndexPos,  rawIndex,  OS_ALPHA);
+            smoothedThumbPos  = smoothPoint(smoothedThumbPos,  rawThumb,  OS_ALPHA);
+            smoothedMiddlePos = smoothPoint(smoothedMiddlePos, rawMiddle, OS_ALPHA);
+
+            const indexTip  = smoothedIndexPos;
+            const thumbTip  = smoothedThumbPos;
+            const middleTip = smoothedMiddlePos;
+
+            // ── Pinch detection (normalised coords for resolution independence) ──
+            const indexPinchDist  = Math.sqrt(Math.pow(rawIndex.x - rawThumb.x, 2) + Math.pow(rawIndex.y - rawThumb.y, 2));
+            const middlePinchDist = Math.sqrt(Math.pow(rawMiddle.x - rawThumb.x, 2) + Math.pow(rawMiddle.y - rawThumb.y, 2));
+
+            const isIndexPinching  = indexPinchDist < 0.055;
+            const isMiddlePinching = middlePinchDist < 0.06;
+
+            // ── Gesture classification ──
             let currentGesture = 'move';
             let outY = indexTip.y;
 
-            if (iExt && mExt && rExt && pExt) {
-               currentGesture = 'zoom';
-               outY = handSize;
-            } else if (iExt && mExt && !rExt && !pExt) {
-               currentGesture = 'scroll';
-               outY = (hand[8].y + hand[12].y) / 2.0;
+            // MIDDLE + THUMB PINCH → Scroll or Right-click
+            if (isMiddlePinching) {
+              if (!wasMiddlePinching) {
+                // Pinch just started
+                const now = performance.now();
+                if (now - middlePinchReleaseTime < 400) {
+                  // Double-pinch detected → right-click
+                  middlePinchCount++;
+                } else {
+                  middlePinchCount = 1;
+                }
+                lastMiddlePinchTime = now;
+                wasMiddlePinching = true;
+                scrollBaseY = rawMiddle.y;
+              }
+
+              // If held for >150ms, it's a scroll hold
+              if (performance.now() - lastMiddlePinchTime > 150 && middlePinchCount <= 1) {
+                currentGesture = 'scroll';
+                outY = rawMiddle.y;
+                isScrolling = true;
+              }
+            } else {
+              if (wasMiddlePinching) {
+                // Pinch just released
+                middlePinchReleaseTime = performance.now();
+                const holdDuration = performance.now() - lastMiddlePinchTime;
+
+                if (middlePinchCount >= 2) {
+                  // Double-pinch → right click
+                  currentGesture = 'rightclick';
+                  middlePinchCount = 0;
+                } else if (holdDuration < 150) {
+                  // Very short tap — wait for potential double
+                  // Will be resolved next frame
+                }
+                wasMiddlePinching = false;
+                isScrolling = false;
+                scrollBaseY = null;
+              }
             }
 
+            // ── Enterprise-grade cursor smoothing ──
+            // Second-pass smoothing for OS cursor (dual EMA)
+            const targetX = 1 - indexTip.x;
+            const targetY = indexTip.y;
+
+            if (osSmoothedX === null) {
+              osSmoothedX = targetX;
+              osSmoothedY = targetY;
+            }
+
+            const dx = targetX - osSmoothedX;
+            const dy = targetY - osSmoothedY;
+            const rawDist = Math.sqrt(dx * dx + dy * dy);
+
+            // Deadzone: sub-pixel jitter elimination
+            if (rawDist > 0.001) {
+              // Velocity-adaptive alpha: fast = responsive, slow = ultra-stable
+              const speed = Math.min(rawDist * 100, 10);
+              osVelocity = osVelocity * 0.6 + speed * 0.4;
+              const alpha = Math.max(0.15, Math.min(0.7, 0.2 + osVelocity * 0.05));
+              osSmoothedX += dx * alpha;
+              osSmoothedY += dy * alpha;
+            }
+
+            // ── Send to backend ──
             if (osWebSocket && osWebSocket.readyState === WebSocket.OPEN) {
                osWebSocket.send(JSON.stringify({
                   action: 'tracking',
-                  x: 1 - indexTip.x,
-                  y: outY,
-                  isPinching: pinchDist < 0.055,
+                  x: osSmoothedX,
+                  y: currentGesture === 'scroll' ? outY : osSmoothedY,
+                  isPinching: isIndexPinching,
                   gesture: currentGesture
                }));
             }
+
+            // ── Visual feedback ──
             if (currentGesture === 'scroll') {
                drawCursorIndicator(lm(hand, 12));
-               drawCursorIndicator(lm(hand, 8));
-            } else if (currentGesture === 'zoom') {
                drawCursorIndicator(lm(hand, 4));
-               drawCursorIndicator(lm(hand, 20));
             } else {
                drawCursorIndicator(lm(hand, 8));
             }
