@@ -1552,23 +1552,18 @@
         drawHud.classList.remove('visible');
       }
 
-      // ── Background: Deep midnight blue with subtle video silhouette ──
+      // ── Background & Camera Feed ──
       if (appMode === 'write') {
-        ctx.fillStyle = "#050510";
+        ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, W, H);
       } else {
-        // Deep midnight blue radial gradient
-        const bg = ctx.createRadialGradient(W * 0.5, H * 0.4, 0, W * 0.5, H * 0.5, W * 0.8);
-        bg.addColorStop(0, "#0c1025");
-        bg.addColorStop(0.5, "#080818");
-        bg.addColorStop(1, "#040410");
-        ctx.fillStyle = bg;
+        ctx.fillStyle = "#0a0a14";
         ctx.fillRect(0, 0, W, H);
 
-        // Draw video as a very faint silhouette (ghostly presence)
+        // Clear camera feed (mirrored)
         if (video.readyState >= 2) {
           ctx.save();
-          ctx.globalAlpha = 0.12;
+          ctx.globalAlpha = 0.75;
           ctx.translate(W, 0);
           ctx.scale(-1, 1);
           ctx.drawImage(video, 0, 0, W, H);
