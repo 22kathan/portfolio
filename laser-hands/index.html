@@ -1335,27 +1335,27 @@
        Drawing helpers
     ──────────────────────────────────────────── */
 
-    // Neon glow dot with pulse + shadowBlur
-    function drawJointDot(pos, color, radius = 4, label = null) {
-      const pulse = 1 + 0.15 * Math.sin(frameTime * 8);
+    // Tiny neon glow dot with subtle pulse
+    function drawJointDot(pos, color, radius = 2.5, label = null) {
+      const pulse = 1 + 0.1 * Math.sin(frameTime * 8);
       
       ctx.save();
-      // Atmospheric scatter bloom
-      ctx.shadowColor = `rgba(${color.r},${color.g},${color.b},0.8)`;
-      ctx.shadowBlur = radius * 5;
-      ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},0.12)`;
-      ctx.beginPath(); ctx.arc(pos.x, pos.y, radius * 4.5 * pulse, 0, Math.PI * 2); ctx.fill();
+      // Soft scatter bloom
+      ctx.shadowColor = `rgba(${color.r},${color.g},${color.b},0.6)`;
+      ctx.shadowBlur = radius * 4;
+      ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},0.08)`;
+      ctx.beginPath(); ctx.arc(pos.x, pos.y, radius * 3.5 * pulse, 0, Math.PI * 2); ctx.fill();
       
-      // Vibrant mid layer
-      ctx.shadowBlur = radius * 3;
-      ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},0.65)`;
-      ctx.beginPath(); ctx.arc(pos.x, pos.y, radius * 1.6 * pulse, 0, Math.PI * 2); ctx.fill();
+      // Mid layer
+      ctx.shadowBlur = radius * 2;
+      ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},0.55)`;
+      ctx.beginPath(); ctx.arc(pos.x, pos.y, radius * 1.2 * pulse, 0, Math.PI * 2); ctx.fill();
 
-      // Sharp white-hot core
+      // White-hot core
       ctx.shadowColor = '#ffffff';
-      ctx.shadowBlur = 4;
-      ctx.fillStyle = `rgba(255,255,255,0.95)`;
-      ctx.beginPath(); ctx.arc(pos.x, pos.y, radius * 0.5, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 2;
+      ctx.fillStyle = `rgba(255,255,255,0.9)`;
+      ctx.beginPath(); ctx.arc(pos.x, pos.y, radius * 0.4, 0, Math.PI * 2); ctx.fill();
       
       if (label) {
         ctx.shadowBlur = 0;
@@ -1366,79 +1366,78 @@
       ctx.restore();
     }
 
-    // Draw skeleton chain with Volumetric 3D cylindrical bones
+    // Draw skeleton chain — ultra-thin wireframe bones
     function drawSkeleton(hand, color, thin = false) {
       ctx.save();
-      const alpha = thin ? 0.15 : 0.3;
+      const alpha = thin ? 0.1 : 0.2;
       
       for (const chain of FINGER_CHAINS) {
         for (let j = 0; j < chain.length - 1; j++) {
           const p1 = lm(hand, chain[j]);
           const p2 = lm(hand, chain[j+1]);
           
-          // Ultra-thin high-tech bones
           ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${alpha})`;
-          ctx.lineWidth = thin ? 0.5 : 1.2;
+          ctx.lineWidth = thin ? 0.3 : 0.7;
           ctx.lineCap = "round";
           ctx.beginPath();
           ctx.moveTo(p1.x, p1.y);
           ctx.lineTo(p2.x, p2.y);
           ctx.stroke();
           
-          // Subtle glow layer
-          ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${alpha * 0.5})`;
-          ctx.lineWidth = thin ? 1.5 : 3;
+          // Faint glow layer
+          ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${alpha * 0.3})`;
+          ctx.lineWidth = thin ? 1 : 2;
           ctx.stroke();
         }
       }
       
-      // Palm outline - Ethereal mesh
+      // Palm outline — faint mesh
       ctx.beginPath();
       for (let j = 0; j < PALM_IDS.length; j++) {
         const p = lm(hand, PALM_IDS[j]);
         j === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y);
       }
       ctx.closePath();
-      ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${alpha * 0.8})`;
-      ctx.lineWidth = 0.8;
+      ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${alpha * 0.6})`;
+      ctx.lineWidth = 0.5;
       ctx.stroke();
       ctx.restore();
     }
 
-    // Laser beam between two points — TRUE GLOWING BEAM with shadowBlur
+    // Laser beam — thin glowing neon line
     function drawLaserBeam(a, b, color, distPx) {
       const maxDist = canvas.width * 0.6;
       const t = Math.min(distPx / maxDist, 1);
-      const thickness = 8 - t * 5;
+      const thickness = 3 - t * 1.8;
       const pulse = 0.85 + 0.15 * Math.sin(frameTime * 14 + a.x * 0.01);
-      const elasticSag = distPx * 0.05 * Math.sin(frameTime * 2.5 + a.y * 0.005);
+      const elasticSag = distPx * 0.04 * Math.sin(frameTime * 2.5 + a.y * 0.005);
       const midX = (a.x + b.x) / 2;
       const midY = (a.y + b.y) / 2 + elasticSag;
 
       ctx.save();
       ctx.lineCap = 'round';
 
-      // Ultra-wide atmospheric scatter
-      ctx.shadowColor = `rgba(${color.r},${color.g},${color.b},0.6)`;
-      ctx.shadowBlur = 35 * pulse;
-      ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${(0.12 - t * 0.06) * pulse})`;
-      ctx.lineWidth = thickness + 28;
+      // Atmospheric scatter glow
+      ctx.shadowColor = `rgba(${color.r},${color.g},${color.b},0.5)`;
+      ctx.shadowBlur = 20 * pulse;
+      ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${(0.08 - t * 0.04) * pulse})`;
+      ctx.lineWidth = thickness + 12;
       ctx.beginPath();
       ctx.moveTo(a.x, a.y);
       ctx.quadraticCurveTo(midX, midY, b.x, b.y);
       ctx.stroke();
 
       // Outer glow bloom
-      ctx.shadowBlur = 22 * pulse;
-      ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${(0.4 - t * 0.15) * pulse})`;
-      ctx.lineWidth = thickness + 8;
+      ctx.shadowBlur = 14 * pulse;
+      ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${(0.35 - t * 0.12) * pulse})`;
+      ctx.lineWidth = thickness + 4;
       ctx.beginPath();
       ctx.moveTo(a.x, a.y);
       ctx.quadraticCurveTo(midX, midY, b.x, b.y);
       ctx.stroke();
 
-      // Core beam — saturated color
-      ctx.shadowBlur = 12;
+      // Core beam — thin saturated line
+      ctx.shadowBlur = 8;
       ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${(0.95 - t * 0.2) * pulse})`;
       ctx.lineWidth = thickness;
       ctx.beginPath();
@@ -1446,11 +1445,11 @@
       ctx.quadraticCurveTo(midX, midY, b.x, b.y);
       ctx.stroke();
 
-      // Hot white center core
+      // Hot white center hairline
       ctx.shadowColor = '#ffffff';
-      ctx.shadowBlur = 6;
-      ctx.strokeStyle = `rgba(255,255,255,${(0.9 - t * 0.3) * pulse})`;
-      ctx.lineWidth = Math.max(thickness * 0.3, 1.2);
+      ctx.shadowBlur = 3;
+      ctx.strokeStyle = `rgba(255,255,255,${(0.85 - t * 0.3) * pulse})`;
+      ctx.lineWidth = Math.max(thickness * 0.3, 0.6);
       ctx.beginPath();
       ctx.moveTo(a.x, a.y);
       ctx.quadraticCurveTo(midX, midY, b.x, b.y);
@@ -1605,10 +1604,10 @@
           const p = lm(leftHand, id);
           if (isThin) {
             const isReadout = (id === 0); // Wrist data
-            drawJointDot(p, COLORS.cyan, 1.5, isReadout ? `L-WRIST:${Math.floor(p.x)},${Math.floor(p.y)}` : null);
+            drawJointDot(p, COLORS.cyan, 1, isReadout ? `L-WRIST:${Math.floor(p.x)},${Math.floor(p.y)}` : null);
           } else {
             const isTip = FINGERTIP_IDS.includes(id);
-            drawJointDot(p, COLORS.cyan, isTip ? 6 : 3);
+            drawJointDot(p, COLORS.cyan, isTip ? 3.5 : 1.8);
           }
         }
       }
@@ -1634,10 +1633,10 @@
           const p = lm(rightHand, id);
           if (isThin) {
             const isReadout = (id === 0);
-            drawJointDot(p, COLORS.magenta, 1.5, isReadout ? `R-WRIST:${Math.floor(p.x)},${Math.floor(p.y)}` : null);
+            drawJointDot(p, COLORS.magenta, 1, isReadout ? `R-WRIST:${Math.floor(p.x)},${Math.floor(p.y)}` : null);
           } else {
             const isTip = FINGERTIP_IDS.includes(id);
-            drawJointDot(p, COLORS.magenta, isTip ? 6 : 3);
+            drawJointDot(p, COLORS.magenta, isTip ? 3.5 : 1.8);
           }
         }
       }
