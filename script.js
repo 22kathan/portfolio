@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const isDesktop = window.innerWidth > 768 && !isTouchDevice;
 
   // ── Floating Particle System ─────────────────────────
-  if (!prefersReducedMotion) {
+  if (isDesktop && !prefersReducedMotion) {
     const canvas = document.createElement('canvas');
     canvas.id = 'particleCanvas';
     document.body.prepend(canvas);
