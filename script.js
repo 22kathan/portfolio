@@ -89,8 +89,10 @@ document.addEventListener('DOMContentLoaded', () => {
         let mouse = { x: null, y: null };
 
         window.addEventListener('resize', () => {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
+            if (window.innerWidth !== width) { // Prevent jumpiness on mobile scrolling
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            }
         });
 
         window.addEventListener('mousemove', (e) => {
