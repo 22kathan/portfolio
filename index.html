@@ -3,583 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gadhiya Kathan — Data Scientist & Developer</title>
-    <meta name="description" content="Portfolio of Gadhiya Kathan — a passionate developer specializing in data science, Python, and building impactful data-driven solutions.">
-    <meta name="keywords" content="Gadhiya Kathan, Developer, Data Science, Python, Machine Learning, Portfolio">
-    <meta name="author" content="Gadhiya Kathan">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-    <meta name="theme-color" content="#06060b">
+    <title>Gadhiya Kathan — AI Engineer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-
-
-    <!-- Navigation -->
-    <nav class="navbar" id="navbar">
-        <div class="container">
-            <a href="#hero" class="nav-logo" id="navLogo">
-            <span class="logo-icon">⬡</span>
-            <span class="logo-text">Gadhiya Kathan</span>
-        </a>
-        <ul class="nav-links" id="navLinks">
-            <li><a href="#about" class="nav-link">About</a></li>
-            <li><a href="#timeline" class="nav-link">Experience</a></li>
-            <li><a href="#skills" class="nav-link">Skills</a></li>
-            <li><a href="#projects" class="nav-link">Projects</a></li>
-            <li><a href="#contact" class="nav-link">Contact</a></li>
-        </ul>
-        <div class="nav-actions">
-            <a href="https://github.com/22kathan" target="_blank" rel="noopener" class="nav-social" aria-label="GitHub">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-            </a>
-            <a href="https://www.linkedin.com/in/kathan-gadhiya10" target="_blank" rel="noopener" class="nav-social" aria-label="LinkedIn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-            </a>
-            <a href="mailto:gadhiyakathan10@gmail.com" class="nav-social" aria-label="Email">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            </a>
+    <!-- Background Canvas -->
+    <canvas id="bgCanvas"></canvas>
+    
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <span class="logo">KATHAN<span class="highlight">_</span></span>
         </div>
-        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
-            <span></span><span></span><span></span>
-        </button>
+        <nav class="sidebar-nav">
+            <ul id="navLinks">
+                <li><a href="#hero" class="nav-link active">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#experience" class="nav-link">Experience</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="resume.pdf" class="btn btn-outline" download>Resume</a>
         </div>
-    </nav>
+    </aside>
 
-    <!-- Hero Section -->
-    <section class="hero" id="hero">
-        <div class="hero-orb hero-orb-1"></div>
-        <div class="hero-orb hero-orb-2"></div>
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-eyebrow" data-animate="fade-up">
-                    <span class="status-dot"></span>
-                    <span>Open to Opportunities</span>
-                </div>
-                <h1 class="hero-title" data-animate="fade-up" data-delay="100">
-                    AI Engineer &<br>
-                    <span class="text-highlight">Data Scientist</span>
+    <button class="mobile-toggle" id="mobileToggle">
+        <span></span><span></span><span></span>
+    </button>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="section hero" id="hero">
+            <div class="hero-inner">
+                <div class="status" data-animate>● System Online</div>
+                <h1 class="hero-title" id="heroTitle" data-animate>
+                    Engineering the <span class="highlight">Future</span><br>of AI & Data.
                 </h1>
-                <p class="hero-tagline" data-animate="fade-up" data-delay="200">
-                    A passionate developer building impactful data-driven solutions.
+                <p class="hero-desc" data-animate>
+                    I'm Gadhiya Kathan, a data scientist and developer building intelligent systems and high-performance algorithms.
                 </p>
-                <div class="hero-metrics" data-animate="fade-up" data-delay="300">
-                    <div class="metric">
-                        <span class="metric-value" data-count="2">0</span>
-                        <span class="metric-label">Projects Done</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-value" data-count="8">0</span>
-                        <span class="metric-label">Technologies</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-value" data-count="100">0</span>
-                        <span class="metric-label">% Passion</span>
-                    </div>
-                </div>
-                <p class="hero-description" data-animate="fade-up" data-delay="400">
-                    Hi, I'm <strong>Gadhiya Kathan</strong> — specialized in building high-performance 
-                    AI products and extracting strategic business value from complex data ecosystems.
-                </p>
-                <div class="hero-actions" data-animate="fade-up" data-delay="500">
-                    <a href="#projects" class="btn btn-primary" id="heroViewWork">
-                        <span>Explore My Work</span>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
-                    </a>
-                    <a href="resume.pdf" download class="btn btn-ghost" id="heroDownloadResume">
-                        <span>Download CV</span>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    </a>
+                <div class="hero-actions" data-animate>
+                    <a href="#projects" class="btn">View Work</a>
+                    <a href="https://github.com/22kathan" target="_blank" class="btn btn-outline">GitHub</a>
                 </div>
             </div>
-            <div class="hero-visual" data-animate="fade-left" data-delay="300">
-                <div class="terminal-card" data-tilt data-tilt-max="5">
-                    <div class="terminal-bar">
-                        <div class="terminal-dots">
-                            <span class="tdot tdot-r"></span>
-                            <span class="tdot tdot-y"></span>
-                            <span class="tdot tdot-g"></span>
-                        </div>
-                        <span class="terminal-title">profile.py</span>
-                        <div class="terminal-actions">
-                            <span class="terminal-min">─</span>
-                            <span class="terminal-max">□</span>
-                            <span class="terminal-close">×</span>
-                        </div>
-                    </div>
-                    <pre class="terminal-body"><code><span class="t-keyword">class</span> <span class="t-class">DataScientist</span>:
-    <span class="t-keyword">def</span> <span class="t-func">__init__</span>(<span class="t-self">self</span>):
-        <span class="t-self">self</span>.name = <span class="t-str">"Gadhiya Kathan"</span>
-        <span class="t-self">self</span>.age = <span class="t-num">20</span>
-        <span class="t-self">self</span>.stack = [
-            <span class="t-str">"Python"</span>, <span class="t-str">"Pandas"</span>,
-            <span class="t-str">"ML"</span>, <span class="t-str">"Visualization"</span>
-        ]
+        </section>
 
-    <span class="t-keyword">def</span> <span class="t-func">motto</span>(<span class="t-self">self</span>):
-        <span class="t-keyword">return</span> <span class="t-str">"Data tells the truth"</span></code></pre>
+        <!-- About Section -->
+        <section class="section" id="about">
+            <h2 class="section-title" data-animate>About <span class="highlight">Me</span></h2>
+            <div class="about-grid">
+                <div class="about-text" data-animate>
+                    <p>I'm a 20-year-old intermediate developer from India, currently pursuing my BTech in Artificial Intelligence at Gandhinagar University. I have a deep curiosity for data and technology, specializing in building solutions that bridge the gap between raw numbers and real-world impact.</p>
+                    <p>My journey in tech started with a fascination for how data shapes decisions. From analyzing employee performance metrics to building predictive models — every dataset has a story and I'm here to tell it clearly and beautifully.</p>
+                </div>
+                <div class="about-stats">
+                    <div class="stat-card" data-animate>
+                        <span class="stat-num">2+</span>
+                        <span class="stat-name">Projects</span>
+                    </div>
+                    <div class="stat-card" data-animate>
+                        <span class="stat-num">8+</span>
+                        <span class="stat-name">Technologies</span>
+                    </div>
+                    <div class="stat-card" data-animate>
+                        <span class="stat-num">∞</span>
+                        <span class="stat-name">Curiosity</span>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- About Section -->
-    <section class="section" id="about">
-        <div class="container">
-            <div class="section-label" data-animate="fade-up">
-                <span class="label-line"></span>
-                <span class="label-text">01 — About</span>
-            </div>
-            <div class="about-layout">
-                <div class="about-left" data-animate="fade-right">
-                    <h2 class="about-heading">
-                        A curious mind driven by <span class="text-highlight">data</span> and <span class="text-highlight">code</span>
-                    </h2>
+        <!-- Experience Section -->
+        <section class="section" id="experience">
+            <h2 class="section-title" data-animate>My <span class="highlight">Experience</span></h2>
+            <div class="timeline-container">
+                <div class="timeline-item" data-animate>
+                    <div class="t-date">2026 — PRESENT</div>
+                    <h3 class="t-title">Laser Hands Lead</h3>
+                    <div class="t-company">Open Source Innovation</div>
+                    <p class="t-desc">Engineered a real-time gesture control system using MediaPipe and WebSockets, enabling hands-free OS navigation and high-performance infinite canvas sketching at 60 FPS.</p>
                 </div>
-                <div class="about-right" data-animate="fade-left">
-                    <div class="about-info-grid">
-                        <div class="info-chip">
-                            <span class="info-icon">📍</span>
-                            <div>
-                                <span class="info-label">Location</span>
-                                <span class="info-value">India</span>
-                            </div>
-                        </div>
-                        <div class="info-chip">
-                            <span class="info-icon">🎂</span>
-                            <div>
-                                <span class="info-label">Age</span>
-                                <span class="info-value">20 years</span>
-                            </div>
-                        </div>
-                        <div class="info-chip">
-                            <span class="info-icon">💼</span>
-                            <div>
-                                <span class="info-label">Level</span>
-                                <span class="info-value">Intermediate Dev</span>
-                            </div>
-                        </div>
-                        <div class="info-chip">
-                            <span class="info-icon">🎯</span>
-                            <div>
-                                <span class="info-label">Focus</span>
-                                <span class="info-value">Data Science</span>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-                    <p class="about-text">
-                        I'm a 20-year-old intermediate developer from <strong>India</strong>, currently pursuing my <strong>BTech in Artificial Intelligence</strong> at <strong>Gandhinagar University</strong>. I have a deep curiosity for 
-                        data and technology, specializing in building solutions that bridge the gap between raw numbers and real-world impact.
-                    </p>
-                    <p class="about-text">
-                        My journey in tech started with a fascination for how data shapes decisions. From analyzing 
-                        employee performance metrics to building predictive models — every dataset has a story 
-                        and I'm here to tell it clearly and beautifully.
-                    </p>
+                <div class="timeline-item" data-animate>
+                    <div class="t-date">2024 — PRESENT</div>
+                    <h3 class="t-title">AI Product Developer</h3>
+                    <div class="t-company">Freelance / Individual Projects</div>
+                    <p class="t-desc">Architecting custom AI interfaces and data-driven web applications using MediaPipe, Python, and modern JavaScript frameworks.</p>
+                </div>
+                <div class="timeline-item" data-animate>
+                    <div class="t-date">2024 — 2028</div>
+                    <h3 class="t-title">BTech in Artificial Intelligence</h3>
+                    <div class="t-company">Gandhinagar University</div>
+                    <p class="t-desc">Specializing in Machine Learning and Artificial Intelligence. Focused on robotic process automation and high-performance AI systems.</p>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+        
+        <!-- Skills Section -->
+        <section class="section" id="skills">
+            <h2 class="section-title" data-animate>Tech <span class="highlight">Stack</span></h2>
+            <div class="skills-grid">
+                <div class="skill-item" data-animate>Python</div>
+                <div class="skill-item" data-animate>Pandas & NumPy</div>
+                <div class="skill-item" data-animate>Machine Learning</div>
+                <div class="skill-item" data-animate>Data Visualization</div>
+                <div class="skill-item" data-animate>EDA & Stats</div>
+                <div class="skill-item" data-animate>SQL & DBs</div>
+                <div class="skill-item" data-animate>HTML / CSS / JS</div>
+                <div class="skill-item" data-animate>Git</div>
+            </div>
+        </section>
 
-    <!-- Education & Experience Section -->
-    <section class="section section-dark" id="timeline">
-        <div class="container">
-            <div class="section-label" data-animate="fade-up">
-                <span class="label-line"></span>
-                <span class="label-text">02 — Experience</span>
-            </div>
-            
-            <div class="timeline-grid">
-                <!-- Column 1: Experience -->
-                <div data-animate="fade-right">
-                    <div class="timeline-col-heading">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-                        Professional Journey
-                    </div>
-                    <div class="timeline">
-                        <div class="timeline-item">
-                            <span class="timeline-date">2024 — PRESENT</span>
-                            <h3 class="timeline-title">AI Product Developer</h3>
-                            <span class="timeline-org">Freelance / Individual Projects</span>
-                            <p class="timeline-desc">Architecting custom AI interfaces and data-driven web applications using MediaPipe, Python, and modern JavaScript frameworks.</p>
-                        </div>
-                        <div class="timeline-item">
-                            <span class="timeline-date">2026 — PRESENT</span>
-                            <h3 class="timeline-title">Laser Hands Lead</h3>
-                            <span class="timeline-org">Open Source Innovation</span>
-                            <p class="timeline-desc">Engineered a real-time gesture control system using MediaPipe and WebSockets, enabling hands-free OS navigation and high-performance infinite canvas sketching at 60 FPS.</p>
-                        </div>
+        <!-- Projects Section -->
+        <section class="section" id="projects">
+            <h2 class="section-title" data-animate>Featured <span class="highlight">Projects</span></h2>
+            <div class="projects-masonry">
+                <div class="project-card" data-animate>
+                    <div class="p-image"><img src="employee_analysis_dashboard_1777140205869.png" alt="Employee Analysis"></div>
+                    <div class="p-content">
+                        <span class="p-meta">01 / Python</span>
+                        <h3 class="p-title">Employee Data Analysis</h3>
+                        <p class="p-desc">A complete data science pipeline that generates 100 realistic records and performs in-depth EDA.</p>
+                        <a href="https://github.com/22kathan/100-employees-data-analysis" target="_blank" class="p-link">View Source ↗</a>
                     </div>
                 </div>
-
-                <!-- Column 2: Education -->
-                <div data-animate="fade-left">
-                    <div class="timeline-col-heading">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-                        Academic Background
-                    </div>
-                    <div class="timeline">
-                        <div class="timeline-item">
-                            <span class="timeline-date">2024 — 2028</span>
-                            <h3 class="timeline-title">BTech in Artificial Intelligence</h3>
-                            <span class="timeline-org">Gandhinagar University</span>
-                            <p class="timeline-desc">Specializing in Machine Learning and Artificial Intelligence. Focused on robotic process automation and high-performance AI systems.</p>
+                <div class="project-card" data-animate>
+                    <div class="p-image"><img src="laser_hands_futuristic_ui_1777140226456.png" alt="Laser Hands"></div>
+                    <div class="p-content">
+                        <span class="p-meta">02 / MediaPipe</span>
+                        <h3 class="p-title">Laser Hands</h3>
+                        <p class="p-desc">A futuristic hand-tracking engine for precision 3D drawing and gesture-based OS control at 60 FPS.</p>
+                        <div style="display:flex;gap:15px">
+                            <a href="./laser-hands/" target="_blank" class="p-link">Live Demo ↗</a>
+                            <a href="https://github.com/22kathan/laser-hands" target="_blank" class="p-link">Source ↗</a>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Skills Section -->
-    <section class="section section-dark" id="skills">
-        <div class="container">
-            <div class="section-label" data-animate="fade-up">
-                <span class="label-line"></span>
-                <span class="label-text">02 — Skills</span>
-            </div>
-            <h2 class="section-heading" data-animate="fade-up" data-delay="100">
-                My Technical <span class="text-highlight">Arsenal</span>
-            </h2>
-            <div class="skills-mosaic">
-                <div class="skill-tile skill-tile-lg" data-animate="fade-up" data-delay="0">
-                    <div class="tile-header">
-                        <span class="tile-icon">🐍</span>
-                        <span class="tile-percent">85%</span>
-                    </div>
-                    <h3 class="tile-name">Python</h3>
-                    <p class="tile-desc">Core language for data analysis, scripting & app development</p>
-                    <div class="tile-bar"><div class="tile-fill" data-width="85"></div></div>
-                </div>
-                <div class="skill-tile" data-animate="fade-up" data-delay="80">
-                    <div class="tile-header">
-                        <span class="tile-icon">📊</span>
-                        <span class="tile-percent">80%</span>
-                    </div>
-                    <h3 class="tile-name">Pandas & NumPy</h3>
-                    <p class="tile-desc">Data manipulation & numerical computation</p>
-                    <div class="tile-bar"><div class="tile-fill" data-width="80"></div></div>
-                </div>
-                <div class="skill-tile" data-animate="fade-up" data-delay="160">
-                    <div class="tile-header">
-                        <span class="tile-icon">📈</span>
-                        <span class="tile-percent">78%</span>
-                    </div>
-                    <h3 class="tile-name">Data Visualization</h3>
-                    <p class="tile-desc">Matplotlib, Seaborn & Plotly charts</p>
-                    <div class="tile-bar"><div class="tile-fill" data-width="78"></div></div>
-                </div>
-                <div class="skill-tile" data-animate="fade-up" data-delay="0">
-                    <div class="tile-header">
-                        <span class="tile-icon">🔬</span>
-                        <span class="tile-percent">75%</span>
-                    </div>
-                    <h3 class="tile-name">EDA & Statistics</h3>
-                    <p class="tile-desc">Exploratory analysis & hypothesis testing</p>
-                    <div class="tile-bar"><div class="tile-fill" data-width="75"></div></div>
-                </div>
-                <div class="skill-tile" data-animate="fade-up" data-delay="80">
-                    <div class="tile-header">
-                        <span class="tile-icon">🤖</span>
-                        <span class="tile-percent">65%</span>
-                    </div>
-                    <h3 class="tile-name">Machine Learning</h3>
-                    <p class="tile-desc">Scikit-learn & predictive modeling</p>
-                    <div class="tile-bar"><div class="tile-fill" data-width="65"></div></div>
-                </div>
-                <div class="skill-tile" data-animate="fade-up" data-delay="160">
-                    <div class="tile-header">
-                        <span class="tile-icon">🌐</span>
-                        <span class="tile-percent">70%</span>
-                    </div>
-                    <h3 class="tile-name">HTML / CSS / JS</h3>
-                    <p class="tile-desc">Responsive & interactive web interfaces</p>
-                    <div class="tile-bar"><div class="tile-fill" data-width="70"></div></div>
-                </div>
-                <div class="skill-tile" data-animate="fade-up" data-delay="0">
-                    <div class="tile-header">
-                        <span class="tile-icon">🔗</span>
-                        <span class="tile-percent">72%</span>
-                    </div>
-                    <h3 class="tile-name">Git & GitHub</h3>
-                    <p class="tile-desc">Version control & collaboration</p>
-                    <div class="tile-bar"><div class="tile-fill" data-width="72"></div></div>
-                </div>
-                <div class="skill-tile" data-animate="fade-up" data-delay="80">
-                    <div class="tile-header">
-                        <span class="tile-icon">🗄️</span>
-                        <span class="tile-percent">68%</span>
-                    </div>
-                    <h3 class="tile-name">SQL & Databases</h3>
-                    <p class="tile-desc">Querying & relational database management</p>
-                    <div class="tile-bar"><div class="tile-fill" data-width="68"></div></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section class="section" id="projects">
-        <div class="container">
-            <div class="section-label" data-animate="fade-up">
-                <span class="label-line"></span>
-                <span class="label-text">03 — Projects</span>
-            </div>
-            <div class="projects-header" data-animate="fade-up" data-delay="100">
-                <h2 class="section-heading">Featured <span class="text-highlight">Work</span></h2>
-                <a href="https://github.com/22kathan" target="_blank" rel="noopener" class="projects-github-link">
-                    <span>View GitHub</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
-                </a>
-            </div>
-
-            <div class="projects-grid">
-                <!-- Project 01 -->
-                <div class="project-card" data-animate="fade-up" data-delay="200" data-tilt data-tilt-max="3">
-                    <div class="project-card-info">
-                        <div class="project-card-header">
-                            <div class="project-card-meta">
-                                <span class="project-num">01</span>
-                                <span class="project-year">2026</span>
-                            </div>
-                            <div class="project-card-title-area">
-                                <h3 class="project-card-title">Employee Data Analysis</h3>
-                                <p class="project-card-sub">Comprehensive EDA on 100 Synthetic Employee Records</p>
-                            </div>
-                            <div class="project-actions">
-                                <a href="https://github.com/22kathan/100-employees-data-analysis" target="_blank" rel="noopener" class="project-card-link project-card-link--demo" title="View Source">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                                    View Source
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="project-stats-row">
-                            <div class="project-stat">
-                                <span class="project-stat-val">0.72</span>
-                                <span class="project-stat-key">Exp↔Salary Corr.</span>
-                            </div>
-                            <div class="project-stat">
-                                <span class="project-stat-val">13</span>
-                                <span class="project-stat-key">Features</span>
-                            </div>
-                            <div class="project-stat">
-                                <span class="project-stat-val">8</span>
-                                <span class="project-stat-key">Visualizations</span>
-                            </div>
-                        </div>
-
-                        <div class="project-tech-row">
-                            <span class="tech-tag">Python</span>
-                            <span class="tech-tag">Pandas</span>
-                            <span class="tech-tag">Seaborn</span>
-                        </div>
-
-                        <p class="project-card-desc">
-                            A complete data science pipeline that generates <strong>100 realistic records</strong> 
-                            and performs in-depth EDA — uncovering key business insights.
-                        </p>
-
-                        <div class="findings-section">
-                            <h4 class="findings-heading">Key Insights</h4>
-                            <div class="findings-list">
-                                <div class="finding-item">
-                                    <span class="finding-bullet">📈</span>
-                                    <p>Identified 0.72 correlation between Exp & Salary</p>
-                                </div>
-                                <div class="finding-item">
-                                    <span class="finding-bullet">🎓</span>
-                                    <p>Quantified 45% premium for advanced degrees</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="project-card-visual">
-                        <div class="visual-main">
-                            <img src="employee_analysis_dashboard_1777140205869.png" alt="Employee Analysis Dashboard" loading="lazy">
-                        </div>
-                        <div class="visual-mosaic">
-                            <div class="mosaic-item"><img src="employee_analysis_thumbs_1777140404985.png" alt="Chart Analysis" loading="lazy"></div>
-                            <div class="mosaic-item"><img src="assets/charts/01_department_distribution.png" alt="Department Stats" loading="lazy"></div>
-                            <div class="mosaic-item"><img src="assets/charts/02_salary_distribution.png" alt="Salary Insights" loading="lazy"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 02 -->
-                <div class="project-card" data-animate="fade-up" data-delay="300" data-tilt data-tilt-max="3">
-                    <div class="project-card-info">
-                        <div class="project-card-header">
-                            <div class="project-card-meta">
-                                <span class="project-num">02</span>
-                                <span class="project-year">2026</span>
-                            </div>
-                            <div class="project-card-title-area">
-                                <h3 class="project-card-title">Laser Hands — Cat's Cradle</h3>
-                                <p class="project-card-sub">Hand-Tracking Animation • Writing Mode • OS Control</p>
-                            </div>
-                            <div class="project-actions">
-                                <a href="./laser-hands/" target="_blank" rel="noopener" class="project-card-link project-card-link--demo">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                                    Demo
-                                </a>
-                                <a href="https://github.com/22kathan/laser-hands" target="_blank" rel="noopener" class="project-card-link">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="project-stats-row">
-                            <div class="project-stat">
-                                <span class="project-stat-val">21</span>
-                                <span class="project-stat-key">Landmarks</span>
-                            </div>
-                            <div class="project-stat">
-                                <span class="project-stat-val">60</span>
-                                <span class="project-stat-key">FPS Target</span>
-                            </div>
-                        </div>
-
-                        <div class="project-tech-row">
-                            <span class="tech-tag">MediaPipe</span>
-                            <span class="tech-tag">WebSockets</span>
-                        </div>
-
-                        <p class="project-card-desc">
-                            A futuristic <strong>hand-tracking</strong> engine that bridges the gap between physical gestures and digital interaction, featuring precision 3D drawing and system-level control.
-                        </p>
-
-                        <div class="findings-section">
-                            <h4 class="findings-heading">Core Modules</h4>
-                            <div class="findings-list">
-                                <div class="finding-item">
-                                    <span class="finding-bullet">✍️</span>
-                                    <p><strong>Writing Mode:</strong> Enables precision 3D sketching and infinite canvas drawing using real-time spatial finger tracking.</p>
-                                </div>
-                                <div class="finding-item">
-                                    <span class="finding-bullet">💻</span>
-                                    <p><strong>OS Control:</strong> A gesture-based interface for controlling mouse, keyboard, and system shortcuts without physical peripherals.</p>
-                                </div>
-                                <div class="finding-item">
-                                    <span class="finding-bullet">🏎️</span>
-                                    <p>High-performance 60FPS engine optimized for low-latency feedback.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="project-card-visual">
-                        <div class="visual-main">
-                            <img src="laser_hands_futuristic_ui_1777140226456.png" alt="Laser Hands Futuristic UI" loading="lazy">
-                        </div>
-                        <div class="visual-mosaic">
-                            <div class="mosaic-item"><img src="laser_hands_os_control_action_1777142235484.png" alt="OS Control Action" loading="lazy"></div>
-                            <div class="mosaic-item"><img src="laser_hands_writing_3d_sketch_1777142495430.png" alt="Writing Mode Demo" loading="lazy"></div>
-                            <div class="mosaic-item"><img src="laser_hands_thumbs_ui_1777140424953.png" alt="Hand Tracking Details" loading="lazy"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section class="section section-dark" id="contact">
-        <div class="container">
-            <div class="section-label" data-animate="fade-up">
-                <span class="label-line"></span>
-                <span class="label-text">04 — Contact</span>
-            </div>
-            <div class="contact-layout">
-                <div class="contact-left" data-animate="fade-right">
-                    <h2 class="contact-heading">
-                        Let's build something <span class="text-highlight">great</span> together
-                    </h2>
-                    <p class="contact-desc">
-                        I'm always open to new opportunities, collaborations, or just a friendly chat about 
-                        data science and technology. Don't hesitate to reach out!
-                    </p>
+        <!-- Contact Section -->
+        <section class="section" id="contact">
+            <h2 class="section-title" data-animate>Let's <span class="highlight">Connect</span></h2>
+            <div class="contact-grid">
+                <div class="contact-info" data-animate>
+                    <p>I'm currently open for new opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!</p>
                     <div class="contact-links">
-                        <a href="mailto:gadhiyakathan10@gmail.com" class="contact-link-card" id="contactEmail">
-                            <div class="cl-icon">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                            </div>
-                            <div class="cl-info">
-                                <span class="cl-label">Email</span>
-                                <span class="cl-value">gadhiyakathan10@gmail.com</span>
-                            </div>
-                            <svg class="cl-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
-                        </a>
-                        <a href="https://github.com/22kathan" target="_blank" rel="noopener" class="contact-link-card" id="contactGithub">
-                            <div class="cl-icon">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                            </div>
-                            <div class="cl-info">
-                                <span class="cl-label">GitHub</span>
-                                <span class="cl-value">22kathan</span>
-                            </div>
-                            <svg class="cl-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
-                        </a>
+                        <a href="mailto:gadhiyakathan10@gmail.com">Email ↗</a>
+                        <a href="https://github.com/22kathan" target="_blank">GitHub ↗</a>
+                        <a href="https://www.linkedin.com/in/kathan-gadhiya10" target="_blank">LinkedIn ↗</a>
                     </div>
                 </div>
-                <div class="contact-right" data-animate="fade-left">
-                    <form class="contact-form" id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+                <div class="contact-form-container" data-animate>
+                    <form id="contactForm" action="https://api.web3forms.com/submit" method="POST">
                         <input type="hidden" name="access_key" value="8446857d-7ea9-4b9b-9f1a-0da412842512">
-                        <input type="hidden" name="subject" value="New Portfolio Message">
-                        <input type="hidden" name="from_name" value="Portfolio Service">
-                        
-                        <div class="form-row">
-                            <div class="form-field">
-                                <label for="formName">Name</label>
-                                <input type="text" id="formName" name="name" placeholder="Your name" required>
-                            </div>
-                            <div class="form-field">
-                                <label for="formEmail">Email</label>
-                                <input type="email" id="formEmail" name="email" placeholder="your@email.com" required>
-                            </div>
-                        </div>
-                        <div class="form-field">
-                            <label for="formMessage">Message</label>
-                            <textarea id="formMessage" name="message" placeholder="Tell me about your project or idea..." rows="5" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-full" id="formSubmit">
-                            <span>Send Message</span>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-                        </button>
+                        <input type="text" name="name" placeholder="Name" required class="input-field">
+                        <input type="email" name="email" placeholder="Email" required class="input-field">
+                        <textarea name="message" placeholder="Message" rows="4" required class="input-field"></textarea>
+                        <button type="submit" class="btn" id="formSubmit">Send Message</button>
                     </form>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-inner">
-                <div class="footer-left">
-                    <p class="footer-tagline">by Gadhiya Kathan</p>
-                </div>
-                <div class="footer-right">
-                    <a href="https://www.linkedin.com/in/kathan-gadhiya10" target="_blank" rel="noopener" class="footer-link" aria-label="LinkedIn">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                    </a>
-                    <a href="mailto:gadhiyakathan10@gmail.com" class="footer-link" aria-label="Email">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                    </a>
-                    <a href="https://github.com/22kathan" target="_blank" rel="noopener" class="footer-link" aria-label="GitHub">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                    </a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Gadhiya Kathan. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+        </section>
+        
+        <footer class="footer">
+            <p>&copy; 2026 Gadhiya Kathan. System online.</p>
+        </footer>
+    </main>
 
     <script src="script.js"></script>
 </body>
