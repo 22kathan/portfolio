@@ -12,7 +12,7 @@ Welcome to my digital space. I'm a Data Scientist and AI Engineer focused on bui
 *   Enables hands-free OS navigation and infinite 3D air-sketching.
 *   Polished "Dark Tech" aesthetic with CRT post-processing.
 
-### [📊 Employee Data Analysis](https://github.com/22kathan/100-employees-data-analysis)
+### [📊 Employee Data Analysis](https://github.com/22kathan/10000-employees-data-analysis)
 **Advanced HR Analytics Pipeline**
 *   Complete data science pipeline generating and analyzing **10,000+ synthetic records**.
 *   In-depth Exploratory Data Analysis (EDA) using Python (Pandas, Seaborn).
