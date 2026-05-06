@@ -9,7 +9,7 @@ Welcome to my digital space. I'm a Data Scientist and AI Engineer focused on bui
 ### [⚡ Flux](https://github.com/22kathan/flux)
 **Real-time Hand Tracking & Gesture Control**
 *   Engineered a high-performance system using Google MediaPipe and WebSockets.
-*   Enables 60 FPS hands-free OS navigation and infinite 3D air-sketching.
+*   Enables hands-free OS navigation and infinite 3D air-sketching.
 *   Polished "Dark Tech" aesthetic with CRT post-processing.
 
 ### [📊 Employee Data Analysis](https://github.com/22kathan/100-employees-data-analysis)
@@ -25,7 +25,7 @@ Welcome to my digital space. I'm a Data Scientist and AI Engineer focused on bui
 ### AI & Data Science
 *   **Languages**: Python, SQL, JavaScript (ES6+)
 *   **Libraries**: NumPy, Pandas, Scikit-Learn, MediaPipe
-*   **Visualization**: Matplotlib, Seaborn, Power BI (DAX)
+*   **Visualization**: Matplotlib, Seaborn
 
 ### Development & UI/UX
 *   **Web**: HTML5, CSS3 (Glassmorphism, Neon Aesthetics), Canvas API
@@ -49,4 +49,4 @@ Welcome to my digital space. I'm a Data Scientist and AI Engineer focused on bui
 *   **Portfolio**: [22kathan.github.io/portfolio](https://22kathan.github.io/portfolio)
 
 ---
-*Generated with ❤️ by the Flux Engine*
+*Thank you for visiting my digital space💖*
