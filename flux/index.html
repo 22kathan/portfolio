@@ -6,14 +6,18 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cat's Cradle — Laser Hands (v3) [Neon Beams]</title>
+  <meta name="description" content="Flux — Real-time interactive hand tracking with neon laser beams, drawing mode, and OS control. Built with MediaPipe." />
+  <title>Flux — Interactive Hand Tracking Experience</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       overflow: hidden;
-      background: #080818;
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #050510;
+      font-family: 'Inter', system-ui, sans-serif;
       width: 100vw;
       height: 100vh;
     }
@@ -67,41 +71,113 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: #0a0a1a;
-      transition: opacity 0.8s ease;
+      background: #050510;
+      transition: opacity 1s cubic-bezier(.4,0,.2,1);
     }
     #splash.hidden { opacity: 0; pointer-events: none; }
+    #splash-particles { position: absolute; inset: 0; z-index: 0; }
+    #splash .splash-content { position: relative; z-index: 1; text-align: center; }
+
+    #splash .version-badge {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 999px;
+      background: rgba(100,180,255,0.1);
+      border: 1px solid rgba(100,180,255,0.2);
+      color: #64b4ff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 1.5px;
+      margin-bottom: 1.2rem;
+      text-transform: uppercase;
+    }
 
     #splash h1 {
-      font-size: 2.4rem;
-      font-weight: 700;
-      background: linear-gradient(90deg, #00ffe5, #ff00ff, #ffe600);
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, #00ffe5 0%, #64b4ff 30%, #ff00ff 60%, #ffe600 100%);
+      background-size: 300% 100%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      animation: gradientShift 4s ease infinite;
+      margin-bottom: 0.4rem;
+      letter-spacing: 4px;
+      filter: drop-shadow(0 0 30px rgba(0,255,229,0.3));
+    }
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    #splash .tagline {
+      font-family: 'JetBrains Mono', monospace;
+      color: rgba(255,255,255,0.4);
+      font-size: clamp(0.7rem, 1.5vw, 0.9rem);
       margin-bottom: 0.6rem;
       letter-spacing: 2px;
     }
-    #splash p {
-      color: rgba(255,255,255,0.5);
-      font-size: 0.95rem;
-      margin-bottom: 2rem;
+    #splash .features {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 1.5rem 0 2.2rem;
     }
+    #splash .feature-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.5);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.5px;
+      transition: all 0.3s;
+    }
+    #splash .feature-chip:hover {
+      background: rgba(100,180,255,0.08);
+      border-color: rgba(100,180,255,0.2);
+      color: #64b4ff;
+    }
+    #splash .feature-chip .chip-icon { font-size: 0.9rem; }
     #start-btn {
-      padding: 14px 44px;
+      padding: 16px 52px;
       font-size: 1rem;
       font-weight: 600;
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 2px;
       border: none;
       border-radius: 999px;
       cursor: pointer;
-      color: #0a0a1a;
+      color: #050510;
+      background: linear-gradient(135deg, #00ffe5, #64b4ff, #ff00ff);
+      background-size: 200% 100%;
+      box-shadow: 0 0 40px rgba(0,255,229,0.25), 0 0 80px rgba(255,0,255,0.1), inset 0 1px 0 rgba(255,255,255,0.2);
+      transition: transform 0.3s cubic-bezier(.4,0,.2,1), box-shadow 0.3s, background-position 0.5s;
+      position: relative;
+      overflow: hidden;
+    }
+    #start-btn::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 999px;
       background: linear-gradient(135deg, #00ffe5, #ff00ff);
-      box-shadow: 0 0 30px rgba(0,255,229,0.3), 0 0 60px rgba(255,0,255,0.15);
-      transition: transform 0.2s, box-shadow 0.2s;
+      z-index: -1;
+      opacity: 0;
+      filter: blur(15px);
+      transition: opacity 0.3s;
     }
     #start-btn:hover {
-      transform: scale(1.06);
-      box-shadow: 0 0 40px rgba(0,255,229,0.5), 0 0 80px rgba(255,0,255,0.25);
+      transform: scale(1.08) translateY(-2px);
+      background-position: 100% 0;
+      box-shadow: 0 0 50px rgba(0,255,229,0.4), 0 0 100px rgba(255,0,255,0.2), 0 8px 32px rgba(0,0,0,0.4);
     }
+    #start-btn:hover::after { opacity: 1; }
+    #start-btn:active { transform: scale(1.02); }
 
     /* ── HUD status ── */
     #hud {
@@ -110,17 +186,23 @@
       z-index: 20;
       color: rgba(255,255,255,0.35);
       font-size: 0.75rem;
-      font-family: 'Consolas', monospace;
+      font-family: 'JetBrains Mono', monospace;
       letter-spacing: 1px;
       pointer-events: none;
       display: flex;
       flex-direction: column;
       gap: 6px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: rgba(5,5,16,0.5);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.05);
     }
     #fps-counter {
       color: #00ffe5;
-      font-weight: bold;
-      opacity: 0.8;
+      font-weight: 600;
+      opacity: 0.9;
       font-size: 0.68rem;
     }
     .hand-status {
@@ -130,6 +212,7 @@
       margin-top: 4px;
       font-size: 0.6rem;
       color: rgba(255,255,255,0.2);
+      transition: color 0.3s;
     }
     .hand-status.active { color: #00ffe5; }
     .hand-icon {
@@ -137,6 +220,10 @@
       border: 1px solid currentColor;
       border-radius: 2px;
       display: inline-block;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .hand-status.active .hand-icon {
+      box-shadow: 0 0 6px currentColor;
     }
     #hud .dot {
       display: inline-block;
@@ -152,6 +239,18 @@
       0%, 100% { opacity: 1; }
       50% { opacity: 0.3; }
     }
+    /* ── Gesture Stats ── */
+    #gesture-stats {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      font-size: 0.58rem;
+      color: rgba(255,255,255,0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    #gesture-stats span { color: rgba(100,180,255,0.6); font-weight: 600; }
 
     /* ── Draw-mode HUD (bottom center status) ── */
     #draw-hud {
@@ -170,7 +269,7 @@
       -webkit-backdrop-filter: blur(14px);
       border: 1px solid rgba(255,255,255,0.08);
       box-shadow: 0 0 30px rgba(100, 180, 255, 0.12);
-      font-family: 'Consolas', monospace;
+      font-family: 'JetBrains Mono', monospace;
       font-size: 0.72rem;
       letter-spacing: 1.2px;
       color: rgba(255,255,255,0.55);
@@ -379,16 +478,147 @@
       color: #00ffe5;
       font-weight: bold;
     }
+    /* ── Toast Notifications ── */
+    #toast-container {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .toast {
+      padding: 10px 24px;
+      border-radius: 10px;
+      background: rgba(10,10,26,0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(100,180,255,0.15);
+      color: rgba(255,255,255,0.8);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.8px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+      animation: toastIn 0.3s ease-out, toastOut 0.3s ease-in 2.2s forwards;
+      white-space: nowrap;
+    }
+    @keyframes toastIn { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes toastOut { from { opacity:1; } to { opacity:0; transform:translateY(-8px); } }
+
+    /* ── Toolbar (fullscreen, screenshot) ── */
+    #toolbar {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 30;
+      display: none;
+      gap: 8px;
+    }
+    #toolbar.visible { display: flex; }
+    .toolbar-btn {
+      width: 40px; height: 40px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      background: rgba(10,10,26,0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.4);
+      transition: all 0.2s;
+    }
+    .toolbar-btn:hover {
+      background: rgba(100,180,255,0.1);
+      border-color: rgba(100,180,255,0.25);
+      color: #64b4ff;
+      transform: scale(1.08);
+    }
+
+    /* ── Keyboard Shortcuts Panel ── */
+    #shortcuts-hint {
+      position: fixed;
+      bottom: 70px;
+      left: 20px;
+      z-index: 30;
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: rgba(10,10,26,0.8);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.06);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: rgba(255,255,255,0.3);
+      animation: panelIn 0.2s ease-out;
+    }
+    #shortcuts-hint.visible { display: flex; }
+    .shortcut-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .shortcut-key {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.5);
+      font-size: 0.58rem;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    /* ── Mobile Responsive ── */
+    @media (max-width: 768px) {
+      #splash h1 { letter-spacing: 2px; }
+      #splash .features { gap: 10px; padding: 0 16px; }
+      #splash .feature-chip { font-size: 0.6rem; padding: 5px 10px; }
+      #hud { top: 8px; left: 8px; padding: 8px 12px; font-size: 0.65rem; }
+      #settings-btn { width: 38px; height: 38px; font-size: 1rem; bottom: 14px; right: 14px; }
+      #settings-panel { width: 180px; bottom: 62px; right: 14px; }
+      #toolbar { bottom: 14px; left: 14px; }
+      .toolbar-btn { width: 36px; height: 36px; font-size: 0.9rem; }
+      #os-instructions { top: auto; bottom: 80px; right: 14px; left: 14px; max-width: none; }
+      #draw-hud { bottom: 18px; padding: 6px 16px; font-size: 0.65rem; }
+    }
+    @media (max-width: 480px) {
+      #splash .features { flex-direction: column; align-items: center; }
+      #start-btn { padding: 14px 36px; font-size: 0.85rem; }
+    }
   </style>
 </head>
 <body>
 
   <!-- Splash Screen -->
   <div id="splash">
-    <h1>LASER HANDS</h1>
-    <p>Cat's Cradle — Interactive Hand Tracking [90 FPS]</p>
-    <button id="start-btn">LAUNCH EXPERIENCE</button>
+    <canvas id="splash-particles"></canvas>
+    <div class="splash-content">
+      <div class="version-badge">v4.0 · MediaPipe Hands</div>
+      <h1>FLUX</h1>
+      <p class="tagline">Interactive Hand Tracking Experience</p>
+      <div class="features">
+        <div class="feature-chip"><span class="chip-icon">⚡</span> Laser Beams</div>
+        <div class="feature-chip"><span class="chip-icon">✏️</span> Air Writing</div>
+        <div class="feature-chip"><span class="chip-icon">🖱️</span> OS Control</div>
+        <div class="feature-chip"><span class="chip-icon">📸</span> Screenshot</div>
+      </div>
+      <button id="start-btn">LAUNCH</button>
+    </div>
   </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
 
   <!-- Overlays -->
   <div id="crt-overlay"></div>
@@ -400,6 +630,11 @@
     <div id="fps-counter">FPS: 00</div>
     <div class="hand-status" id="hand-l-status"><span class="hand-icon"></span> LEFT HAND</div>
     <div class="hand-status" id="hand-r-status"><span class="hand-icon"></span> RIGHT HAND</div>
+    <div id="gesture-stats">
+      <div>BEAMS <span id="stat-beams">0</span></div>
+      <div>TOUCHES <span id="stat-touches">0</span></div>
+      <div>STROKES <span id="stat-strokes">0</span></div>
+    </div>
   </div>
 
   <!-- Draw-mode status HUD -->
@@ -419,7 +654,6 @@
     <p><span class="key">Move:</span> Index Finger (point)</p>
     <p><span class="key">Left Click:</span> Pinch Thumb + Index</p>
     <p><span class="key">Scroll:</span> Pinch Thumb + Middle</p>
-    <p><span class="key">Right Click:</span> Double-pinch Thumb + Middle</p>
     <p style="margin-top: 8px; font-size: 0.65rem; color: rgba(255,255,255,0.4);">
       PiP window keeps tracking active across tabs.
     </p>
@@ -435,11 +669,28 @@
   <!-- Settings gear button -->
   <button id="settings-btn" title="Settings">⚙️</button>
 
+  <!-- Toolbar (bottom-left) -->
+  <div id="toolbar">
+    <button class="toolbar-btn" id="fullscreen-btn" title="Fullscreen (F)">⛶</button>
+    <button class="toolbar-btn" id="screenshot-btn" title="Screenshot (S)">📸</button>
+    <button class="toolbar-btn" id="shortcuts-btn" title="Keyboard Shortcuts (?)">⌨</button>
+  </div>
+
+  <!-- Keyboard Shortcuts Panel -->
+  <div id="shortcuts-hint">
+    <div class="shortcut-row"><span class="shortcut-key">1</span> Laser Mode</div>
+    <div class="shortcut-row"><span class="shortcut-key">2</span> Writing Mode</div>
+    <div class="shortcut-row"><span class="shortcut-key">3</span> OS Control</div>
+    <div class="shortcut-row"><span class="shortcut-key">F</span> Fullscreen</div>
+    <div class="shortcut-row"><span class="shortcut-key">S</span> Screenshot</div>
+    <div class="shortcut-row"><span class="shortcut-key">C</span> Clear Canvas</div>
+  </div>
+
   <!-- Settings panel -->
   <div id="settings-panel">
     <div class="settings-section">
       <div class="settings-label">Mode</div>
-      <button class="mode-btn active" id="mode-laser"><span class="icon">⚡</span> Laser Hands</button>
+      <button class="mode-btn active" id="mode-laser"><span class="icon">⚡</span> Flux Beams</button>
       <button class="mode-btn" id="mode-write"><span class="icon">✏️</span> Writing Mode</button>
       <button class="mode-btn" id="mode-os"><span class="icon">🖱️</span> OS Control</button>
     </div>
@@ -492,7 +743,77 @@
     const PALETTE = [COLORS.cyan, COLORS.magenta, COLORS.yellow, COLORS.cyan, COLORS.magenta];
 
     const TOUCH_DIST_THRESHOLD = 0.04;  // normalised distance for "touch"
-    const MAX_PARTICLES = 300;
+
+    /* ────────────────────────────────────────────
+       One Euro Filter — Gold-standard adaptive smoothing
+       Low speed = heavy filtering (kills jitter)
+       High speed = light filtering (stays responsive)
+    ──────────────────────────────────────────── */
+    class OneEuroFilter {
+      constructor(freq = 90, minCutoff = 1.0, beta = 0.007, dCutoff = 1.0) {
+        this.freq = freq;
+        this.minCutoff = minCutoff;
+        this.beta = beta;
+        this.dCutoff = dCutoff;
+        this.xPrev = null;
+        this.dxPrev = 0;
+        this.lastTime = null;
+      }
+      _alpha(cutoff) {
+        const te = 1.0 / this.freq;
+        const tau = 1.0 / (2 * Math.PI * cutoff);
+        return 1.0 / (1.0 + tau / te);
+      }
+      filter(x, timestamp) {
+        if (this.lastTime !== null && timestamp !== this.lastTime) {
+          this.freq = 1.0 / ((timestamp - this.lastTime) / 1000);
+        }
+        this.lastTime = timestamp;
+        if (this.xPrev === null) {
+          this.xPrev = x;
+          this.dxPrev = 0;
+          return x;
+        }
+        const dx = (x - this.xPrev) * this.freq;
+        const adx = this._alpha(this.dCutoff);
+        this.dxPrev = adx * dx + (1 - adx) * this.dxPrev;
+        const cutoff = this.minCutoff + this.beta * Math.abs(this.dxPrev);
+        const ax = this._alpha(cutoff);
+        this.xPrev = ax * x + (1 - ax) * this.xPrev;
+        return this.xPrev;
+      }
+      reset() { this.xPrev = null; this.dxPrev = 0; this.lastTime = null; }
+    }
+
+    // Per-hand landmark smoothing buffers (21 landmarks × 3 axes each)
+    // Uses One Euro Filters for silky-smooth, zero-lag tracking
+    const HAND_FILTER_CONFIG = { freq: 90, minCutoff: 1.5, beta: 0.01, dCutoff: 1.0 };
+    let leftHandFilters = null;
+    let rightHandFilters = null;
+    let smoothedLeftHand = null;
+    let smoothedRightHand = null;
+
+    function createHandFilters() {
+      const filters = [];
+      for (let i = 0; i < 21; i++) {
+        filters.push({
+          x: new OneEuroFilter(HAND_FILTER_CONFIG.freq, HAND_FILTER_CONFIG.minCutoff, HAND_FILTER_CONFIG.beta, HAND_FILTER_CONFIG.dCutoff),
+          y: new OneEuroFilter(HAND_FILTER_CONFIG.freq, HAND_FILTER_CONFIG.minCutoff, HAND_FILTER_CONFIG.beta, HAND_FILTER_CONFIG.dCutoff),
+          z: new OneEuroFilter(HAND_FILTER_CONFIG.freq, HAND_FILTER_CONFIG.minCutoff, HAND_FILTER_CONFIG.beta, HAND_FILTER_CONFIG.dCutoff),
+        });
+      }
+      return filters;
+    }
+
+    function smoothHandLandmarks(raw, filters, timestamp) {
+      if (!filters) return raw;
+      return raw.map((lm, i) => ({
+        x: filters[i].x.filter(lm.x, timestamp),
+        y: filters[i].y.filter(lm.y, timestamp),
+        z: filters[i].z.filter(lm.z, timestamp),
+      }));
+    }
+    const MAX_PARTICLES = 200;
 
     /* ────────────────────────────────────────────
        State
@@ -537,18 +858,29 @@
     const EMA_ALPHA      = 0.45;
 
     // --- OS CONTROL STATE (normalized 0-1 coords) ---
-    let osSmoothedIndex  = null;  // EMA-smoothed index finger
-    let osSmoothedThumb  = null;  // EMA-smoothed thumb
-    let osSmoothedMiddle = null;  // EMA-smoothed middle finger
-    let osOutX = null;            // Final output X (second-pass smoothed)
-    let osOutY = null;            // Final output Y
+    // One Euro Filters for OS cursor (tighter params for mouse precision)
+    let osFilterX = new OneEuroFilter(90, 0.8, 0.004, 1.0);
+    let osFilterY = new OneEuroFilter(90, 0.8, 0.004, 1.0);
+    let osOutFilterX = new OneEuroFilter(90, 0.5, 0.003, 1.0);  // Second pass
+    let osOutFilterY = new OneEuroFilter(90, 0.5, 0.003, 1.0);
+    let osSmoothedIndex  = null;
+    let osSmoothedThumb  = null;
+    let osSmoothedMiddle = null;
+    let osOutX = null;
+    let osOutY = null;
     let osVelocity = 0;
     let lastMiddlePinchTime = 0;
     let middlePinchCount = 0;
     let wasMiddlePinching = false;
     let middlePinchReleaseTime = 0;
     let isScrolling = false;
-    let scrollBaseY = null; // Slightly lower for more stability
+    let scrollBaseY = null;
+
+    // Writing mode One Euro Filters
+    let writeIndexFilterX = new OneEuroFilter(90, 1.2, 0.008, 1.0);
+    let writeIndexFilterY = new OneEuroFilter(90, 1.2, 0.008, 1.0);
+    let writeThumbFilterX = new OneEuroFilter(90, 1.2, 0.008, 1.0);
+    let writeThumbFilterY = new OneEuroFilter(90, 1.2, 0.008, 1.0);
 
     function smoothPoint(prev, curr, alpha) {
         if (!prev) return { x: curr.x, y: curr.y };
@@ -831,6 +1163,8 @@
     const colorSection = document.getElementById("color-section");
     const clearSection = document.getElementById("clear-section");
     const colorRow     = document.getElementById("color-row");
+    const _handLEl     = document.getElementById('hand-l-status');
+    const _handREl     = document.getElementById('hand-r-status');
 
     /* ────────────────────────────────────────────
        Resize
@@ -863,9 +1197,9 @@
 
       hands.setOptions({
         maxNumHands: 2,
-        modelComplexity: 1, // Increased from 0 for better accuracy (90fps target)
-        minDetectionConfidence: 0.8, // Raised for much higher lock-on stability
-        minTrackingConfidence: 0.8,  // Raised to prevent snap-jitters
+        modelComplexity: 1,
+        minDetectionConfidence: 0.85,
+        minTrackingConfidence: 0.85,
       });
 
       hands.onResults(onResults);
@@ -884,16 +1218,35 @@
        MediaPipe results callback
     ──────────────────────────────────────────── */
     function onResults(results) {
-      leftHand  = null;
-      rightHand = null;
+      const now = performance.now();
+      let rawLeft = null, rawRight = null;
 
       if (results.multiHandLandmarks && results.multiHandedness) {
         for (let i = 0; i < results.multiHandLandmarks.length; i++) {
           const label = results.multiHandedness[i].label;
-          // Mirror: MediaPipe "Left" is viewer's right in mirrored feed
-          if (label === "Left")  rightHand = results.multiHandLandmarks[i];
-          if (label === "Right") leftHand  = results.multiHandLandmarks[i];
+          if (label === "Left")  rawRight = results.multiHandLandmarks[i];
+          if (label === "Right") rawLeft  = results.multiHandLandmarks[i];
         }
+      }
+
+      // Apply One Euro Filter smoothing to all landmarks
+      if (rawLeft) {
+        if (!leftHandFilters) leftHandFilters = createHandFilters();
+        smoothedLeftHand = smoothHandLandmarks(rawLeft, leftHandFilters, now);
+        leftHand = smoothedLeftHand;
+      } else {
+        leftHand = null;
+        // Reset filters after hand disappears so re-entry is instant
+        if (leftHandFilters) { leftHandFilters = null; smoothedLeftHand = null; }
+      }
+
+      if (rawRight) {
+        if (!rightHandFilters) rightHandFilters = createHandFilters();
+        smoothedRightHand = smoothHandLandmarks(rawRight, rightHandFilters, now);
+        rightHand = smoothedRightHand;
+      } else {
+        rightHand = null;
+        if (rightHandFilters) { rightHandFilters = null; smoothedRightHand = null; }
       }
     }
 
@@ -1067,6 +1420,7 @@
         
         strokes.push(currentStroke);
         bakedCtx.drawImage(drawCanvas, 0, 0);
+        updateStats(0, 0, 1);
       }
       
       drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
@@ -1164,15 +1518,19 @@
         return;
       }
 
-      // Pre-smooth the critical landmarks for this frame
+      // One Euro filtered landmarks for writing mode
       const rawThumb = lm(hand, 4);
       const rawIndex = lm(hand, 8);
+      const now = performance.now();
       
-      smoothedThumbPos = smoothPoint(smoothedThumbPos, rawThumb, EMA_ALPHA);
-      smoothedIndexPos = smoothPoint(smoothedIndexPos, rawIndex, EMA_ALPHA);
-
-      const thumbTip = smoothedThumbPos;
-      const indexTip = smoothedIndexPos;
+      const thumbTip = {
+        x: writeThumbFilterX.filter(rawThumb.x, now),
+        y: writeThumbFilterY.filter(rawThumb.y, now)
+      };
+      const indexTip = {
+        x: writeIndexFilterX.filter(rawIndex.x, now),
+        y: writeIndexFilterY.filter(rawIndex.y, now)
+      };
       
       // Use Normalized Distance for resolution-independent accuracy
       const pinchDistNorm = normDist(hand, 4, hand, 8);
@@ -1316,6 +1674,8 @@
     }
 
     function updateAndDrawParticles() {
+      if (particles.length === 0) return;
+      ctx.save();
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         p.x += p.vx;
@@ -1327,7 +1687,6 @@
 
         const alpha = p.life;
         const r = p.size * p.life;
-        ctx.save();
         ctx.globalAlpha = alpha;
         // Outer glow
         ctx.fillStyle = `rgba(${p.r},${p.g},${p.b},0.2)`;
@@ -1338,18 +1697,17 @@
         // Hot center
         ctx.fillStyle = `rgba(255,255,255,${0.7 * alpha})`;
         ctx.beginPath(); ctx.arc(p.x, p.y, r * 0.35, 0, Math.PI * 2); ctx.fill();
-        ctx.restore();
       }
+      ctx.restore();
     }
 
     /* ────────────────────────────────────────────
        Drawing helpers
     ──────────────────────────────────────────── */
 
-    // Tiny neon glow dot — NO shadowBlur for performance
-    function drawJointDot(pos, color, radius = 2.5, label = null) {
-      const pulse = 1 + 0.1 * Math.sin(frameTime * 8);
-      ctx.save();
+    // Tiny neon glow dot — batched, NO shadowBlur
+    function drawJointDot(pos, color, radius = 2.5) {
+      const pulse = _cachedPulse;
       // Soft bloom
       ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},0.06)`;
       ctx.beginPath(); ctx.arc(pos.x, pos.y, radius * 4 * pulse, 0, Math.PI * 2); ctx.fill();
@@ -1357,40 +1715,38 @@
       ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},0.45)`;
       ctx.beginPath(); ctx.arc(pos.x, pos.y, radius * 1.2 * pulse, 0, Math.PI * 2); ctx.fill();
       // White core
-      ctx.fillStyle = `rgba(255,255,255,0.85)`;
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
       ctx.beginPath(); ctx.arc(pos.x, pos.y, radius * 0.4, 0, Math.PI * 2); ctx.fill();
-      if (label) {
-        ctx.fillStyle = "rgba(255,255,255,0.5)";
-        ctx.font = "7px 'Space Grotesk', sans-serif";
-        ctx.fillText(label, pos.x + 8, pos.y - 8);
-      }
-      ctx.restore();
     }
 
-    // Draw skeleton chain — ultra-thin wireframe bones
+    // Pre-computed pulse value (updated once per frame)
+    let _cachedPulse = 1;
+
+    // Draw skeleton chain — batched ultra-thin wireframe bones
     function drawSkeleton(hand, color, thin = false) {
       ctx.save();
       const alpha = thin ? 0.1 : 0.2;
+      ctx.lineCap = 'round';
       
+      // Batch all bone segments into one path per layer
+      // Layer 1: core bones
+      ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${alpha})`;
+      ctx.lineWidth = thin ? 0.3 : 0.7;
+      ctx.beginPath();
       for (const chain of FINGER_CHAINS) {
         for (let j = 0; j < chain.length - 1; j++) {
           const p1 = lm(hand, chain[j]);
           const p2 = lm(hand, chain[j+1]);
-          
-          ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${alpha})`;
-          ctx.lineWidth = thin ? 0.3 : 0.7;
-          ctx.lineCap = "round";
-          ctx.beginPath();
           ctx.moveTo(p1.x, p1.y);
           ctx.lineTo(p2.x, p2.y);
-          ctx.stroke();
-          
-          // Faint glow layer
-          ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${alpha * 0.3})`;
-          ctx.lineWidth = thin ? 1 : 2;
-          ctx.stroke();
         }
       }
+      ctx.stroke();
+      
+      // Layer 2: glow (same path, just wider + more transparent)
+      ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${alpha * 0.3})`;
+      ctx.lineWidth = thin ? 1 : 2;
+      ctx.stroke();
       
       // Palm outline — faint mesh
       ctx.beginPath();
@@ -1405,7 +1761,7 @@
       ctx.restore();
     }
 
-    // Laser beam — thin neon line, NO shadowBlur for 60fps
+    // Laser beam — optimized: build path once, stroke 4 layers
     function drawLaserBeam(a, b, color, distPx) {
       const maxDist = canvas.width * 0.6;
       const t = Math.min(distPx / maxDist, 1);
@@ -1418,25 +1774,30 @@
       ctx.save();
       ctx.lineCap = 'round';
 
+      // Build path once, stroke multiple layers
+      const path = new Path2D();
+      path.moveTo(a.x, a.y);
+      path.quadraticCurveTo(midX, midY, b.x, b.y);
+
       // Wide soft glow
       ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${(0.06 - t * 0.03) * pulse})`;
       ctx.lineWidth = thickness + 14;
-      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.quadraticCurveTo(midX, midY, b.x, b.y); ctx.stroke();
+      ctx.stroke(path);
 
       // Mid glow
       ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${(0.25 - t * 0.1) * pulse})`;
       ctx.lineWidth = thickness + 4;
-      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.quadraticCurveTo(midX, midY, b.x, b.y); ctx.stroke();
+      ctx.stroke(path);
 
       // Core line
       ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${(0.9 - t * 0.2) * pulse})`;
       ctx.lineWidth = thickness;
-      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.quadraticCurveTo(midX, midY, b.x, b.y); ctx.stroke();
+      ctx.stroke(path);
 
       // White center hairline
       ctx.strokeStyle = `rgba(255,255,255,${(0.8 - t * 0.3) * pulse})`;
       ctx.lineWidth = Math.max(thickness * 0.3, 0.5);
-      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.quadraticCurveTo(midX, midY, b.x, b.y); ctx.stroke();
+      ctx.stroke(path);
 
       ctx.restore();
     }
@@ -1446,6 +1807,7 @@
     ──────────────────────────────────────────── */
     function render(timestamp) {
       frameTime = timestamp * 0.001;
+      _cachedPulse = 1 + 0.1 * Math.sin(frameTime * 8);
       const W = canvas.width, H = canvas.height;
 
       // Update FPS counter
@@ -1469,31 +1831,20 @@
         if (isDrawing) { isDrawing = false; lastDrawPos = null; smoothedDrawPos = null; }
           const hand = rightHand || leftHand;
           if (hand) {
-            // ── Raw normalized landmarks (0-1 range) ──
+            const now = performance.now();
+
+            // ── Raw normalized landmarks (already One Euro filtered from onResults) ──
             const rawIndex  = hand[8];
             const rawThumb  = hand[4];
             const rawMiddle = hand[12];
 
-            // ── Inline EMA smoothing for normalized coords ──
-            // (Can't use smoothPoint — it has pixel-space thresholds)
-            const OS_ALPHA = 0.45;
-            if (!osSmoothedIndex) osSmoothedIndex = { x: rawIndex.x, y: rawIndex.y };
-            else {
-              osSmoothedIndex.x += (rawIndex.x - osSmoothedIndex.x) * OS_ALPHA;
-              osSmoothedIndex.y += (rawIndex.y - osSmoothedIndex.y) * OS_ALPHA;
-            }
-            if (!osSmoothedThumb) osSmoothedThumb = { x: rawThumb.x, y: rawThumb.y };
-            else {
-              osSmoothedThumb.x += (rawThumb.x - osSmoothedThumb.x) * OS_ALPHA;
-              osSmoothedThumb.y += (rawThumb.y - osSmoothedThumb.y) * OS_ALPHA;
-            }
-            if (!osSmoothedMiddle) osSmoothedMiddle = { x: rawMiddle.x, y: rawMiddle.y };
-            else {
-              osSmoothedMiddle.x += (rawMiddle.x - osSmoothedMiddle.x) * OS_ALPHA;
-              osSmoothedMiddle.y += (rawMiddle.y - osSmoothedMiddle.y) * OS_ALPHA;
-            }
+            // ── OS-specific One Euro Filter pass (tighter params for mouse precision) ──
+            const smoothIdx = {
+              x: osFilterX.filter(rawIndex.x, now),
+              y: osFilterY.filter(rawIndex.y, now)
+            };
 
-            // ── Pinch detection (raw coords for responsiveness) ──
+            // ── Pinch detection (use pre-smoothed landmarks for stability) ──
             const indexPinchDist  = Math.sqrt(Math.pow(rawIndex.x - rawThumb.x, 2) + Math.pow(rawIndex.y - rawThumb.y, 2));
             const middlePinchDist = Math.sqrt(Math.pow(rawMiddle.x - rawThumb.x, 2) + Math.pow(rawMiddle.y - rawThumb.y, 2));
 
@@ -1504,55 +1855,30 @@
             let currentGesture = 'move';
             let scrollY = rawMiddle.y;
 
-            // MIDDLE + THUMB PINCH → Scroll or Right-click
+            // MIDDLE + THUMB PINCH → Scroll
             if (isMiddlePinching) {
               if (!wasMiddlePinching) {
-                const now = performance.now();
-                if (now - middlePinchReleaseTime < 400) {
-                  middlePinchCount++;
-                } else {
-                  middlePinchCount = 1;
-                }
-                lastMiddlePinchTime = now;
+                lastMiddlePinchTime = performance.now();
                 wasMiddlePinching = true;
                 scrollBaseY = rawMiddle.y;
               }
-              // Held > 150ms → scroll mode
-              if (performance.now() - lastMiddlePinchTime > 150 && middlePinchCount <= 1) {
+              if (performance.now() - lastMiddlePinchTime > 150) {
                 currentGesture = 'scroll';
                 isScrolling = true;
               }
             } else {
               if (wasMiddlePinching) {
-                middlePinchReleaseTime = performance.now();
-                if (middlePinchCount >= 2) {
-                  currentGesture = 'rightclick';
-                  middlePinchCount = 0;
-                }
                 wasMiddlePinching = false;
                 isScrolling = false;
                 scrollBaseY = null;
               }
             }
 
-            // ── Cursor output: mirror X, apply velocity-adaptive smoothing ──
-            const cursorX = 1 - osSmoothedIndex.x;
-            const cursorY = osSmoothedIndex.y;
-
-            // Second-pass output smoothing (deadzone for jitter)
-            if (osOutX === null) { osOutX = cursorX; osOutY = cursorY; }
-            const dx = cursorX - osOutX;
-            const dy = cursorY - osOutY;
-            const moveDist = Math.sqrt(dx * dx + dy * dy);
-
-            if (moveDist > 0.0008) {
-              // Velocity-adaptive: fast = responsive, slow = stable
-              const speed = Math.min(moveDist * 100, 10);
-              osVelocity = osVelocity * 0.5 + speed * 0.5;
-              const outAlpha = Math.max(0.25, Math.min(0.8, 0.3 + osVelocity * 0.06));
-              osOutX += dx * outAlpha;
-              osOutY += dy * outAlpha;
-            }
+            // ── Cursor output: mirror X, second-pass One Euro for final output ──
+            const cursorX = 1 - smoothIdx.x;
+            const cursorY = smoothIdx.y;
+            osOutX = osOutFilterX.filter(cursorX, now);
+            osOutY = osOutFilterY.filter(cursorY, now);
 
             // ── Send to backend ──
             if (osWebSocket && osWebSocket.readyState === WebSocket.OPEN) {
@@ -1595,17 +1921,16 @@
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, W, H);
       } else {
-        ctx.fillStyle = "#0a0a14";
+        ctx.fillStyle = "#050510";
         ctx.fillRect(0, 0, W, H);
 
-        // Clear camera feed (mirrored)
+        // Camera feed (mirrored) — no save/restore overhead
         if (video.readyState >= 2) {
-          ctx.save();
           ctx.globalAlpha = 0.75;
-          ctx.translate(W, 0);
-          ctx.scale(-1, 1);
+          ctx.setTransform(-1, 0, 0, 1, W, 0);
           ctx.drawImage(video, 0, 0, W, H);
-          ctx.restore();
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          ctx.globalAlpha = 1.0;
         }
       }
 
@@ -1625,52 +1950,36 @@
       if (leftHand) {
         // High-Tech Shadow Projection
         const wrist = lm(leftHand, 0);
-        ctx.save();
-        ctx.fillStyle = "rgba(0, 255, 229, 0.05)";
+        ctx.fillStyle = 'rgba(0, 255, 229, 0.05)';
         ctx.beginPath();
         ctx.ellipse(wrist.x, wrist.y + 40, 60, 20, 0, 0, Math.PI * 2);
         ctx.fill();
-        ctx.restore();
 
         drawSkeleton(leftHand, COLORS.cyan, isThin);
         for (const id of JOINT_IDS) {
           const p = lm(leftHand, id);
-          if (isThin) {
-            const isReadout = (id === 0); // Wrist data
-            drawJointDot(p, COLORS.cyan, 1, isReadout ? `L-WRIST:${Math.floor(p.x)},${Math.floor(p.y)}` : null);
-          } else {
-            const isTip = FINGERTIP_IDS.includes(id);
-            drawJointDot(p, COLORS.cyan, isTip ? 3.5 : 1.8);
-          }
+          const isTip = FINGERTIP_IDS.includes(id);
+          drawJointDot(p, COLORS.cyan, isThin ? 1 : (isTip ? 3.5 : 1.8));
         }
       }
 
-      // Update HUD Hand Status
-      const handLIndicator = document.getElementById('hand-l-status');
-      const handRIndicator = document.getElementById('hand-r-status');
-      if (handLIndicator) handLIndicator.classList.toggle('active', !!leftHand);
-      if (handRIndicator) handRIndicator.classList.toggle('active', !!rightHand);
+      // Update HUD Hand Status (cached refs)
+      _handLEl.classList.toggle('active', !!leftHand);
+      _handREl.classList.toggle('active', !!rightHand);
 
       if (rightHand) {
         // High-Tech Shadow Projection
         const wrist = lm(rightHand, 0);
-        ctx.save();
-        ctx.fillStyle = "rgba(255, 0, 255, 0.05)";
+        ctx.fillStyle = 'rgba(255, 0, 255, 0.05)';
         ctx.beginPath();
         ctx.ellipse(wrist.x, wrist.y + 40, 60, 20, 0, 0, Math.PI * 2);
         ctx.fill();
-        ctx.restore();
 
         drawSkeleton(rightHand, COLORS.magenta, isThin);
         for (const id of JOINT_IDS) {
           const p = lm(rightHand, id);
-          if (isThin) {
-            const isReadout = (id === 0);
-            drawJointDot(p, COLORS.magenta, 1, isReadout ? `R-WRIST:${Math.floor(p.x)},${Math.floor(p.y)}` : null);
-          } else {
-            const isTip = FINGERTIP_IDS.includes(id);
-            drawJointDot(p, COLORS.magenta, isTip ? 3.5 : 1.8);
-          }
+          const isTip = FINGERTIP_IDS.includes(id);
+          drawJointDot(p, COLORS.magenta, isThin ? 1 : (isTip ? 3.5 : 1.8));
         }
       }
 
@@ -1706,10 +2015,12 @@
             // Secondary burst with white for flash effect
             spawnParticles(mx, my, COLORS.white, 8);
             // playZap(i); // Muted
+            updateStats(0, 1, 0);
           }
         }
 
         activeBeamCount = beamsThisFrame;
+        if (beamsThisFrame > 0) updateStats(beamsThisFrame, 0, 0);
         // updateHum(activeBeamCount); // Muted
 
         // ── Bonus: cross-connect web for richer cradle look ──
@@ -1752,6 +2063,120 @@
     }
 
     /* ────────────────────────────────────────────
+       Gesture Stats
+    ──────────────────────────────────────────── */
+    let totalBeams = 0, totalTouches = 0, totalStrokesCount = 0;
+    const statBeamsEl = document.getElementById('stat-beams');
+    const statTouchesEl = document.getElementById('stat-touches');
+    const statStrokesEl = document.getElementById('stat-strokes');
+
+    function updateStats(beams, touches, strokesDelta) {
+      totalBeams += beams;
+      totalTouches += touches;
+      totalStrokesCount += strokesDelta;
+      if (statBeamsEl) statBeamsEl.textContent = totalBeams;
+      if (statTouchesEl) statTouchesEl.textContent = totalTouches;
+      if (statStrokesEl) statStrokesEl.textContent = totalStrokesCount;
+    }
+
+    /* ────────────────────────────────────────────
+       Toast Notification System
+    ──────────────────────────────────────────── */
+    const toastContainer = document.getElementById('toast-container');
+    function showToast(msg) {
+      const t = document.createElement('div');
+      t.className = 'toast';
+      t.textContent = msg;
+      toastContainer.appendChild(t);
+      setTimeout(() => t.remove(), 2600);
+    }
+
+    /* ────────────────────────────────────────────
+       Splash Particle Animation
+    ──────────────────────────────────────────── */
+    const splashCanvas = document.getElementById('splash-particles');
+    const splashCtx = splashCanvas.getContext('2d');
+    let splashAnimId = null;
+    function initSplashParticles() {
+      splashCanvas.width = window.innerWidth;
+      splashCanvas.height = window.innerHeight;
+      const pts = [];
+      for (let i = 0; i < 60; i++) {
+        pts.push({
+          x: Math.random() * splashCanvas.width,
+          y: Math.random() * splashCanvas.height,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: (Math.random() - 0.5) * 0.4,
+          r: 1 + Math.random() * 2,
+          a: 0.2 + Math.random() * 0.4,
+        });
+      }
+      function animSplash() {
+        splashCtx.clearRect(0, 0, splashCanvas.width, splashCanvas.height);
+        for (const p of pts) {
+          p.x += p.vx; p.y += p.vy;
+          if (p.x < 0) p.x = splashCanvas.width;
+          if (p.x > splashCanvas.width) p.x = 0;
+          if (p.y < 0) p.y = splashCanvas.height;
+          if (p.y > splashCanvas.height) p.y = 0;
+          splashCtx.beginPath();
+          splashCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          splashCtx.fillStyle = `rgba(100,180,255,${p.a})`;
+          splashCtx.fill();
+        }
+        // Draw connection lines between nearby particles
+        for (let i = 0; i < pts.length; i++) {
+          for (let j = i + 1; j < pts.length; j++) {
+            const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
+            const d = Math.sqrt(dx*dx + dy*dy);
+            if (d < 120) {
+              splashCtx.beginPath();
+              splashCtx.moveTo(pts[i].x, pts[i].y);
+              splashCtx.lineTo(pts[j].x, pts[j].y);
+              splashCtx.strokeStyle = `rgba(100,180,255,${0.08 * (1 - d/120)})`;
+              splashCtx.lineWidth = 0.5;
+              splashCtx.stroke();
+            }
+          }
+        }
+        splashAnimId = requestAnimationFrame(animSplash);
+      }
+      animSplash();
+    }
+    initSplashParticles();
+    window.addEventListener('resize', () => {
+      if (splashCanvas) { splashCanvas.width = window.innerWidth; splashCanvas.height = window.innerHeight; }
+    });
+
+    /* ────────────────────────────────────────────
+       Screenshot & Fullscreen
+    ──────────────────────────────────────────── */
+    function takeScreenshot() {
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = canvas.width;
+      tempCanvas.height = canvas.height;
+      const tempCtx = tempCanvas.getContext('2d');
+      tempCtx.drawImage(canvas, 0, 0);
+      tempCtx.drawImage(bakedCanvas, 0, 0);
+      tempCtx.drawImage(drawCanvas, 0, 0);
+      const link = document.createElement('a');
+      link.download = `laser-hands-${Date.now()}.png`;
+      link.href = tempCanvas.toDataURL('image/png');
+      link.click();
+      showToast('📸 Screenshot saved!');
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+        showToast('⛶ Fullscreen enabled');
+      } else {
+        document.exitFullscreen();
+        showToast('⛶ Exited fullscreen');
+      }
+    }
+
+    /* ────────────────────────────────────────────
        Boot
     ──────────────────────────────────────────── */
     startBtn.addEventListener("click", async () => {
@@ -1764,13 +2189,18 @@
         await video.play();
 
         splash.classList.add("hidden");
+        if (splashAnimId) { cancelAnimationFrame(splashAnimId); splashAnimId = null; }
         hud.style.display = "block";
         settingsBtn.style.display = "block";
+        document.getElementById('toolbar').classList.add('visible');
 
         // initAudio(); // Muted at user request
         initMediaPipe();
         initSettingsPanel();
+        initToolbar();
+        initKeyboardShortcuts();
         requestAnimationFrame(render);
+        showToast('✅ Camera connected — tracking started');
       } catch (err) {
         alert("Camera access is required.\n\n" + err.message);
       }
@@ -1966,6 +2396,46 @@ if %errorlevel% neq 0 (
         if (!settingsPanel.contains(e.target) && e.target !== settingsBtn) {
           settingsPanel.classList.remove('visible');
           settingsBtn.classList.remove('open');
+        }
+      });
+    }
+
+    /* ────────────────────────────────────────────
+       Toolbar (Fullscreen, Screenshot, Shortcuts)
+    ──────────────────────────────────────────── */
+    function initToolbar() {
+      document.getElementById('fullscreen-btn').addEventListener('click', toggleFullscreen);
+      document.getElementById('screenshot-btn').addEventListener('click', takeScreenshot);
+      document.getElementById('shortcuts-btn').addEventListener('click', () => {
+        document.getElementById('shortcuts-hint').classList.toggle('visible');
+      });
+    }
+
+    /* ────────────────────────────────────────────
+       Keyboard Shortcuts
+    ──────────────────────────────────────────── */
+    function initKeyboardShortcuts() {
+      document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        const key = e.key.toLowerCase();
+        if (key === '1') {
+          document.getElementById('mode-laser').click();
+          showToast('⚡ Laser Mode');
+        } else if (key === '2') {
+          document.getElementById('mode-write').click();
+          showToast('✏️ Writing Mode');
+        } else if (key === '3') {
+          document.getElementById('mode-os').click();
+          showToast('🖱️ OS Control Mode');
+        } else if (key === 'f') {
+          toggleFullscreen();
+        } else if (key === 's') {
+          e.preventDefault();
+          takeScreenshot();
+        } else if (key === 'c') {
+          clearDrawCanvas();
+          spawnParticles(canvas.width / 2, canvas.height / 2, COLORS.white, 40);
+          showToast('🗑️ Canvas cleared');
         }
       });
     }
