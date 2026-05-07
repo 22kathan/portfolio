@@ -101,6 +101,19 @@ body { display: flex; min-height: 100vh; min-height: 100dvh; width: 100%; overfl
 .p-link { font-family: var(--font-mono); color: var(--text-main); font-size: 0.85rem; text-decoration: underline; text-underline-offset: 4px; transition: 0.3s; }
 .p-link:hover { color: var(--accent); }
 
+/* Certifications */
+.certs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+.cert-card { background: var(--bg-panel); border: 1px solid var(--border); padding: 30px; border-radius: 8px; display: flex; align-items: center; gap: 25px; transition: 0.3s; position: relative; overflow: hidden; }
+.cert-card::before { content: ''; position: absolute; top: 0; left: 0; width: 2px; height: 100%; background: var(--accent); opacity: 0; transition: 0.3s; }
+.cert-card:hover { border-color: #333; transform: translateX(10px); background: rgba(255,255,255,0.02); }
+.cert-card:hover::before { opacity: 1; }
+.cert-icon { width: 50px; height: 50px; background: rgba(0, 255, 204, 0.05); border: 1px solid rgba(0, 255, 204, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--accent); flex-shrink: 0; }
+.cert-info { flex: 1; }
+.cert-title { font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 5px; color: var(--text-main); }
+.cert-issuer { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; }
+.cert-link { font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: 0.3s; }
+.cert-link:hover { border-bottom-color: var(--accent); }
+
 /* Contact */
 .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
 .contact-info p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 30px; }
@@ -155,4 +168,7 @@ body { display: flex; min-height: 100vh; min-height: 100dvh; width: 100%; overfl
   .about-stats { flex-direction: column; }
   .stat-card { flex: 1 1 100%; }
   .p-links-row { flex-direction: column; gap: 10px; }
+  .cert-card { gap: 15px; padding: 20px; }
+  .cert-icon { width: 40px; height: 40px; }
+  .cert-title { font-size: 1.1rem; }
 }
