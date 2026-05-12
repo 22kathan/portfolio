@@ -172,3 +172,6 @@ body { display: flex; min-height: 100vh; min-height: 100dvh; width: 100%; overfl
   .cert-icon { width: 40px; height: 40px; }
   .cert-title { font-size: 1.1rem; }
 }
+
+.p-link-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border: 1px solid var(--border); border-radius: 4px; text-decoration: none !important; background: rgba(255,255,255,0.03); margin-top: 5px; }
+.p-link-btn:hover { background: var(--accent); color: #000 !important; border-color: var(--accent); }
