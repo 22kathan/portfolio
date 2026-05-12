@@ -595,31 +595,6 @@ body {
     color: var(--text-muted);
 }
 
-/* ─── Insights Section ─── */
-.charts-container {
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-}
-
-.chart-wrapper {
-    background: rgba(20, 28, 48, 0.4);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-sm);
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.chart-wrapper h3 {
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 20px;
-    text-align: center;
-}
-
 /* ─── Responsive ─── */
 @media (max-width: 640px) {
     .header {

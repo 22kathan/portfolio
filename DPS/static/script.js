@@ -53,7 +53,7 @@ form.addEventListener("submit", async (e) => {
     const payload = {};
     const checkedGender = document.querySelector('input[name="Gender"]:checked');
     const gender = checkedGender ? checkedGender.value : "female";
-    
+
     FEATURES.forEach((f) => {
         const input = document.getElementById(f);
         if (f === "Pregnancies" && gender === "male") {
@@ -66,10 +66,10 @@ form.addEventListener("submit", async (e) => {
     try {
         // Collect feature values in an array matching FEATURES order
         const feature_values = FEATURES.map(f => payload[f]);
-        
+
         // Use local JS model inference (from model_inference.js)
         const result = predict_single(feature_values, FEATURES);
-        
+
         showResult(result);
     } catch (error) {
         alert("⚠ Error: " + error.message);
@@ -200,114 +200,3 @@ function hexToRgba(hex, alpha) {
     const b = parseInt(hex.slice(5, 7), 16);
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
-
-// ─── Chart.js Insights ───
-function renderInsights() {
-    if (typeof modelMetrics === "undefined" || !modelMetrics || modelMetrics.length === 0) return;
-
-    // Common chart options for Dark Tech theme
-    Chart.defaults.color = '#8899b8';
-    Chart.defaults.font.family = 'Inter, sans-serif';
-    Chart.defaults.scale.grid.color = 'rgba(99, 140, 255, 0.08)';
-
-    const labels = modelMetrics.map(m => m.Model);
-    
-    // 1. Train vs Test Accuracy
-    const trainAcc = modelMetrics.map(m => m["Train Accuracy"]);
-    const testAcc = modelMetrics.map(m => m["Accuracy"]);
-
-    const ctxTrainTest = document.getElementById('trainTestChart').getContext('2d');
-    new Chart(ctxTrainTest, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [
-                {
-                    label: 'Train Accuracy (%)',
-                    data: trainAcc,
-                    backgroundColor: 'rgba(34, 211, 238, 0.6)',
-                    borderColor: 'rgba(34, 211, 238, 1)',
-                    borderWidth: 1,
-                    borderRadius: 4
-                },
-                {
-                    label: 'Test Accuracy (%)',
-                    data: testAcc,
-                    backgroundColor: 'rgba(167, 139, 250, 0.6)',
-                    borderColor: 'rgba(167, 139, 250, 1)',
-                    borderWidth: 1,
-                    borderRadius: 4
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: false,
-                    min: 50,
-                    max: 100
-                }
-            },
-            plugins: {
-                legend: {
-                    position: 'top',
-                }
-            }
-        }
-    });
-
-    // 2. ML Models Accuracy (All metrics radar or another bar)
-    // Let's do a grouped bar for Accuracy, Precision, Recall, F1
-    const precision = modelMetrics.map(m => m["Precision"]);
-    const recall = modelMetrics.map(m => m["Recall"]);
-    const f1 = modelMetrics.map(m => m["F1-Score"]);
-
-    const ctxAcc = document.getElementById('accuracyChart').getContext('2d');
-    new Chart(ctxAcc, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [
-                {
-                    label: 'Accuracy',
-                    data: testAcc,
-                    backgroundColor: 'rgba(77, 139, 255, 0.7)'
-                },
-                {
-                    label: 'Precision',
-                    data: precision,
-                    backgroundColor: 'rgba(0, 230, 118, 0.7)'
-                },
-                {
-                    label: 'Recall',
-                    data: recall,
-                    backgroundColor: 'rgba(255, 171, 0, 0.7)'
-                },
-                {
-                    label: 'F1-Score',
-                    data: f1,
-                    backgroundColor: 'rgba(255, 23, 68, 0.7)'
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: false,
-                    min: 40,
-                    max: 100
-                }
-            },
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                }
-            }
-        }
-    });
-}
-
-// Initialize Charts on load
-document.addEventListener("DOMContentLoaded", renderInsights);
