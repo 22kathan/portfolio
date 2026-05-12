@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -47,11 +48,13 @@
 
             <form id="prediction-form" class="form-grid">
                 <div class="input-group" id="group-gender">
-                    <label for="Gender">Gender</label>
-                    <select id="Gender" name="Gender" required>
-                        <option value="female">Female</option>
-                        <option value="male">Male</option>
-                    </select>
+                    <label>Gender</label>
+                    <div class="segmented-control">
+                        <input type="radio" id="gender-female" name="Gender" value="female" checked>
+                        <label for="gender-female">Female</label>
+                        <input type="radio" id="gender-male" name="Gender" value="male">
+                        <label for="gender-male">Male</label>
+                    </div>
                     <span class="input-hint">Biological sex</span>
                 </div>
                 <div class="input-group" id="group-pregnancies">
@@ -151,6 +154,25 @@
             <button class="btn-reset" id="btn-reset" onclick="resetForm()">
                 ← New Assessment
             </button>
+        </section>
+
+        <!-- Insights Section -->
+        <section class="card card--insights" id="insights-section">
+            <div class="card__header">
+                <h2 class="card__title">Model Insights</h2>
+                <p class="card__desc">Performance metrics and accuracy analysis of the underlying ML models.</p>
+            </div>
+            
+            <div class="charts-container">
+                <div class="chart-wrapper">
+                    <h3>Train vs Test Accuracy</h3>
+                    <canvas id="trainTestChart"></canvas>
+                </div>
+                <div class="chart-wrapper">
+                    <h3>ML Models Accuracy</h3>
+                    <canvas id="accuracyChart"></canvas>
+                </div>
+            </div>
         </section>
 
     </main>

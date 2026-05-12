@@ -4,6 +4,50 @@
 const scalerMean = [3.8192182410423454, 121.67100977198697, 72.1400651465798, 29.042345276872965, 137.70521172638436, 32.44674267100978, 0.477428338762215, 33.36644951140065];
 const scalerScale = [3.311448216586372, 29.979350764655706, 12.2651192609104, 8.884611281688818, 78.70059996835236, 6.8185831159432295, 0.33003119077476745, 11.82379790254742];
 
+// Model Metrics for Insights
+const modelMetrics = [
+    {
+        "Model": "KNN",
+        "Train Accuracy": 100.0,
+        "Accuracy": 68.18,
+        "Precision": 53.42,
+        "Recall": 72.22,
+        "F1-Score": 61.42,
+        "ROC-AUC": 77.44,
+        "Time (s)": 0.001
+    },
+    {
+        "Model": "Random Forest",
+        "Train Accuracy": 95.62,
+        "Accuracy": 74.03,
+        "Precision": 60.61,
+        "Recall": 74.07,
+        "F1-Score": 66.67,
+        "ROC-AUC": 81.67,
+        "Time (s)": 0.097
+    },
+    {
+        "Model": "SVM",
+        "Train Accuracy": 90.25,
+        "Accuracy": 70.78,
+        "Precision": 57.38,
+        "Recall": 64.81,
+        "F1-Score": 60.87,
+        "ROC-AUC": 79.93,
+        "Time (s)": 0.05
+    },
+    {
+        "Model": "Naive Bayes",
+        "Train Accuracy": 73.12,
+        "Accuracy": 69.48,
+        "Precision": 55.38,
+        "Recall": 66.67,
+        "F1-Score": 60.5,
+        "ROC-AUC": 77.41,
+        "Time (s)": 0.001
+    }
+];
+
 function scaleFeatures(features) {
     let scaled = [];
     for (let i = 0; i < features.length; i++) {

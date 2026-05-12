@@ -10,18 +10,20 @@ const btnPredict = document.getElementById("btn-predict");
 const inputSection = document.getElementById("input-section");
 const resultSection = document.getElementById("result-section");
 
-const genderSelect = document.getElementById("Gender");
+const genderRadios = document.querySelectorAll('input[name="Gender"]');
 const groupPregnancies = document.getElementById("group-pregnancies");
 const pregnanciesInput = document.getElementById("Pregnancies");
 
-if (genderSelect) {
-    genderSelect.addEventListener("change", (e) => {
-        if (e.target.value === "male") {
-            groupPregnancies.style.display = "none";
-            pregnanciesInput.value = "0";
-        } else {
-            groupPregnancies.style.display = "flex";
-        }
+if (genderRadios.length > 0) {
+    genderRadios.forEach(radio => {
+        radio.addEventListener("change", (e) => {
+            if (e.target.value === "male") {
+                groupPregnancies.style.display = "none";
+                pregnanciesInput.value = "0";
+            } else {
+                groupPregnancies.style.display = "flex";
+            }
+        });
     });
 }
 
@@ -49,7 +51,8 @@ form.addEventListener("submit", async (e) => {
 
     // Collect form data
     const payload = {};
-    const gender = genderSelect ? genderSelect.value : "female";
+    const checkedGender = document.querySelector('input[name="Gender"]:checked');
+    const gender = checkedGender ? checkedGender.value : "female";
     
     FEATURES.forEach((f) => {
         const input = document.getElementById(f);
@@ -197,3 +200,114 @@ function hexToRgba(hex, alpha) {
     const b = parseInt(hex.slice(5, 7), 16);
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
+
+// ─── Chart.js Insights ───
+function renderInsights() {
+    if (typeof modelMetrics === "undefined" || !modelMetrics || modelMetrics.length === 0) return;
+
+    // Common chart options for Dark Tech theme
+    Chart.defaults.color = '#8899b8';
+    Chart.defaults.font.family = 'Inter, sans-serif';
+    Chart.defaults.scale.grid.color = 'rgba(99, 140, 255, 0.08)';
+
+    const labels = modelMetrics.map(m => m.Model);
+    
+    // 1. Train vs Test Accuracy
+    const trainAcc = modelMetrics.map(m => m["Train Accuracy"]);
+    const testAcc = modelMetrics.map(m => m["Accuracy"]);
+
+    const ctxTrainTest = document.getElementById('trainTestChart').getContext('2d');
+    new Chart(ctxTrainTest, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Train Accuracy (%)',
+                    data: trainAcc,
+                    backgroundColor: 'rgba(34, 211, 238, 0.6)',
+                    borderColor: 'rgba(34, 211, 238, 1)',
+                    borderWidth: 1,
+                    borderRadius: 4
+                },
+                {
+                    label: 'Test Accuracy (%)',
+                    data: testAcc,
+                    backgroundColor: 'rgba(167, 139, 250, 0.6)',
+                    borderColor: 'rgba(167, 139, 250, 1)',
+                    borderWidth: 1,
+                    borderRadius: 4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    min: 50,
+                    max: 100
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            }
+        }
+    });
+
+    // 2. ML Models Accuracy (All metrics radar or another bar)
+    // Let's do a grouped bar for Accuracy, Precision, Recall, F1
+    const precision = modelMetrics.map(m => m["Precision"]);
+    const recall = modelMetrics.map(m => m["Recall"]);
+    const f1 = modelMetrics.map(m => m["F1-Score"]);
+
+    const ctxAcc = document.getElementById('accuracyChart').getContext('2d');
+    new Chart(ctxAcc, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Accuracy',
+                    data: testAcc,
+                    backgroundColor: 'rgba(77, 139, 255, 0.7)'
+                },
+                {
+                    label: 'Precision',
+                    data: precision,
+                    backgroundColor: 'rgba(0, 230, 118, 0.7)'
+                },
+                {
+                    label: 'Recall',
+                    data: recall,
+                    backgroundColor: 'rgba(255, 171, 0, 0.7)'
+                },
+                {
+                    label: 'F1-Score',
+                    data: f1,
+                    backgroundColor: 'rgba(255, 23, 68, 0.7)'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    min: 40,
+                    max: 100
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                }
+            }
+        }
+    });
+}
+
+// Initialize Charts on load
+document.addEventListener("DOMContentLoaded", renderInsights);
