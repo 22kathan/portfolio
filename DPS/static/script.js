@@ -10,6 +10,21 @@ const btnPredict = document.getElementById("btn-predict");
 const inputSection = document.getElementById("input-section");
 const resultSection = document.getElementById("result-section");
 
+const genderSelect = document.getElementById("Gender");
+const groupPregnancies = document.getElementById("group-pregnancies");
+const pregnanciesInput = document.getElementById("Pregnancies");
+
+if (genderSelect) {
+    genderSelect.addEventListener("change", (e) => {
+        if (e.target.value === "male") {
+            groupPregnancies.style.display = "none";
+            pregnanciesInput.value = "0";
+        } else {
+            groupPregnancies.style.display = "flex";
+        }
+    });
+}
+
 const gaugeFill = document.getElementById("gauge-fill");
 const gaugeValue = document.getElementById("gauge-value");
 const gaugeLabel = document.getElementById("gauge-label");
@@ -34,9 +49,15 @@ form.addEventListener("submit", async (e) => {
 
     // Collect form data
     const payload = {};
+    const gender = genderSelect ? genderSelect.value : "female";
+    
     FEATURES.forEach((f) => {
         const input = document.getElementById(f);
-        payload[f] = parseFloat(input.value) || 0;
+        if (f === "Pregnancies" && gender === "male") {
+            payload[f] = 0;
+        } else {
+            payload[f] = parseFloat(input.value) || 0;
+        }
     });
 
     try {
