@@ -97,6 +97,9 @@ body { display: flex; min-height: 100vh; min-height: 100dvh; width: 100%; overfl
 .p-meta { font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent); margin-bottom: 10px; display: block; }
 .p-title { font-family: var(--font-display); font-size: 1.6rem; margin-bottom: 15px; }
 .p-desc { color: var(--text-muted); margin-bottom: 25px; font-size: 0.95rem; flex: 1; }
+.p-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 25px; }
+.p-tag { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); background: rgba(0, 255, 204, 0.05); border: 1px solid rgba(0, 255, 204, 0.2); padding: 4px 12px; border-radius: 50px; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.3s; cursor: default; }
+.p-tag:hover { background: rgba(0, 255, 204, 0.15); border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0, 255, 204, 0.1); }
 .p-links-row { display: flex; gap: 15px; flex-wrap: wrap; }
 .p-link { font-family: var(--font-mono); color: var(--text-main); font-size: 0.85rem; text-decoration: underline; text-underline-offset: 4px; transition: 0.3s; }
 .p-link:hover { color: var(--accent); }
