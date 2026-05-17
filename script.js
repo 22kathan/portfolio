@@ -206,4 +206,33 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // --- Mind-Blowing 3D Hover & Glow Effect for Tech Stack Cards ---
+    const skillCards = document.querySelectorAll('.skill-category-card');
+    skillCards.forEach(card => {
+        card.addEventListener('mousemove', e => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // Calculate tilt based on mouse position relative to center
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            // Max tilt of 10 degrees for a subtle but noticeable 3D effect
+            const rotateX = ((y - centerY) / centerY) * -10; 
+            const rotateY = ((x - centerX) / centerX) * 10;
+
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+            card.style.setProperty('--rotate-x', `${rotateX}deg`);
+            card.style.setProperty('--rotate-y', `${rotateY}deg`);
+        });
+
+        card.addEventListener('mouseleave', () => {
+            // Reset to default on mouse out
+            card.style.setProperty('--rotate-x', `0deg`);
+            card.style.setProperty('--rotate-y', `0deg`);
+        });
+    });
+
 });

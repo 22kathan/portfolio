@@ -91,16 +91,16 @@ body { display: flex; min-height: 100vh; min-height: 100dvh; width: 100%; overfl
     border-left: 1px solid rgba(255, 255, 255, 0.1);
     padding: 30px; 
     border-radius: 16px; 
-    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1); 
+    transition: transform 0.1s ease-out, box-shadow 0.3s ease, border-color 0.3s ease;
     position: relative; 
     overflow: hidden;
     box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
     transform-style: preserve-3d;
+    transform: perspective(1000px) rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg));
 }
 .skill-category-card:hover { 
-    border-color: rgba(0, 255, 204, 0.3); 
-    transform: translateY(-10px) rotateX(2deg) rotateY(-2deg); 
-    box-shadow: 20px 30px 50px rgba(0,0,0,0.5), 0 0 20px rgba(0, 255, 204, 0.1), inset 0 1px 0 rgba(255,255,255,0.2); 
+    border-color: rgba(0, 255, 204, 0.4); 
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 30px rgba(0, 255, 204, 0.15), inset 0 1px 0 rgba(255,255,255,0.2); 
 }
 .skill-category-card::before { 
     content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; 
@@ -108,10 +108,16 @@ body { display: flex; min-height: 100vh; min-height: 100dvh; width: 100%; overfl
     transform: skewX(-25deg); transition: 0.75s; z-index: 1; pointer-events: none;
 }
 .skill-category-card:hover::before { left: 125%; }
+.skill-category-card::after {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 255, 204, 0.15), transparent 40%);
+    z-index: 0; pointer-events: none; opacity: 0; transition: opacity 0.4s ease;
+}
+.skill-category-card:hover::after { opacity: 1; }
 .skill-category-title { 
     font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 25px; 
     color: var(--text-main); display: flex; align-items: center; gap: 12px; letter-spacing: -0.5px;
-    transform: translateZ(20px); 
+    transform: translateZ(30px); position: relative; z-index: 2;
 }
 .skill-category-title::before { 
     content: ''; display: block; width: 10px; height: 10px; 
