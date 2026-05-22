@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
             .catch(() => { btn.innerHTML = 'Error Sending'; })
-            .then(() => { 
+            .finally(() => { 
                 setTimeout(() => { 
                     btn.innerHTML = orig; 
                     btn.disabled = false; 
