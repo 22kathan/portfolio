@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebar = document.getElementById('sidebar');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
     const navLinks = document.querySelectorAll('.nav-link');
-    const dockItems = document.querySelectorAll('.dock-item[href]');
+    const dotLinks = document.querySelectorAll('.dot-link');
+    const topbar = document.getElementById('topbar');
 
     if (mobileToggle && sidebar) {
         mobileToggle.addEventListener('click', () => {
@@ -23,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Close sidebar on any nav link click (sidebar + dock)
+    // Close sidebar on any nav link click
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
             if (sidebar) sidebar.classList.remove('open');
@@ -70,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
 
-    // Active Navigation State — Dock + Sidebar sync
+    // Active Navigation — Dot Nav + Sidebar + Topbar scroll
     const sections = document.querySelectorAll('.section');
 
     window.addEventListener('scroll', () => {
@@ -90,13 +91,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Update dock items
-        dockItems.forEach(item => {
-            item.classList.remove('active');
-            if (item.getAttribute('href') === `#${current}`) {
-                item.classList.add('active');
+        // Update dot nav
+        dotLinks.forEach(dot => {
+            dot.classList.remove('active');
+            if (dot.getAttribute('href') === `#${current}`) {
+                dot.classList.add('active');
             }
         });
+
+        // Topbar scroll state
+        if (topbar) {
+            if (window.scrollY > 80) {
+                topbar.classList.add('scrolled');
+            } else {
+                topbar.classList.remove('scrolled');
+            }
+        }
     });
 
     // --- Interactive 3D Particle Network Canvas Effect ---

@@ -10,46 +10,30 @@
 <body>
     <!-- Background Canvas -->
     <canvas id="bgCanvas"></canvas>
-    
-    <!-- Bottom Floating Dock Navigation -->
-    <nav class="dock-wrapper" id="dockNav">
-        <div class="dock-glow"></div>
-        <div class="dock" id="dock">
-            <a href="#hero" class="dock-item active" data-tooltip="Home">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>
-            </a>
-            <a href="#about" class="dock-item" data-tooltip="About">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zm-4 7a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-            </a>
-            <a href="#experience" class="dock-item" data-tooltip="Experience">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 13.255A23.193 23.193 0 0112 15c-3.183 0-6.22-.64-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m8 0H8m8 0h2a2 2 0 012 2v6.5M8 6H6a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2v-1.5"/></svg>
-            </a>
-            <a href="#skills" class="dock-item" data-tooltip="Skills">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
-            </a>
-            <div class="dock-divider"></div>
-            <a href="#certifications" class="dock-item" data-tooltip="Certs">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
-            </a>
-            <a href="#projects" class="dock-item" data-tooltip="Projects">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6a2 2 0 012-2h2l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"/><path d="M14 11l-2 2-2-2"/></svg>
-            </a>
-            <a href="#contact" class="dock-item" data-tooltip="Contact">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-            </a>
-            <div class="dock-divider"></div>
-            <a href="Resume.pdf" class="dock-item dock-item-accent" data-tooltip="Resume" download>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            </a>
-        </div>
+
+    <!-- Minimal Top Bar -->
+    <header class="topbar" id="topbar">
+        <span class="topbar-name">kathan<span class="topbar-dot">.</span></span>
+        <a href="Resume.pdf" class="topbar-resume" download>Resume <span class="topbar-arrow">↓</span></a>
+    </header>
+
+    <!-- Vertical Dot Navigator (right edge) -->
+    <nav class="dot-nav" id="dotNav">
+        <a href="#hero" class="dot-link active" data-section="Home"><span class="dot"></span></a>
+        <a href="#about" class="dot-link" data-section="About"><span class="dot"></span></a>
+        <a href="#experience" class="dot-link" data-section="Experience"><span class="dot"></span></a>
+        <a href="#skills" class="dot-link" data-section="Skills"><span class="dot"></span></a>
+        <a href="#certifications" class="dot-link" data-section="Certs"><span class="dot"></span></a>
+        <a href="#projects" class="dot-link" data-section="Projects"><span class="dot"></span></a>
+        <a href="#contact" class="dot-link" data-section="Contact"><span class="dot"></span></a>
     </nav>
 
-    <!-- Mobile Toggle (top-right) -->
+    <!-- Mobile Toggle -->
     <button class="mobile-toggle" id="mobileToggle">
         <span></span><span></span><span></span>
     </button>
 
-    <!-- Sidebar Drawer (Mobile Overlay) -->
+    <!-- Mobile Drawer -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
             <span class="logo"><span class="highlight">kathan</span></span>
