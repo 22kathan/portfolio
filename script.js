@@ -1,19 +1,34 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Mobile Menu
+    // Mobile Sidebar Drawer
     const mobileToggle = document.getElementById('mobileToggle');
     const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
     const navLinks = document.querySelectorAll('.nav-link');
+    const dockItems = document.querySelectorAll('.dock-item[href]');
 
-    mobileToggle.addEventListener('click', () => {
-        sidebar.classList.toggle('open');
-        mobileToggle.classList.toggle('active');
-    });
+    if (mobileToggle && sidebar) {
+        mobileToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            mobileToggle.classList.toggle('active');
+            if (sidebarOverlay) sidebarOverlay.classList.toggle('active');
+        });
+    }
 
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', () => {
             sidebar.classList.remove('open');
             mobileToggle.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+        });
+    }
+
+    // Close sidebar on any nav link click (sidebar + dock)
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (sidebar) sidebar.classList.remove('open');
+            if (mobileToggle) mobileToggle.classList.remove('active');
+            if (sidebarOverlay) sidebarOverlay.classList.remove('active');
         });
     });
 
@@ -55,8 +70,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
 
-    // Active Navigation State
+    // Active Navigation State — Dock + Sidebar sync
     const sections = document.querySelectorAll('.section');
+
     window.addEventListener('scroll', () => {
         let current = '';
         sections.forEach(section => {
@@ -66,10 +82,19 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // Update sidebar nav links
         navLinks.forEach(link => {
             link.classList.remove('active');
             if (link.getAttribute('href') === `#${current}`) {
                 link.classList.add('active');
+            }
+        });
+
+        // Update dock items
+        dockItems.forEach(item => {
+            item.classList.remove('active');
+            if (item.getAttribute('href') === `#${current}`) {
+                item.classList.add('active');
             }
         });
     });
