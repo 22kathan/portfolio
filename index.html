@@ -3,70 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Portfolio | My journey in tech</title>
+    <title>Kathan Gadhiya — AI & Data Portfolio</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Background Canvas -->
     <canvas id="bgCanvas"></canvas>
 
-    <!-- Minimal Top Bar -->
-    <header class="topbar" id="topbar">
-        <a href="Resume.pdf" class="topbar-resume" download>Resume <span class="topbar-arrow">↓</span></a>
+    <!-- Professional Top Navbar -->
+    <header class="navbar" id="navbar">
+        <a href="#hero" class="navbar-brand">kathan<span class="accent-dot">.</span></a>
+        <nav class="navbar-links" id="navLinks">
+            <a href="#about" class="nav-link">About</a>
+            <a href="#experience" class="nav-link">Experience</a>
+            <a href="#skills" class="nav-link">Skills</a>
+            <a href="#projects" class="nav-link">Projects</a>
+            <a href="#contact" class="nav-link">Contact</a>
+            <a href="Resume.pdf" class="nav-cta" download>Resume ↓</a>
+        </nav>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
     </header>
 
-    <!-- Vertical Dot Navigator (right edge) -->
-    <nav class="dot-nav" id="dotNav">
-        <a href="#hero" class="dot-link active" data-section="Home"><span class="dot"></span></a>
-        <a href="#about" class="dot-link" data-section="About"><span class="dot"></span></a>
-        <a href="#experience" class="dot-link" data-section="Experience"><span class="dot"></span></a>
-        <a href="#skills" class="dot-link" data-section="Skills"><span class="dot"></span></a>
-        <a href="#certifications" class="dot-link" data-section="Certs"><span class="dot"></span></a>
-        <a href="#projects" class="dot-link" data-section="Projects"><span class="dot"></span></a>
-        <a href="#contact" class="dot-link" data-section="Contact"><span class="dot"></span></a>
-    </nav>
-
-    <!-- Menu Toggle Button -->
-    <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
-        <div class="menu-toggle-bars">
-            <span></span>
-            <span></span>
-        </div>
-    </button>
-
-    <!-- Full-Screen Navigation Overlay -->
-    <div class="nav-overlay" id="navOverlay">
-        <div class="nav-overlay-inner">
-            <nav class="nav-main">
-                <ul class="nav-list">
-                    <li style="--i:0"><a href="#hero" class="nav-item active"><span class="nav-num">01</span><span class="nav-label">Home</span></a></li>
-                    <li style="--i:1"><a href="#about" class="nav-item"><span class="nav-num">02</span><span class="nav-label">About</span></a></li>
-                    <li style="--i:2"><a href="#experience" class="nav-item"><span class="nav-num">03</span><span class="nav-label">Experience</span></a></li>
-                    <li style="--i:3"><a href="#skills" class="nav-item"><span class="nav-num">04</span><span class="nav-label">Skills</span></a></li>
-                    <li style="--i:4"><a href="#certifications" class="nav-item"><span class="nav-num">05</span><span class="nav-label">Certifications</span></a></li>
-                    <li style="--i:5"><a href="#projects" class="nav-item"><span class="nav-num">06</span><span class="nav-label">Projects</span></a></li>
-                    <li style="--i:6"><a href="#contact" class="nav-item"><span class="nav-num">07</span><span class="nav-label">Contact</span></a></li>
-                </ul>
-            </nav>
-
-            <div class="nav-footer">
-                <div class="nav-footer-left">
-                    <a href="https://github.com/22kathan" target="_blank" class="nav-social">GitHub</a>
-                    <a href="https://www.linkedin.com/in/kathan-gadhiya10" target="_blank" class="nav-social">LinkedIn</a>
-                    <a href="mailto:gadhiyakathan10@gmail.com" class="nav-social">Email</a>
-                </div>
-                <a href="Resume.pdf" class="nav-resume-btn" download>Download Resume <span>↓</span></a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Content -->
     <main class="main-content">
-        <!-- Hero Section -->
+        <!-- Hero -->
         <section class="section hero" id="hero">
             <div class="hero-inner">
-                <div class="status" data-animate>● System Online</div>
+                <div class="status" data-animate>● Available for work</div>
                 <h1 class="hero-title" id="heroTitle" data-animate>
                     Engineering the <span class="highlight">Future</span><br>of AI & Data.
                 </h1>
@@ -74,13 +38,13 @@
                     I'm Gadhiya Kathan, a data scientist and developer building intelligent systems and high-performance algorithms.
                 </p>
                 <div class="hero-actions" data-animate>
-                    <a href="#projects" class="btn">Explore My Projects</a>
-                    <a href="https://github.com/22kathan/portfolio" target="_blank" class="btn btn-outline">GitHub↗</a>
+                    <a href="#projects" class="btn">Explore Projects</a>
+                    <a href="https://github.com/22kathan/portfolio" target="_blank" class="btn btn-outline">GitHub ↗</a>
                 </div>
             </div>
         </section>
 
-        <!-- About Section -->
+        <!-- About -->
         <section class="section" id="about">
             <h2 class="section-title" data-animate>About <span class="highlight">Me</span></h2>
             <div class="about-grid">
@@ -89,23 +53,14 @@
                     <p>My journey in tech started with a fascination for how data shapes decisions. From analyzing employee performance metrics to building predictive models — every dataset has a story and I'm here to tell it clearly and beautifully.</p>
                 </div>
                 <div class="about-stats">
-                    <div class="stat-card" data-animate>
-                        <span class="stat-num">3</span>
-                        <span class="stat-name">Projects</span>
-                    </div>
-                    <div class="stat-card" data-animate>
-                        <span class="stat-num">8+</span>
-                        <span class="stat-name">Technologies</span>
-                    </div>
-                    <div class="stat-card" data-animate>
-                        <span class="stat-num">∞</span>
-                        <span class="stat-name">Curiosity</span>
-                    </div>
+                    <div class="stat-card" data-animate><span class="stat-num">3</span><span class="stat-name">Projects</span></div>
+                    <div class="stat-card" data-animate><span class="stat-num">8+</span><span class="stat-name">Technologies</span></div>
+                    <div class="stat-card" data-animate><span class="stat-num">∞</span><span class="stat-name">Curiosity</span></div>
                 </div>
             </div>
         </section>
 
-        <!-- Experience Section -->
+        <!-- Experience -->
         <section class="section" id="experience">
             <h2 class="section-title" data-animate>My <span class="highlight">Experience</span></h2>
             <div class="timeline-container">
@@ -129,8 +84,8 @@
                 </div>
             </div>
         </section>
-        
-        <!-- Skills Section -->
+
+        <!-- Skills -->
         <section class="section" id="skills">
             <h2 class="section-title" data-animate>Tech <span class="highlight">Stack</span></h2>
             <div class="skills-category-grid">
@@ -172,15 +127,13 @@
                 </div>
             </div>
         </section>
-        
-        <!-- Certifications Section -->
+
+        <!-- Certifications -->
         <section class="section" id="certifications">
             <h2 class="section-title" data-animate>Professional <span class="highlight">Certifications</span></h2>
             <div class="certs-grid">
                 <div class="cert-card" data-animate>
-                    <div class="cert-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    </div>
+                    <div class="cert-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
                     <div class="cert-info">
                         <h3 class="cert-title">AI Engineer</h3>
                         <p class="cert-issuer">Professional Certification</p>
@@ -188,9 +141,7 @@
                     </div>
                 </div>
                 <div class="cert-card" data-animate>
-                    <div class="cert-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    </div>
+                    <div class="cert-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
                     <div class="cert-info">
                         <h3 class="cert-title">Python Specialist</h3>
                         <p class="cert-issuer">Technical Certification</p>
@@ -198,9 +149,7 @@
                     </div>
                 </div>
                 <div class="cert-card" data-animate>
-                    <div class="cert-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                    </div>
+                    <div class="cert-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
                     <div class="cert-info">
                         <h3 class="cert-title">Data Science</h3>
                         <p class="cert-issuer">Full Track Specialization</p>
@@ -210,7 +159,7 @@
             </div>
         </section>
 
-        <!-- Projects Section -->
+        <!-- Projects -->
         <section class="section" id="projects">
             <h2 class="section-title" data-animate>Featured <span class="highlight">Projects</span></h2>
             <div class="projects-masonry">
@@ -219,16 +168,11 @@
                     <div class="p-content">
                         <h3 class="p-title">Diabetes Prediction System</h3>
                         <p class="p-desc">A lightweight, end-to-end ML prediction web app utilizing advanced feature explainability and robust traditional classifiers (Random Forest, SVM).</p>
-                        <div class="p-tags">
-                            <span class="p-tag">Python</span>
-                            <span class="p-tag">Scikit-Learn</span>
-                            <span class="p-tag">HTML/JS</span>
-                            <span class="p-tag">ML</span>
-                        </div>
+                        <div class="p-tags"><span class="p-tag">Python</span><span class="p-tag">Scikit-Learn</span><span class="p-tag">HTML/JS</span><span class="p-tag">ML</span></div>
                         <div class="p-links-row">
                             <a href="./DPS/" target="_blank" class="p-link">Live App ↗</a>
                             <a href="https://github.com/22kathan/DPS" target="_blank" class="p-link">View Source ↗</a>
-                            <a href="./DPS/DPS_Presentation.pptx" download class="p-link p-link-btn" title="Download DPS Presentation">📊 Download PPT →</a>
+                            <a href="./DPS/DPS_Presentation.pptx" download class="p-link p-link-btn">📊 Download PPT →</a>
                         </div>
                     </div>
                 </div>
@@ -237,12 +181,7 @@
                     <div class="p-content">
                         <h3 class="p-title">Employee Data Analysis</h3>
                         <p class="p-desc">A complete data science pipeline with 10,000+ records, featuring advanced EDA and a high-fidelity Power BI interactive dashboard.</p>
-                        <div class="p-tags">
-                            <span class="p-tag">Power BI</span>
-                            <span class="p-tag">Python</span>
-                            <span class="p-tag">Pandas</span>
-                            <span class="p-tag">EDA</span>
-                        </div>
+                        <div class="p-tags"><span class="p-tag">Power BI</span><span class="p-tag">Python</span><span class="p-tag">Pandas</span><span class="p-tag">EDA</span></div>
                         <a href="https://github.com/22kathan/10000-employees-data-analysis" target="_blank" class="p-link">View Source ↗</a>
                     </div>
                 </div>
@@ -251,12 +190,7 @@
                     <div class="p-content">
                         <h3 class="p-title">Flux</h3>
                         <p class="p-desc">A futuristic hand-tracking engine for precision 3D drawing and gesture-based OS control at 60 FPS.</p>
-                        <div class="p-tags">
-                            <span class="p-tag">MediaPipe</span>
-                            <span class="p-tag">Python</span>
-                            <span class="p-tag">WebSockets</span>
-                            <span class="p-tag">JS</span>
-                        </div>
+                        <div class="p-tags"><span class="p-tag">MediaPipe</span><span class="p-tag">Python</span><span class="p-tag">WebSockets</span><span class="p-tag">JS</span></div>
                         <div class="p-links-row">
                             <a href="./flux/" target="_blank" class="p-link">Live Demo ↗</a>
                             <a href="https://github.com/22kathan/Flux" target="_blank" class="p-link">View Source ↗</a>
@@ -266,7 +200,7 @@
             </div>
         </section>
 
-        <!-- Contact Section -->
+        <!-- Contact -->
         <section class="section" id="contact">
             <h2 class="section-title" data-animate>Let's <span class="highlight">Connect</span></h2>
             <div class="contact-grid">
@@ -289,9 +223,9 @@
                 </div>
             </div>
         </section>
-        
+
         <footer class="footer">
-            <p>&copy; 2026 All rights reserved.</p>
+            <p>&copy; 2026 Kathan Gadhiya. All rights reserved.</p>
         </footer>
     </main>
 

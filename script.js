@@ -1,33 +1,49 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Navigation Elements
-    const menuToggle = document.getElementById('menuToggle');
-    const navOverlay = document.getElementById('navOverlay');
-    const navItems = document.querySelectorAll('.nav-item');
-    const dotLinks = document.querySelectorAll('.dot-link');
-    const topbar = document.getElementById('topbar');
+    const navbar = document.getElementById('navbar');
+    const mobileToggle = document.getElementById('mobileToggle');
+    const navLinks = document.getElementById('navLinks');
+    const allNavLinks = document.querySelectorAll('.nav-link');
 
-    // Toggle menu
-    function toggleMenu() {
-        const isOpen = navOverlay.classList.toggle('open');
-        menuToggle.classList.toggle('active');
-        document.body.style.overflow = isOpen ? 'hidden' : '';
+    // Mobile menu toggle
+    if (mobileToggle && navLinks) {
+        mobileToggle.addEventListener('click', () => {
+            mobileToggle.classList.toggle('active');
+            navLinks.classList.toggle('open');
+        });
+
+        // Close on link click
+        allNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileToggle.classList.remove('active');
+                navLinks.classList.remove('open');
+            });
+        });
     }
 
-    if (menuToggle && navOverlay) {
-        menuToggle.addEventListener('click', toggleMenu);
-    }
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+        if (navbar) {
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        }
 
-    // Close menu on nav link click
-    navItems.forEach(link => {
-        link.addEventListener('click', () => {
-            if (navOverlay.classList.contains('open')) {
-                toggleMenu();
+        // Active link tracking
+        let current = '';
+        document.querySelectorAll('.section').forEach(section => {
+            if (window.scrollY >= section.offsetTop - 200) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        allNavLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${current}`) {
+                link.classList.add('active');
             }
         });
     });
 
-    // Header Text Rotator (every 2 seconds)
+    // Hero text rotator
     const heroTitle = document.getElementById('heroTitle');
     if (heroTitle) {
         const titles = [
@@ -36,226 +52,93 @@ document.addEventListener('DOMContentLoaded', () => {
             "Architecting <span class='highlight'>Scalable</span><br>Data Solutions.",
             "Designing <span class='highlight'>Premium</span><br>Web Experiences."
         ];
-        let titleIndex = 0;
-        
+        let i = 0;
         heroTitle.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-
         setInterval(() => {
-            titleIndex = (titleIndex + 1) % titles.length;
+            i = (i + 1) % titles.length;
             heroTitle.style.opacity = '0';
             heroTitle.style.transform = 'translateY(15px)';
-            
             setTimeout(() => {
-                heroTitle.innerHTML = titles[titleIndex];
+                heroTitle.innerHTML = titles[i];
                 heroTitle.style.opacity = '1';
                 heroTitle.style.transform = 'translateY(0)';
-            }, 400); 
-        }, 2000); 
+            }, 400);
+        }, 2000);
     }
 
-    // Scroll Animations
-    const observer = new IntersectionObserver((entries) => {
+    // Scroll animations
+    const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
                 observer.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
-
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
     document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
 
-    // Active Navigation — Dot Nav + Overlay Nav + Topbar scroll
-    const sections = document.querySelectorAll('.section');
-
-    window.addEventListener('scroll', () => {
-        let current = '';
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            if (window.scrollY >= sectionTop - 200) {
-                current = section.getAttribute('id');
-            }
-        });
-
-        // Update overlay nav active links
-        navItems.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === `#${current}`) {
-                link.classList.add('active');
-            }
-        });
-
-        // Update dot nav
-        dotLinks.forEach(dot => {
-            dot.classList.remove('active');
-            if (dot.getAttribute('href') === `#${current}`) {
-                dot.classList.add('active');
-            }
-        });
-
-        // Topbar scroll state
-        if (topbar) {
-            if (window.scrollY > 80) {
-                topbar.classList.add('scrolled');
-            } else {
-                topbar.classList.remove('scrolled');
-            }
-        }
-    });
-
-    // --- Interactive 3D Particle Network Canvas Effect ---
+    // Particle canvas
     const canvas = document.getElementById('bgCanvas');
     if (canvas) {
         const ctx = canvas.getContext('2d');
-        let width = canvas.width = window.innerWidth;
-        let height = canvas.height = window.innerHeight;
-
-        let particles = [];
-        const isMobile = window.innerWidth <= 768;
-        const particleCount = isMobile ? 30 : 80;
-        const connectionDistance = 150;
-
+        let w = canvas.width = innerWidth, h = canvas.height = innerHeight;
+        const isMobile = innerWidth <= 768;
+        const count = isMobile ? 30 : 80;
         let mouse = { x: null, y: null };
 
-        window.addEventListener('resize', () => {
-            if (window.innerWidth !== width) {
-                width = canvas.width = window.innerWidth;
-                height = canvas.height = window.innerHeight;
-            }
-        });
+        addEventListener('resize', () => { w = canvas.width = innerWidth; h = canvas.height = innerHeight; });
+        addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        addEventListener('mouseout', () => { mouse.x = mouse.y = null; });
 
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-        });
-        window.addEventListener('mouseout', () => {
-            mouse.x = null;
-            mouse.y = null;
-        });
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.vx = (Math.random() - 0.5) * 1;
-                this.vy = (Math.random() - 0.5) * 1;
-                this.size = Math.random() * 2 + 1;
-            }
-
+        class P {
+            constructor() { this.x = Math.random()*w; this.y = Math.random()*h; this.vx = (Math.random()-0.5); this.vy = (Math.random()-0.5); this.s = Math.random()*2+1; }
             update() {
-                this.x += this.vx;
-                this.y += this.vy;
-
-                if (this.x < 0 || this.x > width) this.vx *= -1;
-                if (this.y < 0 || this.y > height) this.vy *= -1;
-
-                if (mouse.x && mouse.y) {
-                    let dx = mouse.x - this.x;
-                    let dy = mouse.y - this.y;
-                    let dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 150) {
-                        this.x -= dx * 0.02;
-                        this.y -= dy * 0.02;
-                    }
-                }
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < 0 || this.x > w) this.vx *= -1;
+                if (this.y < 0 || this.y > h) this.vy *= -1;
+                if (mouse.x && mouse.y) { let dx=mouse.x-this.x, dy=mouse.y-this.y; if (Math.sqrt(dx*dx+dy*dy)<150) { this.x-=dx*0.02; this.y-=dy*0.02; }}
             }
-
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(0, 255, 204, 0.4)';
-                ctx.fill();
-            }
+            draw() { ctx.beginPath(); ctx.arc(this.x,this.y,this.s,0,Math.PI*2); ctx.fillStyle='rgba(0,255,204,0.4)'; ctx.fill(); }
         }
 
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-
-                for (let j = i + 1; j < particles.length; j++) {
-                    let dx = particles[i].x - particles[j].x;
-                    let dy = particles[i].y - particles[j].y;
-                    let dist = Math.sqrt(dx * dx + dy * dy);
-
-                    if (dist < connectionDistance) {
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        let opacity = 1 - (dist / connectionDistance);
-                        ctx.strokeStyle = `rgba(0, 255, 204, ${opacity * 0.25})`;
-                        ctx.lineWidth = 1;
-                        ctx.stroke();
-                    }
-                }
-            }
-            requestAnimationFrame(animate);
-        }
-        animate();
+        const ps = Array.from({length:count}, () => new P());
+        (function loop() {
+            ctx.clearRect(0,0,w,h);
+            ps.forEach((p,i) => { p.update(); p.draw(); for (let j=i+1;j<ps.length;j++) { let dx=p.x-ps[j].x, dy=p.y-ps[j].y, d=Math.sqrt(dx*dx+dy*dy); if(d<150){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(ps[j].x,ps[j].y);ctx.strokeStyle=`rgba(0,255,204,${(1-d/150)*0.25})`;ctx.lineWidth=1;ctx.stroke();}}});
+            requestAnimationFrame(loop);
+        })();
     }
 
-    // Contact Form submission
+    // Contact form
     const form = document.getElementById('contactForm');
     const btn = document.getElementById('formSubmit');
     if (form && btn) {
         form.addEventListener('submit', e => {
             e.preventDefault();
             const orig = btn.innerHTML;
-            btn.innerHTML = 'Sending...';
-            btn.disabled = true;
-
+            btn.innerHTML = 'Sending...'; btn.disabled = true;
             fetch('https://api.web3forms.com/submit', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                method: 'POST', headers: {'Content-Type':'application/json',Accept:'application/json'},
                 body: JSON.stringify(Object.fromEntries(new FormData(form)))
             })
-            .then(async r => {
-                if (r.status === 200) { 
-                    btn.innerHTML = 'Message Sent!'; 
-                    form.reset(); 
-                } else { 
-                    btn.innerHTML = 'Error Sending'; 
-                }
-            })
-            .catch(() => { btn.innerHTML = 'Error Sending'; })
-            .finally(() => { 
-                setTimeout(() => { 
-                    btn.innerHTML = orig; 
-                    btn.disabled = false; 
-                }, 3000); 
-            });
+            .then(r => { btn.innerHTML = r.status===200 ? (form.reset(),'Message Sent!') : 'Error'; })
+            .catch(() => { btn.innerHTML = 'Error'; })
+            .finally(() => { setTimeout(() => { btn.innerHTML = orig; btn.disabled = false; }, 3000); });
         });
     }
 
-    // --- 3D Hover & Glow Effect for Tech Stack Cards ---
-    const skillCards = document.querySelectorAll('.skill-category-card');
-    skillCards.forEach(card => {
+    // 3D skill card hover
+    document.querySelectorAll('.skill-category-card').forEach(card => {
         card.addEventListener('mousemove', e => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const rotateX = ((y - centerY) / centerY) * -10; 
-            const rotateY = ((x - centerX) / centerX) * 10;
-
-            card.style.setProperty('--mouse-x', `${x}px`);
-            card.style.setProperty('--mouse-y', `${y}px`);
-            card.style.setProperty('--rotate-x', `${rotateX}deg`);
-            card.style.setProperty('--rotate-y', `${rotateY}deg`);
+            const r = card.getBoundingClientRect(), x = e.clientX-r.left, y = e.clientY-r.top;
+            card.style.setProperty('--mouse-x', x+'px');
+            card.style.setProperty('--mouse-y', y+'px');
+            card.style.setProperty('--rotate-x', ((y-r.height/2)/r.height*-10)+'deg');
+            card.style.setProperty('--rotate-y', ((x-r.width/2)/r.width*10)+'deg');
         });
-
         card.addEventListener('mouseleave', () => {
-            card.style.setProperty('--rotate-x', `0deg`);
-            card.style.setProperty('--rotate-y', `0deg`);
+            card.style.setProperty('--rotate-x','0deg');
+            card.style.setProperty('--rotate-y','0deg');
         });
     });
-
 });
