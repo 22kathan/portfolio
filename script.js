@@ -1,35 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Mobile Sidebar Drawer
-    const mobileToggle = document.getElementById('mobileToggle');
-    const sidebar = document.getElementById('sidebar');
-    const sidebarOverlay = document.getElementById('sidebarOverlay');
-    const navLinks = document.querySelectorAll('.nav-link');
+    // Navigation Elements
+    const menuToggle = document.getElementById('menuToggle');
+    const navOverlay = document.getElementById('navOverlay');
+    const navItems = document.querySelectorAll('.nav-item');
     const dotLinks = document.querySelectorAll('.dot-link');
     const topbar = document.getElementById('topbar');
 
-    if (mobileToggle && sidebar) {
-        mobileToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
-            mobileToggle.classList.toggle('active');
-            if (sidebarOverlay) sidebarOverlay.classList.toggle('active');
-        });
+    // Toggle menu
+    function toggleMenu() {
+        const isOpen = navOverlay.classList.toggle('open');
+        menuToggle.classList.toggle('active');
+        document.body.style.overflow = isOpen ? 'hidden' : '';
     }
 
-    if (sidebarOverlay) {
-        sidebarOverlay.addEventListener('click', () => {
-            sidebar.classList.remove('open');
-            mobileToggle.classList.remove('active');
-            sidebarOverlay.classList.remove('active');
-        });
+    if (menuToggle && navOverlay) {
+        menuToggle.addEventListener('click', toggleMenu);
     }
 
-    // Close sidebar on any nav link click
-    navLinks.forEach(link => {
+    // Close menu on nav link click
+    navItems.forEach(link => {
         link.addEventListener('click', () => {
-            if (sidebar) sidebar.classList.remove('open');
-            if (mobileToggle) mobileToggle.classList.remove('active');
-            if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+            if (navOverlay.classList.contains('open')) {
+                toggleMenu();
+            }
         });
     });
 
@@ -71,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
 
-    // Active Navigation — Dot Nav + Sidebar + Topbar scroll
+    // Active Navigation — Dot Nav + Overlay Nav + Topbar scroll
     const sections = document.querySelectorAll('.section');
 
     window.addEventListener('scroll', () => {
@@ -83,8 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Update sidebar nav links
-        navLinks.forEach(link => {
+        // Update overlay nav active links
+        navItems.forEach(link => {
             link.classList.remove('active');
             if (link.getAttribute('href') === `#${current}`) {
                 link.classList.add('active');
@@ -118,13 +112,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let particles = [];
         const isMobile = window.innerWidth <= 768;
-        const particleCount = isMobile ? 30 : 80; // Optimized count
+        const particleCount = isMobile ? 30 : 80;
         const connectionDistance = 150;
 
         let mouse = { x: null, y: null };
 
         window.addEventListener('resize', () => {
-            if (window.innerWidth !== width) { // Prevent jumpiness on mobile scrolling
+            if (window.innerWidth !== width) {
                 width = canvas.width = window.innerWidth;
                 height = canvas.height = window.innerHeight;
             }
@@ -152,11 +146,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.x += this.vx;
                 this.y += this.vy;
 
-                // Bounce off edges
                 if (this.x < 0 || this.x > width) this.vx *= -1;
                 if (this.y < 0 || this.y > height) this.vy *= -1;
 
-                // Mouse interaction - repel slightly
                 if (mouse.x && mouse.y) {
                     let dx = mouse.x - this.x;
                     let dy = mouse.y - this.y;
@@ -187,7 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 particles[i].update();
                 particles[i].draw();
 
-                // Connect particles
                 for (let j = i + 1; j < particles.length; j++) {
                     let dx = particles[i].x - particles[j].x;
                     let dy = particles[i].y - particles[j].y;
@@ -242,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Mind-Blowing 3D Hover & Glow Effect for Tech Stack Cards ---
+    // --- 3D Hover & Glow Effect for Tech Stack Cards ---
     const skillCards = document.querySelectorAll('.skill-category-card');
     skillCards.forEach(card => {
         card.addEventListener('mousemove', e => {
@@ -250,10 +241,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
 
-            // Calculate tilt based on mouse position relative to center
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
-            // Max tilt of 10 degrees for a subtle but noticeable 3D effect
             const rotateX = ((y - centerY) / centerY) * -10; 
             const rotateY = ((x - centerX) / centerX) * 10;
 
@@ -264,7 +253,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         card.addEventListener('mouseleave', () => {
-            // Reset to default on mouse out
             card.style.setProperty('--rotate-x', `0deg`);
             card.style.setProperty('--rotate-y', `0deg`);
         });

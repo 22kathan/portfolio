@@ -27,34 +27,39 @@
         <a href="#contact" class="dot-link" data-section="Contact"><span class="dot"></span></a>
     </nav>
 
-    <!-- Mobile Toggle -->
-    <button class="mobile-toggle" id="mobileToggle">
-        <span></span><span></span><span></span>
+    <!-- Menu Toggle Button -->
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+        <div class="menu-toggle-bars">
+            <span></span>
+            <span></span>
+        </div>
     </button>
 
-    <!-- Mobile Drawer -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-brand">
-            <span class="logo"><span class="highlight">kathan</span></span>
-        </div>
-        <nav class="sidebar-nav">
-            <ul>
-                <li><a href="#hero" class="nav-link active">Home</a></li>
-                <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#experience" class="nav-link">Experience</a></li>
-                <li><a href="#skills" class="nav-link">Skills</a></li>
-                <li><a href="#certifications" class="nav-link">Certifications</a></li>
-                <li><a href="#projects" class="nav-link">Projects</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
-            </ul>
-        </nav>
-        <div class="sidebar-footer">
-            <a href="Resume.pdf" class="btn btn-outline" download>Resume</a>
-        </div>
-    </aside>
+    <!-- Full-Screen Navigation Overlay -->
+    <div class="nav-overlay" id="navOverlay">
+        <div class="nav-overlay-inner">
+            <nav class="nav-main">
+                <ul class="nav-list">
+                    <li style="--i:0"><a href="#hero" class="nav-item active"><span class="nav-num">01</span><span class="nav-label">Home</span></a></li>
+                    <li style="--i:1"><a href="#about" class="nav-item"><span class="nav-num">02</span><span class="nav-label">About</span></a></li>
+                    <li style="--i:2"><a href="#experience" class="nav-item"><span class="nav-num">03</span><span class="nav-label">Experience</span></a></li>
+                    <li style="--i:3"><a href="#skills" class="nav-item"><span class="nav-num">04</span><span class="nav-label">Skills</span></a></li>
+                    <li style="--i:4"><a href="#certifications" class="nav-item"><span class="nav-num">05</span><span class="nav-label">Certifications</span></a></li>
+                    <li style="--i:5"><a href="#projects" class="nav-item"><span class="nav-num">06</span><span class="nav-label">Projects</span></a></li>
+                    <li style="--i:6"><a href="#contact" class="nav-item"><span class="nav-num">07</span><span class="nav-label">Contact</span></a></li>
+                </ul>
+            </nav>
 
-    <!-- Backdrop Overlay for Mobile Sidebar Drawer -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+            <div class="nav-footer">
+                <div class="nav-footer-left">
+                    <a href="https://github.com/22kathan" target="_blank" class="nav-social">GitHub</a>
+                    <a href="https://www.linkedin.com/in/kathan-gadhiya10" target="_blank" class="nav-social">LinkedIn</a>
+                    <a href="mailto:gadhiyakathan10@gmail.com" class="nav-social">Email</a>
+                </div>
+                <a href="Resume.pdf" class="nav-resume-btn" download>Download Resume <span>↓</span></a>
+            </div>
+        </div>
+    </div>
 
     <!-- Main Content -->
     <main class="main-content">
