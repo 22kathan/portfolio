@@ -181,13 +181,14 @@ body { display: flex; flex-direction: column; min-height: 100vh; width: 100%; ov
 .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
 
 /* About */
-.about-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 60px; }
+.about-grid { display: grid; grid-template-columns: 1fr; gap: 50px; }
 .about-text { font-size: 1.1rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 20px; }
-.about-stats { display: flex; flex-direction: column; gap: 20px; }
-.stat-card { background: var(--bg-panel); border: 1px solid var(--border); padding: 30px; border-radius: 8px; transition: border-color 0.3s ease; }
-.stat-card:hover { border-color: rgba(0,255,204,0.2); }
-.stat-num { display: block; font-family: var(--font-display); font-size: 3rem; font-weight: 700; color: var(--accent); line-height: 1; margin-bottom: 5px; }
-.stat-name { font-family: var(--font-mono); font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); }
+.about-counters { display: flex; align-items: center; justify-content: flex-start; gap: 0; padding: 40px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.counter-item { display: flex; flex-direction: column; align-items: center; flex: 1; padding: 10px 0; }
+.counter-num { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 900; color: var(--accent); line-height: 1; letter-spacing: -2px; transition: text-shadow 0.4s ease; }
+.counter-item:hover .counter-num { text-shadow: 0 0 25px rgba(0, 255, 204, 0.4); }
+.counter-label { font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 2px; margin-top: 8px; }
+.counter-divider { width: 1px; height: 50px; background: linear-gradient(to bottom, transparent, var(--border), transparent); flex-shrink: 0; }
 
 /* Experience */
 .timeline-container { border-left: 1px solid var(--border); padding-left: 40px; margin-left: 10px; display: flex; flex-direction: column; gap: 50px; }
@@ -309,16 +310,18 @@ body { display: flex; flex-direction: column; min-height: 100vh; width: 100%; ov
   .projects-masonry { grid-template-columns: 1fr; }
   .hero-actions { flex-direction: column; width: 100%; }
   .hero-actions .btn { width: 100%; text-align: center; justify-content: center; }
-  .about-stats { flex-direction: row; flex-wrap: wrap; }
-  .stat-card { flex: 1 1 calc(50% - 10px); padding: 20px; }
+  .about-counters { padding: 30px 0; }
+  .counter-num { font-size: clamp(2rem, 5vw, 2.5rem); }
+  .counter-label { font-size: 0.65rem; letter-spacing: 1.5px; }
+  .counter-divider { height: 35px; }
   .contact-form-container { padding: 30px 20px; }
   .cert-card { gap: 15px; padding: 20px; }
   .cert-icon { width: 40px; height: 40px; }
 }
 
 @media (max-width: 480px) {
-  .about-stats { flex-direction: column; }
-  .stat-card { flex: 1 1 100%; }
+  .about-counters { flex-direction: column; gap: 20px; }
+  .counter-divider { width: 60px; height: 1px; background: linear-gradient(to right, transparent, var(--border), transparent); }
   .p-links-row { flex-direction: column; gap: 10px; }
   .cert-title { font-size: 1.1rem; }
 }
