@@ -80,28 +80,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Scroll animations
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-    document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
+    } else {
+        document.querySelectorAll('[data-animate]').forEach(el => el.classList.add('visible'));
+    }
 
     // Particle canvas
     const canvas = document.getElementById('bgCanvas');
     if (canvas) {
         const ctx = canvas.getContext('2d');
-        let w = canvas.width = innerWidth, h = canvas.height = innerHeight;
-        const isMobile = innerWidth <= 768;
+        let w = canvas.width = window.innerWidth, h = canvas.height = window.innerHeight;
+        const isMobile = window.innerWidth <= 768;
         const count = isMobile ? 30 : 80;
         let mouse = { x: null, y: null };
 
-        addEventListener('resize', () => { w = canvas.width = innerWidth; h = canvas.height = innerHeight; });
-        addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-        addEventListener('mouseout', () => { mouse.x = mouse.y = null; });
+        window.addEventListener('resize', () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; });
+        window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        window.addEventListener('mouseout', () => { mouse.x = mouse.y = null; });
 
         class P {
             constructor() { this.x = Math.random()*w; this.y = Math.random()*h; this.vx = (Math.random()-0.5); this.vy = (Math.random()-0.5); this.s = Math.random()*2+1; }
