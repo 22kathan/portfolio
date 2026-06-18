@@ -6,11 +6,22 @@ Welcome to my digital space. I'm a Data Scientist and AI Engineer focused on bui
 
 ## 🚀 Featured Projects
 
+### [🛡️ TruthShield](https://github.com/22kathan/TruthShield)
+**AI-Driven Media Verification System**
+*   Client-side GPU-accelerated deep learning using **TensorFlow.js** (WebGL backend).
+*   Forensic analysis suite: Zero-shot text stance detection (Universal Sentence Encoder), Image forgery detection (Error Level Analysis + Custom CNN), and Video deepfake forensics (Temporal stability checker).
+*   Developed under conceptual requirements of the Cyber Crime Branch, Ahmedabad City Police.
+
 ### [⚡ Flux](https://github.com/22kathan/flux)
 **Real-time Hand Tracking & Gesture Control**
-*   Engineered a high-performance system using Google MediaPipe and WebSockets.
+*   Engineered a high-performance system using Google **MediaPipe** and WebSockets.
 *   Enables hands-free OS navigation and infinite 3D air-sketching.
 *   Polished "Dark Tech" aesthetic with CRT post-processing.
+
+### [🏥 Diabetes Prediction System](https://github.com/22kathan/DPS)
+**End-to-End ML Prediction App**
+*   Lightweight web application utilizing advanced feature explainability and robust traditional classifiers (Random Forest, SVM).
+*   Provides clear indicators for early diagnosis with feature importance metrics.
 
 ### [📊 Employee Data Analysis](https://github.com/22kathan/10000-employees-data-analysis)
 **Advanced HR Analytics Pipeline**
@@ -24,8 +35,9 @@ Welcome to my digital space. I'm a Data Scientist and AI Engineer focused on bui
 
 ### AI & Data Science
 *   **Languages**: Python, SQL, JavaScript (ES6+)
-*   **Libraries**: NumPy, Pandas, Scikit-Learn, MediaPipe
+*   **Libraries / Frameworks**: NumPy, Pandas, Scikit-Learn, MediaPipe, TensorFlow.js
 *   **Visualization**: Matplotlib, Seaborn
+*   **Core Concepts**: Machine Learning, Deep Learning, NLP, Exploratory Data Analysis (EDA)
 
 ### Development & UI/UX
 *   **Web**: HTML5, CSS3 (Glassmorphism, Neon Aesthetics), Canvas API
