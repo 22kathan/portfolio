@@ -109,47 +109,173 @@
         <!-- Skills -->
         <section class="section" id="skills">
             <h2 class="section-title" data-animate>Tech <span class="highlight">Stack</span></h2>
+            
+            <!-- Dynamic Filter Tabs -->
+            <div class="skills-filter-container" data-animate>
+                <button class="filter-btn active" data-filter="all">All Stack</button>
+                <button class="filter-btn" data-filter="languages">Languages</button>
+                <button class="filter-btn" data-filter="ai-ml">AI & ML</button>
+                <button class="filter-btn" data-filter="data-analysis">Data Analysis</button>
+                <button class="filter-btn" data-filter="visualization">Visualization</button>
+                <button class="filter-btn" data-filter="tools">Developer Tools</button>
+            </div>
+
             <div class="skills-category-grid">
-                <div class="skill-category-card" data-animate>
-                    <h3 class="skill-category-title">Programming & Web</h3>
+                <!-- Card 1: Programming Languages -->
+                <div class="skill-category-card" data-category="languages" data-animate>
+                    <h3 class="skill-category-title">Programming Languages</h3>
                     <div class="skills-grid">
-                        <div class="skill-item">Python</div>
-                        <div class="skill-item">HTML / CSS</div>
-                        <div class="skill-item">JavaScript</div>
-                        <div class="skill-item">SQL & DBs</div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Python</span>
+                                <span class="skill-level">Advanced</span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">SQL & Databases</span>
+                                <span class="skill-level">Intermediate</span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">JavaScript</span>
+                                <span class="skill-level">Proficient</span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">HTML / CSS</span>
+                                <span class="skill-level">Proficient</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="skill-category-card" data-animate>
-                    <h3 class="skill-category-title">Data Science & AI</h3>
+
+                <!-- Card 2: AI & Machine Learning -->
+                <div class="skill-category-card" data-category="ai-ml" data-animate>
+                    <h3 class="skill-category-title">AI & Machine Learning</h3>
                     <div class="skills-grid">
-                        <div class="skill-item">Machine Learning</div>
-                        <div class="skill-item">Deep Learning</div>
-                        <div class="skill-item">NLP</div>
-                        <div class="skill-item">Pandas</div>
-                        <div class="skill-item">NumPy</div>
-                        <div class="skill-item">EDA & Stats</div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Machine Learning</span>
+                                <span class="skill-level">Advanced</span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Deep Learning</span>
+                                <span class="skill-level">Intermediate</span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">NLP</span>
+                                <span class="skill-level">Intermediate</span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Scikit-Learn</span>
+                                <span class="skill-level">Advanced</span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">MediaPipe</span>
+                                <span class="skill-level">Proficient</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="skill-category-card" data-animate>
+
+                <!-- Card 3: Data Science & Analysis -->
+                <div class="skill-category-card" data-category="data-analysis" data-animate>
+                    <h3 class="skill-category-title">Data Science & Analysis</h3>
+                    <div class="skills-grid">
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Pandas</span>
+                                <span class="skill-level">Advanced</span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">NumPy</span>
+                                <span class="skill-level">Advanced</span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">EDA & Stats</span>
+                                <span class="skill-level">Advanced</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Data Visualization -->
+                <div class="skill-category-card" data-category="visualization" data-animate>
                     <h3 class="skill-category-title">Data Visualization</h3>
                     <div class="skills-grid">
-                        <div class="skill-item">Matplotlib</div>
-                        <div class="skill-item">Seaborn</div>
-                        <div class="skill-item">Chart.js</div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Power BI</span>
+                                <span class="skill-level">Advanced</span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Matplotlib</span>
+                                <span class="skill-level">Advanced</span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Seaborn</span>
+                                <span class="skill-level">Advanced</span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Chart.js</span>
+                                <span class="skill-level">Proficient</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="skill-category-card" data-animate>
-                    <h3 class="skill-category-title">Tools & Frameworks</h3>
+
+                <!-- Card 5: Developer Tools -->
+                <div class="skill-category-card" data-category="tools" data-animate>
+                    <h3 class="skill-category-title">Developer Tools</h3>
                     <div class="skills-grid">
-                        <div class="skill-item">Git / GitHub</div>
-                        <div class="skill-item">Jupyter</div>
-                        <div class="skill-item">TensorFlow.js</div>
-                        <div class="skill-item">MediaPipe</div>
-                        <div class="skill-item">Scikit-Learn</div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Git & GitHub</span>
+                                <span class="skill-level">Advanced</span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">Jupyter Notebooks</span>
+                                <span class="skill-level">Advanced</span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">VS Code</span>
+                                <span class="skill-level">Proficient</span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">TensorFlow.js</span>
+                                <span class="skill-level">Intermediate</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
 
         <!-- Certifications -->
         <section class="section" id="certifications">

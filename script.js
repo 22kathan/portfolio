@@ -144,6 +144,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Tech Stack Filter Logic
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const skillCards = document.querySelectorAll('.skill-category-card');
+
+    if (filterButtons.length > 0 && skillCards.length > 0) {
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterButtons.forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                btn.classList.add('active');
+
+                const filter = btn.getAttribute('data-filter');
+
+                skillCards.forEach(card => {
+                    const category = card.getAttribute('data-category');
+                    if (filter === 'all' || category === filter) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            });
+        });
+    }
+
     // 3D skill card hover
     document.querySelectorAll('.skill-category-card').forEach(card => {
         card.addEventListener('mousemove', e => {
