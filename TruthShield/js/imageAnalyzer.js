@@ -16,6 +16,12 @@ class ImageAnalyzer {
     const noiseAnalysis = this.analyzeNoise(img);
     const ganDetection = this.detectGANArtifacts(img);
 
+    // Run Provenance detection
+    let provenance = null;
+    if (window.ProvenanceDetector) {
+      provenance = await window.ProvenanceDetector.analyzeImage(file, img, elaResult, ganDetection);
+    }
+
     // Run Neural Checks if MLCore is active
     let neuralAnomalies = null;
     let predictions = [];
@@ -87,7 +93,7 @@ class ImageAnalyzer {
     return {
       authenticityScore, verdict, verdictClass,
       ela: elaResult, metadata, stats, noise: noiseAnalysis, gan: ganDetection,
-      neuralAnomalies, predictions,
+      neuralAnomalies, predictions, provenance,
       breakdown, flags
     };
   }

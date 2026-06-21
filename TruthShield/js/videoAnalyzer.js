@@ -24,6 +24,12 @@ class VideoAnalyzer {
     const temporalArtifacts = this.detectTemporalArtifacts(frames);
     const audioSync = this.analyzeAudioSync(duration, frames.length);
 
+    // Run Provenance detection
+    let provenance = null;
+    if (window.ProvenanceDetector) {
+      provenance = await window.ProvenanceDetector.analyzeVideo(file, consistency);
+    }
+
     // Run Neural Checks if MLCore is active
     let temporalStability = null;
     if (window.MLCore && window.MLCore.loaded) {
@@ -80,7 +86,7 @@ class VideoAnalyzer {
       deepfakeConfidence, verdict, verdictClass, duration: duration.toFixed(1),
       fileSize: this.formatSize(file.size),
       frames, consistency, faceAnalysis, temporalArtifacts, audioSync,
-      temporalStability,
+      temporalStability, provenance,
       flags
     };
   }

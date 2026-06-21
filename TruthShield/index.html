@@ -24,11 +24,11 @@
       </span>
     </div>
     <div class="nav-links" id="navLinks">
-      <a href="#" class="nav-link active" data-section="dashboard" id="nav-dashboard">Dashboard</a>
-      <a href="#" class="nav-link" data-section="text-analysis" id="nav-text">Text</a>
-      <a href="#" class="nav-link" data-section="image-analysis" id="nav-image">Image</a>
-      <a href="#" class="nav-link" data-section="video-analysis" id="nav-video">Video</a>
-      <a href="#" class="nav-link" data-section="media-literacy" id="nav-literacy">Learn</a>
+      <a href="#" class="nav-link active" data-section="dashboard" id="nav-dashboard" data-i18n="nav_dashboard">Dashboard</a>
+      <a href="#" class="nav-link" data-section="text-analysis" id="nav-text" data-i18n="nav_text">Text</a>
+      <a href="#" class="nav-link" data-section="image-analysis" id="nav-image" data-i18n="nav_image">Image</a>
+      <a href="#" class="nav-link" data-section="video-analysis" id="nav-video" data-i18n="nav_video">Video</a>
+      <a href="#" class="nav-link" data-section="media-literacy" id="nav-literacy" data-i18n="nav_literacy">Learn</a>
     </div>
     <div class="nav-right">
       <select id="langSelect" class="lang-select" title="Language">
@@ -48,13 +48,13 @@
     <!-- ========== DASHBOARD ========== -->
     <section id="dashboard" class="section active">
       <div class="dash-hero">
-        <p class="overline">AI-Powered Verification Platform</p>
+        <p class="overline" data-i18n="hero_overline">AI-Powered Verification Platform</p>
         <h1 data-i18n="hero_title">Stop misinformation<br><em>before it spreads.</em></h1>
         <p class="hero-sub" data-i18n="hero_subtitle">Upload text, images, or videos — TruthShield analyses them for fake news patterns, deepfake artifacts, and digital manipulation in seconds.</p>
         <div class="hero-ctas">
-          <button class="btn btn-dark" onclick="TruthShield.navigate('text-analysis')">Analyse Text</button>
-          <button class="btn btn-dark" onclick="TruthShield.navigate('image-analysis')">Scan Image</button>
-          <button class="btn btn-dark" onclick="TruthShield.navigate('video-analysis')">Check Video</button>
+          <button class="btn btn-dark" onclick="TruthShield.navigate('text-analysis')" data-i18n="btn_analyse_text">Analyse Text</button>
+          <button class="btn btn-dark" onclick="TruthShield.navigate('image-analysis')" data-i18n="btn_scan_image">Scan Image</button>
+          <button class="btn btn-dark" onclick="TruthShield.navigate('video-analysis')" data-i18n="btn_check_video">Check Video</button>
         </div>
       </div>
 
@@ -70,15 +70,15 @@
 
       <div class="dash-grid">
         <div class="dash-card card-wide">
-          <h3>How it works</h3>
+          <h3 data-i18n="how_it_works">How it works</h3>
           <div class="steps">
-            <div class="step"><span class="step-n">1</span><div><strong>Upload content</strong><p>Paste text, drop an image, or upload a video file</p></div></div>
-            <div class="step"><span class="step-n">2</span><div><strong>AI analyses it</strong><p>Multiple detection algorithms run in parallel</p></div></div>
-            <div class="step"><span class="step-n">3</span><div><strong>Get a trust score</strong><p>See a detailed breakdown with explanations and flags</p></div></div>
+            <div class="step"><span class="step-n">1</span><div><strong data-i18n="step_1_title">Upload content</strong><p data-i18n="step_1_desc">Paste text, drop an image, or upload a video file</p></div></div>
+            <div class="step"><span class="step-n">2</span><div><strong data-i18n="step_2_title">AI analyses it</strong><p data-i18n="step_2_desc">Multiple detection algorithms run in parallel</p></div></div>
+            <div class="step"><span class="step-n">3</span><div><strong data-i18n="step_3_title">Get a trust score</strong><p data-i18n="step_3_desc">See a detailed breakdown with explanations and flags</p></div></div>
           </div>
         </div>
         <div class="dash-card">
-          <h3>Fact-check partners</h3>
+          <h3 data-i18n="fact_check_partners">Fact-check partners</h3>
           <div class="partner-list">
             <span>PIB Fact Check</span><span>AltNews</span><span>BOOM Live</span><span>Factly</span><span>The Quint</span>
           </div>
@@ -86,9 +86,9 @@
       </div>
 
       <div class="activity-section">
-        <h3>Recent activity</h3>
+        <h3 data-i18n="recent_activity">Recent activity</h3>
         <div class="activity-feed" id="activityFeed">
-          <p class="empty-msg">No analyses yet. Pick a tool above to get started.</p>
+          <p class="empty-msg" data-i18n="activity_empty_msg">No analyses yet. Pick a tool above to get started.</p>
         </div>
       </div>
     </section>
@@ -104,25 +104,25 @@
         <div class="input-col">
           <div class="card">
             <div class="tab-row">
-              <button class="tab active" data-tab="text" id="tab-paste-text">Paste text</button>
-              <button class="tab" data-tab="url" id="tab-enter-url">Enter URL</button>
+              <button class="tab active" data-tab="text" id="tab-paste-text" data-i18n="tab_paste_text">Paste text</button>
+              <button class="tab" data-tab="url" id="tab-enter-url" data-i18n="tab_enter_url">Enter URL</button>
             </div>
             <div class="tab-content active" id="text-tab-text">
-              <textarea id="textInput" class="textarea" placeholder="Paste news article, headline, or social media post here…" rows="8"></textarea>
+              <textarea id="textInput" class="textarea" data-i18n-placeholder="text_placeholder" placeholder="Paste news article, headline, or social media post here…" rows="8"></textarea>
             </div>
             <div class="tab-content" id="text-tab-url">
-              <input type="url" id="urlInput" class="input" placeholder="https://example.com/article">
-              <p class="hint">Content will be fetched and analysed automatically</p>
+              <input type="url" id="urlInput" class="input" data-i18n-placeholder="url_placeholder" placeholder="https://example.com/article">
+              <p class="hint" data-i18n="url_hint">Content will be fetched and analysed automatically</p>
             </div>
             <div class="input-bottom">
-              <span class="char-ct"><span id="charCount">0</span> chars</span>
+              <span class="char-ct"><span id="charCount">0</span> <span data-i18n="char_count_suffix">chars</span></span>
               <button class="btn btn-primary" id="analyzeTextBtn" onclick="TruthShield.analyzeText()">
                 <span data-i18n="analyze_btn">Analyse</span> →
               </button>
             </div>
           </div>
           <div class="card card-muted">
-            <p class="card-label">Cross-verified with</p>
+            <p class="card-label" data-i18n="cross_verified_label">Cross-verified with</p>
             <div class="source-tags">
               <span>PIB Fact Check</span><span>AltNews</span><span>BOOM Live</span><span>Factly</span><span>The Quint</span>
             </div>
@@ -131,7 +131,7 @@
 
         <div class="result-col" id="textResults" style="display:none;">
           <div class="card score-block">
-            <p class="card-label">Trust score</p>
+            <p class="card-label" data-i18n="trust_score_label">Trust score</p>
             <div class="big-score">
               <svg viewBox="0 0 200 120" class="gauge-svg">
                 <path d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="#e8e7e3" stroke-width="10" stroke-linecap="round"/>
@@ -145,15 +145,21 @@
           </div>
 
           <div class="metrics-grid">
-            <div class="metric"><span class="metric-name">Clickbait</span><div class="bar-track"><div class="bar-fill" id="clickbaitBar"></div></div><span class="metric-val" id="clickbaitValue">0%</span></div>
-            <div class="metric"><span class="metric-name">Sentiment bias</span><div class="bar-track"><div class="bar-fill" id="sentimentBar"></div></div><span class="metric-val" id="sentimentValue">0%</span></div>
-            <div class="metric"><span class="metric-name">Source credibility</span><div class="bar-track"><div class="bar-fill" id="credibilityBar"></div></div><span class="metric-val" id="credibilityValue">0%</span></div>
-            <div class="metric"><span class="metric-name">Writing quality</span><div class="bar-track"><div class="bar-fill" id="grammarBar"></div></div><span class="metric-val" id="grammarValue">0%</span></div>
+            <div class="metric"><span class="metric-name" data-i18n="metric_clickbait">Clickbait</span><div class="bar-track"><div class="bar-fill" id="clickbaitBar"></div></div><span class="metric-val" id="clickbaitValue">0%</span></div>
+            <div class="metric"><span class="metric-name" data-i18n="metric_sentiment">Sentiment bias</span><div class="bar-track"><div class="bar-fill" id="sentimentBar"></div></div><span class="metric-val" id="sentimentValue">0%</span></div>
+            <div class="metric"><span class="metric-name" data-i18n="metric_credibility">Source credibility</span><div class="bar-track"><div class="bar-fill" id="credibilityBar"></div></div><span class="metric-val" id="credibilityValue">0%</span></div>
+            <div class="metric"><span class="metric-name" data-i18n="metric_quality">Writing quality</span><div class="bar-track"><div class="bar-fill" id="grammarBar"></div></div><span class="metric-val" id="grammarValue">0%</span></div>
+          </div>
+
+          <!-- 3D Pie Chart: Text Analysis -->
+          <div class="card pie-chart-card">
+            <p class="card-label"><i class="fas fa-chart-pie"></i> ML Analysis Breakdown (3D)</p>
+            <div class="pie-chart-wrap"><canvas id="textPieChart3D"></canvas></div>
           </div>
 
           <!-- NLP: Stance Detection -->
           <div class="card" id="stanceCard">
-            <p class="card-label">Stance Detection</p>
+            <p class="card-label" data-i18n="stance_detection_label">Stance Detection</p>
             <div class="stance-result" id="stanceResult">
               <div class="stance-header" id="stanceHeader"></div>
               <div class="stance-bars" id="stanceBars"></div>
@@ -164,7 +170,7 @@
 
           <!-- NLP: Semantic Similarity -->
           <div class="card" id="similarityCard">
-            <p class="card-label">Semantic Similarity Analysis</p>
+            <p class="card-label" data-i18n="semantic_similarity_label">Semantic Similarity Analysis</p>
             <div class="similarity-result" id="similarityResult">
               <div class="sim-summary" id="simSummary"></div>
               <div class="sim-matches" id="simMatches"></div>
@@ -172,12 +178,12 @@
           </div>
 
           <div class="card">
-            <p class="card-label">Detected flags</p>
+            <p class="card-label" data-i18n="detected_flags_label">Detected flags</p>
             <div class="flags-list" id="flagsList"></div>
           </div>
 
           <div class="card">
-            <p class="card-label">Explanation</p>
+            <p class="card-label" data-i18n="explanation_label">Explanation</p>
             <div class="explanation-text" id="explanationText"></div>
           </div>
         </div>
@@ -194,8 +200,8 @@
       <div class="upload-area" id="imageDropZone">
         <div class="upload-inner">
           <div class="upload-icon-wrap"><i class="fas fa-arrow-up-from-bracket"></i></div>
-          <p class="upload-main">Drop an image here, or <label for="imageFileInput" class="link">browse</label></p>
-          <p class="upload-sub">JPG, PNG, WebP · Max 20 MB</p>
+          <p class="upload-main" data-i18n="upload_img_main">Drop an image here, or <label for="imageFileInput" class="link">browse</label></p>
+          <p class="upload-sub" data-i18n="upload_img_sub">JPG, PNG, WebP · Max 30 MB</p>
           <input type="file" id="imageFileInput" accept="image/*" hidden>
         </div>
       </div>
@@ -203,23 +209,23 @@
       <div id="imageResultsArea" style="display:none;">
         <div class="compare-row">
           <div class="compare-panel">
-            <p class="card-label">Original</p>
+            <p class="card-label" data-i18n="original_label">Original</p>
             <div class="canvas-wrap"><canvas id="originalCanvas"></canvas></div>
           </div>
           <div class="compare-panel">
-            <p class="card-label">Error Level Analysis</p>
+            <p class="card-label" data-i18n="ela_label">Error Level Analysis</p>
             <div class="canvas-wrap"><canvas id="elaCanvas"></canvas></div>
             <div class="ela-key">
-              <span><i class="dot dot-ok"></i>Consistent</span>
-              <span><i class="dot dot-warn"></i>Minor diff</span>
-              <span><i class="dot dot-bad"></i>Suspect</span>
+              <span data-i18n="ela_consistent"><i class="dot dot-ok"></i>Consistent</span>
+              <span data-i18n="ela_minor"><i class="dot dot-warn"></i>Minor diff</span>
+              <span data-i18n="ela_suspect"><i class="dot dot-bad"></i>Suspect</span>
             </div>
           </div>
         </div>
 
         <div class="img-results-grid">
           <div class="card score-block">
-            <p class="card-label">Authenticity score</p>
+            <p class="card-label" data-i18n="authenticity_score_label">Authenticity score</p>
             <div class="big-score">
               <svg viewBox="0 0 200 120" class="gauge-svg">
                 <path d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="#e8e7e3" stroke-width="10" stroke-linecap="round"/>
@@ -233,22 +239,35 @@
           </div>
 
           <div class="card">
-            <p class="card-label">Breakdown</p>
+            <p class="card-label" data-i18n="breakdown_label">Breakdown</p>
             <div class="breakdown-list" id="imageBreakdown"></div>
           </div>
 
+          <!-- 3D Pie Chart: Image Analysis -->
+          <div class="card pie-chart-card">
+            <p class="card-label"><i class="fas fa-chart-pie"></i> ML Analysis Breakdown (3D)</p>
+            <div class="pie-chart-wrap"><canvas id="imagePieChart3D"></canvas></div>
+          </div>
+
           <div class="card" id="neuralSceneCard" style="display:none;">
-            <p class="card-label">Neural Scene Classification</p>
+            <p class="card-label" data-i18n="neural_classification_label">Neural Scene Classification</p>
             <div class="prediction-items" id="imagePredictions"></div>
           </div>
 
           <div class="card">
-            <p class="card-label">Metadata</p>
-            <div class="metadata-table" id="imageMetadata"><p class="hint">Waiting for upload…</p></div>
+            <p class="card-label" data-i18n="metadata_label">Metadata</p>
+            <div class="metadata-table" id="imageMetadata"><p class="hint" data-i18n="metadata_waiting">Waiting for upload…</p></div>
+          </div>
+
+          <div class="card" id="imageProvenanceCard">
+            <p class="card-label" data-i18n="provenance_label">Media Provenance &amp; Source Origin</p>
+            <div class="provenance-items" id="imageProvenance">
+              <!-- Populated dynamically -->
+            </div>
           </div>
 
           <div class="card">
-            <p class="card-label">Findings</p>
+            <p class="card-label" data-i18n="findings_label">Findings</p>
             <div class="flags-list" id="imageFlags"></div>
           </div>
         </div>
@@ -265,8 +284,8 @@
       <div class="upload-area" id="videoDropZone">
         <div class="upload-inner">
           <div class="upload-icon-wrap"><i class="fas fa-film"></i></div>
-          <p class="upload-main">Drop a video here, or <label for="videoFileInput" class="link">browse</label></p>
-          <p class="upload-sub">MP4, WebM, AVI · Max 100 MB</p>
+          <p class="upload-main" data-i18n="upload_vid_main">Drop a video here, or <label for="videoFileInput" class="link">browse</label></p>
+          <p class="upload-sub" data-i18n="upload_vid_sub">MP4, WebM, AVI · Max 250 MB</p>
           <input type="file" id="videoFileInput" accept="video/*" hidden>
         </div>
       </div>
@@ -277,13 +296,13 @@
         </div>
 
         <div class="card">
-          <p class="card-label">Extracted frames</p>
+          <p class="card-label" data-i18n="extracted_frames_label">Extracted frames</p>
           <div class="frames-grid" id="framesGrid"></div>
         </div>
 
         <div class="vid-results-grid">
           <div class="card score-block">
-            <p class="card-label">Deepfake confidence</p>
+            <p class="card-label" data-i18n="deepfake_confidence_label">Deepfake confidence</p>
             <div class="big-score">
               <svg viewBox="0 0 200 120" class="gauge-svg">
                 <path d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="#e8e7e3" stroke-width="10" stroke-linecap="round"/>
@@ -296,22 +315,35 @@
           </div>
 
           <div class="card">
-            <p class="card-label">Frame consistency</p>
+            <p class="card-label" data-i18n="frame_consistency_label">Frame consistency</p>
             <canvas id="consistencyChart" height="160"></canvas>
           </div>
 
+          <!-- 3D Pie Chart: Video Analysis -->
+          <div class="card pie-chart-card">
+            <p class="card-label"><i class="fas fa-chart-pie"></i> ML Analysis Breakdown (3D)</p>
+            <div class="pie-chart-wrap"><canvas id="videoPieChart3D"></canvas></div>
+          </div>
+
           <div class="card">
-            <p class="card-label">Face analysis</p>
+            <p class="card-label" data-i18n="face_analysis_label">Face analysis</p>
             <div id="faceAnalysis" class="analysis-items"></div>
           </div>
 
           <div class="card" id="neuralVideoCard" style="display:none;">
-            <p class="card-label">Neural Frame Analysis</p>
+            <p class="card-label" data-i18n="neural_video_label">Neural Frame Analysis</p>
             <div class="analysis-items" id="neuralVideoItems"></div>
           </div>
 
+          <div class="card" id="videoProvenanceCard">
+            <p class="card-label" data-i18n="video_provenance_label">Video Provenance &amp; Origin</p>
+            <div class="provenance-items" id="videoProvenance">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+
           <div class="card">
-            <p class="card-label">Detection results</p>
+            <p class="card-label" data-i18n="detection_results_label">Detection results</p>
             <div class="flags-list" id="videoFlags"></div>
           </div>
         </div>
@@ -373,12 +405,12 @@
       </div>
 
       <div class="card quiz-section">
-        <h3>Quick quiz</h3>
+        <h3 data-i18n="quick_quiz">Quick quiz</h3>
         <div id="quizContainer">
           <p class="quiz-q" id="quizQuestion"></p>
           <div class="quiz-opts" id="quizOptions"></div>
           <p class="quiz-fb" id="quizFeedback"></p>
-          <button class="btn btn-small" id="nextQuizBtn" onclick="TruthShield.nextQuiz()">Next question →</button>
+          <button class="btn btn-small" id="nextQuizBtn" onclick="TruthShield.nextQuiz()" data-i18n="next_question">Next question →</button>
         </div>
       </div>
     </section>
@@ -389,7 +421,7 @@
   <div class="loading-overlay" id="loadingOverlay">
     <div class="loader">
       <div class="loader-ring"></div>
-      <p id="loadingText">Analysing…</p>
+      <p id="loadingText" data-i18n="loading_analyzing">Analysing…</p>
     </div>
   </div>
 
@@ -400,8 +432,8 @@
   <footer>
     <div class="footer-inner">
       <span class="footer-brand">TruthShield</span>
-      <span class="footer-mid">AI-Driven Detection for Fake News, Deepfakes &amp; Media Manipulation</span>
-      <span class="footer-org">Cyber Crime Branch, Ahmedabad City Police</span>
+      <span class="footer-mid" data-i18n="footer_mid">AI-Driven Detection for Fake News, Deepfakes &amp; Media Manipulation</span>
+      <span class="footer-org" data-i18n="footer_org">Cyber Crime Branch, Ahmedabad City Police</span>
     </div>
   </footer>
 
@@ -414,6 +446,7 @@
   <script src="js/mlCore.js"></script>
   <script src="js/nlpEngine.js"></script>
   <script src="js/textAnalyzer.js"></script>
+  <script src="js/provenanceDetector.js"></script>
   <script src="js/imageAnalyzer.js"></script>
   <script src="js/videoAnalyzer.js"></script>
   <script src="js/app.js"></script>
