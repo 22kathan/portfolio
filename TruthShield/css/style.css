@@ -292,21 +292,69 @@ footer{margin-top:3rem;padding:1.5rem 2.5rem;border-top:1px solid var(--border);
   .quiz-opts{grid-template-columns:1fr}
 }
 @media(max-width:640px){
-  #main-nav{padding:0 1rem}
+  #main-nav{padding:0 0.75rem; gap: 0.5rem;}
+  .nav-brand-wrap { gap: 0.4rem; }
+  .brand-name { font-size: 1rem; }
+  
+  /* Compact round status badge to save precious space */
+  .ml-status-badge {
+    padding: 0.35rem;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ml-status-badge span {
+    display: none;
+  }
+
   .nav-links{display:none;position:fixed;top:56px;left:0;right:0;background:var(--surface);
     flex-direction:column;padding:1rem;border-bottom:1px solid var(--border);box-shadow:var(--shadow-md)}
   .nav-links.open{display:flex}
   .mobile-toggle{display:flex}
-  .section{padding:1.5rem 1rem}
-  .hero-ctas{flex-direction:column}
+  
+  .section{padding:1.25rem 0.75rem}
+  .hero-ctas{flex-direction:column; gap: 0.5rem;}
+  .hero-ctas .btn { width: 100%; justify-content: center; }
+  
+  /* 2x2 Clean grid for stats on mobile */
+  .stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem 1rem;
+    padding: 1.25rem 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .stat {
+    align-items: center;
+    text-align: center;
+  }
+  .stat-num { font-size: 1.75rem; }
+  .stat-div { display: none; }
+
   .footer-inner{flex-direction:column;gap:.4rem;text-align:center}
+  
   .provenance-analytics-row {
     flex-direction: column;
     gap: 1rem;
     padding: 1rem;
+    align-items: center;
   }
   .provenance-legend-list {
     width: 100%;
+  }
+
+  /* Prevent Safari auto-zoom on focus by enforcing 16px font-size */
+  .textarea, .input, .ai-chat-input {
+    font-size: 16px !important;
+  }
+
+  /* Prevent table cells from breaking the layout with long strings */
+  .metadata-table td {
+    word-break: break-all;
+    overflow-wrap: anywhere;
   }
 }
 
