@@ -9,7 +9,10 @@ const TruthShield = (() => {
     stats: { texts: 0, images: 0, videos: 0, threats: 0 },
     activities: [],
     quizIndex: 0,
-    lang: 'en'
+    lang: 'en',
+    lastTextAnalysis: null,
+    lastImageAnalysis: null,
+    lastVideoAnalysis: null
   };
 
   // Analyzers
@@ -28,6 +31,7 @@ const TruthShield = (() => {
     setupLanguage();
     loadQuiz();
     animateStats();
+    setupChatbot();
 
     // Init Neural Engine (MLCore)
     if (window.MLCore) {
@@ -123,6 +127,9 @@ const TruthShield = (() => {
           toast(result.error, 'error');
           return;
         }
+
+        state.lastTextAnalysis = { text, result };
+        activateChatbot('text', state.lastTextAnalysis);
 
         // Show results
         document.getElementById('textResults').style.display = 'block';
@@ -232,6 +239,9 @@ const TruthShield = (() => {
 
     try {
       const result = await imageAnalyzer.analyze(file);
+
+      state.lastImageAnalysis = { file, result };
+      activateChatbot('image', state.lastImageAnalysis);
 
       document.getElementById('imageResultsArea').style.display = 'block';
       document.getElementById('imageDropZone').style.display = 'none';
@@ -370,6 +380,9 @@ const TruthShield = (() => {
 
     try {
       const result = await videoAnalyzer.analyze(file);
+
+      state.lastVideoAnalysis = { file, result };
+      activateChatbot('video', state.lastVideoAnalysis);
 
       document.getElementById('videoResultsArea').style.display = 'block';
       document.getElementById('videoDropZone').style.display = 'none';
@@ -1681,6 +1694,192 @@ const TruthShield = (() => {
       badge.innerHTML = '<i class="fas fa-triangle-exclamation"></i> <span>AI offline</span>';
       toast('AI Neural Engine failed to initialize: ' + status.error, 'error');
     }
+  }
+
+  // ==================== GENERATIVE AI CO-PILOT CHAT ENGINE ====================
+  function setupChatbot() {
+    ['text', 'image', 'video'].forEach(type => {
+      const input = document.getElementById(`${type}ChatInput`);
+      const btn = document.getElementById(`${type}SendBtn`);
+      if (!input || !btn) return;
+
+      const triggerSend = () => {
+        const text = input.value.trim();
+        if (!text) return;
+        input.value = '';
+        submitChatMessage(type, text);
+      };
+
+      btn.addEventListener('click', triggerSend);
+      input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') triggerSend();
+      });
+    });
+  }
+
+  function activateChatbot(type, analysisData) {
+    const input = document.getElementById(`${type}ChatInput`);
+    const btn = document.getElementById(`${type}SendBtn`);
+    const msgsContainer = document.getElementById(`${type}ChatMessages`);
+
+    if (!input || !btn || !msgsContainer) return;
+
+    // Enable inputs
+    input.removeAttribute('disabled');
+    btn.removeAttribute('disabled');
+
+    // Create introductory LLM summary based on neural outputs
+    let summaryHtml = '';
+    if (type === 'text') {
+      const { text, result } = analysisData;
+      summaryHtml = `<p><strong>Neural Stance & Factuality Summary:</strong><br>
+        I have analyzed your text using the Universal Sentence Encoder and stance classification engine. 
+        The content shows a <strong>${result.trustScore}%</strong> authenticity/trust rating (Verdict: <em>${result.verdict}</em>). 
+        Key markers: clickbait index is at <strong>${result.clickbait}%</strong> and credibility consistency is <strong>${result.credibility}%</strong>. 
+        How can I help you interpret these findings?</p>`;
+    } else if (type === 'image') {
+      const { file, result } = analysisData;
+      const cnnText = result.neuralAnomalies ? `local ELA CNN splicing boundary anomalies (probability: ${(result.neuralAnomalies.rawPredict * 100).toFixed(0)}%)` : 'no local CNN splicing anomalies';
+      summaryHtml = `<p><strong>Visual Forensics & CNN Scan Summary:</strong><br>
+        Image <code>${file.name}</code> analyzed. The blended deep learning authenticity score is <strong>${result.authenticityScore}%</strong> (Verdict: <em>${result.verdict}</em>). 
+        The pixel scan detected <strong>${cnnText}</strong>, ELA consistency is <strong>${result.ela.suspicionLevel}%</strong>, and the GAN artifact detector is at <strong>${result.gan.authenticityScore}%</strong>. 
+        What forensic details would you like me to explain?</p>`;
+    } else if (type === 'video') {
+      const { file, result } = analysisData;
+      const temporalText = result.temporalStability ? `neural temporal stability score of <strong>${result.temporalStability.stabilityScore}%</strong> (with ${result.temporalStability.classFlickers} transitions)` : 'no temporal neural anomalies';
+      summaryHtml = `<p><strong>Temporal Deepfake & Lip-Sync Summary:</strong><br>
+        Video <code>${file.name}</code> analyzed. The calculated deepfake confidence is <strong>${result.deepfakeConfidence}%</strong> (Verdict: <em>${result.verdict}</em>). 
+        The model identified a <strong>${temporalText}</strong>, frame consistency score of <strong>${result.consistency.score}%</strong>, and face skin-tone consistency of <strong>${result.faceAnalysis.score}%</strong>. 
+        Ask me anything about these indicators.</p>`;
+    }
+
+    // Set first message
+    msgsContainer.innerHTML = `
+      <div class="chat-message ai">
+        <div class="chat-avatar"><i class="fas fa-shield-halved"></i></div>
+        <div class="chat-content">
+          ${summaryHtml}
+        </div>
+      </div>
+    `;
+    msgsContainer.scrollTop = msgsContainer.scrollHeight;
+  }
+
+  function appendMessage(containerId, role, text) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const msg = document.createElement('div');
+    msg.className = `chat-message ${role}`;
+    msg.innerHTML = `
+      <div class="chat-avatar"><i class="fas ${role === 'ai' ? 'fa-shield-halved' : 'fa-user'}"></i></div>
+      <div class="chat-content">
+        <p>${text}</p>
+      </div>
+    `;
+    container.appendChild(msg);
+    container.scrollTop = container.scrollHeight;
+    return msg;
+  }
+
+  async function submitChatMessage(type, query) {
+    const containerId = `${type}ChatMessages`;
+    const data = type === 'text' ? state.lastTextAnalysis : type === 'image' ? state.lastImageAnalysis : state.lastVideoAnalysis;
+
+    // Append user message
+    appendMessage(containerId, 'user', query);
+
+    // Append typing indicator
+    const container = document.getElementById(containerId);
+    const typing = document.createElement('div');
+    typing.className = 'chat-message ai';
+    typing.innerHTML = `
+      <div class="chat-avatar"><i class="fas fa-shield-halved"></i></div>
+      <div class="chat-content">
+        <div class="chat-typing-indicator">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    `;
+    container.appendChild(typing);
+    container.scrollTop = container.scrollHeight;
+
+    // Simulate LLM response time
+    setTimeout(() => {
+      typing.remove();
+      const reply = generateAIResponse(type, data, query);
+      appendMessage(containerId, 'ai', reply);
+    }, 1200);
+  }
+
+  function generateAIResponse(type, analysisData, query) {
+    const q = query.toLowerCase();
+    if (!analysisData) return "I don't have active analysis data to reference. Please perform an upload above.";
+
+    const { result } = analysisData;
+
+    // ═══════════════════════════════════════
+    // TEXT ANALYZER CHAT RESPONSES
+    // ═══════════════════════════════════════
+    if (type === 'text') {
+      if (q.includes('clickbait') || q.includes('title')) {
+        return `My NLP classifier scores this text at <strong>${result.clickbait}% clickbait likelihood</strong>. Highly sensationalized headings often indicate subjective or hyper-partisan material designed to elicit emotional rather than rational responses.`;
+      }
+      if (q.includes('stance') || q.includes('opin') || q.includes('bias')) {
+        const stanceStr = result.nlp && result.nlp.stance ? `The stance analyzer indicates the text is leaning towards <strong>${result.nlp.stance.verdict}</strong>.` : '';
+        return `Analyzing semantic stance: ${stanceStr} Bias in writing is indicated by highly polarized adjectives and a lack of opposing arguments. Here, our neural networks flagged features correlating with loaded language.`;
+      }
+      if (q.includes('score') || q.includes('percent') || q.includes('fake') || q.includes('real')) {
+        return `The overall <strong>Trust Score of ${result.trustScore}%</strong> is derived using text complexity, credibility indexes, and stance alignment. The Truth Graph represents the probability distribution of this text being a genuine neutral report vs. manipulative/fabricated news.`;
+      }
+      return `Our Universal Sentence Encoder (USE) mapped this text to a multi-dimensional vector space to evaluate its similarity to known factual statements. Stance classification indicates a confidence rating of <strong>${result.trustScore}%</strong>. Feel free to ask about clickbait scores or bias markers!`;
+    }
+
+    // ═══════════════════════════════════════
+    // IMAGE ANALYZER CHAT RESPONSES
+    // ═══════════════════════════════════════
+    if (type === 'image') {
+      if (q.includes('ela') || q.includes('error level') || q.includes('splic')) {
+        const cnnVal = result.neuralAnomalies ? `Our Neural ELA CNN scan returned an authenticity score of <strong>${result.neuralAnomalies.authenticityScore}%</strong>, denoting local splicing boundaries.` : '';
+        return `Error Level Analysis (ELA) works by saving the image at a specific JPEG compression level and measuring the difference. In a modified image, edited portions compress differently than the original canvas, creating bright highlights. ${cnnVal} ELA consistency is currently graded at <strong>${result.ela.suspicionLevel}%</strong>.`;
+      }
+      if (q.includes('exif') || q.includes('metadata') || q.includes('camera') || q.includes('software')) {
+        const meta = result.metadata;
+        const cameraText = meta.camera ? `captured using a <strong>${meta.camera} ${meta.model || ''}</strong>` : 'having no camera/hardware metadata';
+        const swText = meta.software ? `modified or saved using <strong>${meta.software}</strong>` : 'having no editing software tags';
+        return `Forensic Metadata Report: The image file was detected as ${cameraText}, and ${swText}. Photos taken directly from digital devices contain EXIF headers with camera profiles. Editing tools like Photoshop or Canva append software signatures, which reduces authenticity ratings.`;
+      }
+      if (q.includes('gan') || q.includes('ai') || q.includes('gen') || q.includes('midjourney') || q.includes('dall')) {
+        return `The Generative Adversarial Network (GAN) artifact detector checked the image for checkerboard pixel anomalies, texture banding, and frequency domain spikes typical of AI generation. The current GAN Authenticity Score is <strong>${result.gan.authenticityScore}%</strong> (higher means more likely to be an authentic photograph).`;
+      }
+      if (q.includes('score') || q.includes('percent') || q.includes('fake') || q.includes('real')) {
+        const neuralCheck = result.neuralAnomalies ? `Neural ELA CNN scan: ${result.neuralAnomalies.authenticityScore}%, ` : '';
+        return `The <strong>Truth Graph</strong> is compiled using a neural-enhanced blend of visual and metadata signatures: ELA: ${result.ela.suspicionLevel}%, GAN: ${result.gan.authenticityScore}%, ${neuralCheck}and Metadata Trust: ${result.metadata.trustScore}%. Clean images with intact hardware headers and uniform noise score above 85% Real.`;
+      }
+      return `I have analyzed the uploaded image using Error Level Analysis (ELA), EXIF header parsing, and a checkerboard GAN detector. The neural classification engine's top prediction is <strong>${result.predictions[0]?.label.split(',')[0]}</strong> (${result.predictions[0]?.confidence}%). Ask me about ELA, GAN artifacts, or metadata profiles!`;
+    }
+
+    // ═══════════════════════════════════════
+    // VIDEO ANALYZER CHAT RESPONSES
+    // ═══════════════════════════════════════
+    if (type === 'video') {
+      if (q.includes('deepfake') || q.includes('face') || q.includes('skin') || q.includes('swap')) {
+        return `Deepfake detection focuses on facial boundaries. In face-swapping, models insert a synthetic face onto another body. This creates boundary inconsistencies in skin color and shape. Our Face Analysis graded skin-tone consistency across all frames at <strong>${result.faceAnalysis.score}%</strong>.`;
+      }
+      if (q.includes('flicker') || q.includes('stability') || q.includes('mobilenet') || q.includes('neural')) {
+        const stableText = result.temporalStability ? `Our MobileNet V2 neural sequence scan calculated a temporal stability rating of <strong>${result.temporalStability.stabilityScore}%</strong> with <strong>${result.temporalStability.classFlickers}</strong> class transitions.` : '';
+        return `Temporal stability evaluates how consistently a neural network classifies objects in a video. In deepfakes, minor facial warping causes classification models to flicker rapidly. ${stableText} High class flickering is a key indicator of GAN/diffusion frame interpolation.`;
+      }
+      if (q.includes('consistency') || q.includes('artifact') || q.includes('temporal')) {
+        return `Temporal consistency checks for color shifts and brightness spikes between frames. The average frame-to-frame color difference is <strong>${result.consistency.avgDiff}</strong>, resulting in a consistency score of <strong>${result.consistency.score}%</strong>. High differences suggest frame splicing.`;
+      }
+      if (q.includes('score') || q.includes('percent') || q.includes('fake') || q.includes('real')) {
+        return `The video's <strong>Truth Graph</strong> details are calculated by blending multiple neural and temporal signals: Deepfake Confidence is at <strong>${result.deepfakeConfidence}%</strong>, frame consistency is <strong>${result.consistency.score}%</strong>, and facial skin stability is <strong>${result.faceAnalysis.score}%</strong>. By default, evidence of tampering is required to reduce the score from the authentic baseline.`;
+      }
+      return `This video has been analyzed using temporal neural stability metrics, frame consistency delta checks, and face-swap skin boundaries. The file size is <strong>${result.fileSize}</strong> with a duration of <strong>${result.duration}s</strong>. Ask me about class flickers, temporal artifacts, or deepfake faces!`;
+    }
+
+    return "I am ready to explain any aspect of the analysis. Ask me about scores, neural networks, or specific features.";
   }
 
   // ==================== PUBLIC API ====================

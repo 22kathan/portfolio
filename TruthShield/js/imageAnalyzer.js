@@ -16,13 +16,7 @@ class ImageAnalyzer {
     const noiseAnalysis = this.analyzeNoise(img);
     const ganDetection = this.detectGANArtifacts(img);
 
-    // Run Provenance detection
-    let provenance = null;
-    if (window.ProvenanceDetector) {
-      provenance = await window.ProvenanceDetector.analyzeImage(file, img, elaResult, ganDetection);
-    }
-
-    // Run Neural Checks if MLCore is active
+    // Run Neural Checks FIRST if MLCore is active (before provenance)
     let neuralAnomalies = null;
     let predictions = [];
     if (window.MLCore && window.MLCore.loaded) {
@@ -36,7 +30,7 @@ class ImageAnalyzer {
       neuralAnomalies = await window.MLCore.detectNeuralAnomalies(elaCanvas);
     }
 
-    // Calculate overall authenticity score
+    // Calculate overall authenticity score (used by provenance for Truth Graph)
     const elaScore = elaResult.suspicionLevel;
     const metaScore = metadata.trustScore;
     const statsScore = stats.consistencyScore;
@@ -55,6 +49,41 @@ class ImageAnalyzer {
     } else {
       const rawScore = (elaScore * 0.35 + metaScore * 0.2 + statsScore * 0.2 + ganScore * 0.25);
       authenticityScore = Math.round(Math.max(0, Math.min(100, rawScore)));
+    }
+
+    // Run Provenance detection AFTER neural checks (passes all ML signals)
+    let provenance = null;
+    if (window.ProvenanceDetector) {
+      provenance = await window.ProvenanceDetector.analyzeImage(file, img, elaResult, ganDetection);
+
+      // Override provenance scores with neural-enhanced authenticity if we have ML data
+      if (provenance && provenance.scores) {
+        // Blend the provenance heuristic scores with the neural authenticity score
+        // The authenticity score reflects the full ML pipeline output
+        const neuralReal = authenticityScore;
+        const heuristicReal = provenance.scores.raw;
+        
+        // Weighted blend: 60% neural, 40% heuristic
+        const blendedReal = Math.round(neuralReal * 0.6 + heuristicReal * 0.4);
+        const blendedFake = 100 - blendedReal;
+        
+        // Redistribute the fake portion between edit and ai using heuristic ratios
+        const heuristicFakeTotal = provenance.scores.edit + provenance.scores.ai;
+        let newEdit, newAi;
+        if (heuristicFakeTotal > 0) {
+          newEdit = Math.round(blendedFake * (provenance.scores.edit / heuristicFakeTotal));
+          newAi = blendedFake - newEdit;
+        } else {
+          newEdit = Math.round(blendedFake * 0.5);
+          newAi = blendedFake - newEdit;
+        }
+        
+        provenance.scores = {
+          raw: blendedReal,
+          edit: Math.max(0, newEdit),
+          ai: Math.max(0, newAi)
+        };
+      }
     }
 
     let verdict, verdictClass;

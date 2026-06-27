@@ -24,13 +24,7 @@ class VideoAnalyzer {
     const temporalArtifacts = this.detectTemporalArtifacts(frames);
     const audioSync = this.analyzeAudioSync(duration, frames.length);
 
-    // Run Provenance detection
-    let provenance = null;
-    if (window.ProvenanceDetector) {
-      provenance = await window.ProvenanceDetector.analyzeVideo(file, consistency);
-    }
-
-    // Run Neural Checks if MLCore is active
+    // Run Neural Checks FIRST if MLCore is active (before provenance)
     let temporalStability = null;
     if (window.MLCore && window.MLCore.loaded) {
       temporalStability = await window.MLCore.analyzeVideoTemporalStability(frames);
@@ -56,6 +50,40 @@ class VideoAnalyzer {
         (100 - faceScore) * 0.35 +
         (100 - temporalScore) * 0.25
       );
+    }
+
+    // Run Provenance detection AFTER neural checks
+    let provenance = null;
+    if (window.ProvenanceDetector) {
+      provenance = await window.ProvenanceDetector.analyzeVideo(file, consistency);
+
+      // Override provenance scores with neural-enhanced deepfake analysis
+      if (provenance && provenance.scores) {
+        // Derive authenticity from deepfake confidence (inverse relationship)
+        const neuralReal = 100 - deepfakeConfidence;
+        const heuristicReal = provenance.scores.raw;
+        
+        // Weighted blend: 60% neural, 40% heuristic
+        const blendedReal = Math.round(neuralReal * 0.6 + heuristicReal * 0.4);
+        const blendedFake = 100 - blendedReal;
+        
+        // Redistribute fake portion between edit and ai using heuristic ratios
+        const heuristicFakeTotal = provenance.scores.edit + provenance.scores.ai;
+        let newEdit, newAi;
+        if (heuristicFakeTotal > 0) {
+          newEdit = Math.round(blendedFake * (provenance.scores.edit / heuristicFakeTotal));
+          newAi = blendedFake - newEdit;
+        } else {
+          newEdit = Math.round(blendedFake * 0.5);
+          newAi = blendedFake - newEdit;
+        }
+        
+        provenance.scores = {
+          raw: blendedReal,
+          edit: Math.max(0, newEdit),
+          ai: Math.max(0, newAi)
+        };
+      }
     }
 
     let verdict, verdictClass;

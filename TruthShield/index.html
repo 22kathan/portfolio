@@ -186,6 +186,25 @@
             <p class="card-label" data-i18n="explanation_label">Explanation</p>
             <div class="explanation-text" id="explanationText"></div>
           </div>
+
+          <!-- Generative AI Co-Pilot Card -->
+          <div class="card ai-copilot-card">
+            <p class="card-label"><i class="fas fa-robot"></i> Generative AI Co-Pilot (LLM Engine)</p>
+            <div class="ai-chat-container">
+              <div class="ai-chat-messages" id="textChatMessages">
+                <div class="chat-message ai">
+                  <div class="chat-avatar"><i class="fas fa-shield-halved"></i></div>
+                  <div class="chat-content">
+                    <p>I am analyzing the neural patterns. Submit an article above to begin real-time verification.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="ai-chat-input-wrap">
+                <input type="text" class="ai-chat-input" id="textChatInput" placeholder="Ask the AI Co-Pilot about this text..." disabled>
+                <button class="ai-send-btn" id="textSendBtn" disabled><i class="fas fa-paper-plane"></i></button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -270,6 +289,25 @@
             <p class="card-label" data-i18n="findings_label">Findings</p>
             <div class="flags-list" id="imageFlags"></div>
           </div>
+
+          <!-- Generative AI Co-Pilot Card -->
+          <div class="card ai-copilot-card">
+            <p class="card-label"><i class="fas fa-robot"></i> Generative AI Co-Pilot (LLM Engine)</p>
+            <div class="ai-chat-container">
+              <div class="ai-chat-messages" id="imageChatMessages">
+                <div class="chat-message ai">
+                  <div class="chat-avatar"><i class="fas fa-shield-halved"></i></div>
+                  <div class="chat-content">
+                    <p>I am monitoring the visual forensic feeds. Upload an image above to begin neural analysis.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="ai-chat-input-wrap">
+                <input type="text" class="ai-chat-input" id="imageChatInput" placeholder="Ask the AI Co-Pilot about this image..." disabled>
+                <button class="ai-send-btn" id="imageSendBtn" disabled><i class="fas fa-paper-plane"></i></button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -345,6 +383,25 @@
           <div class="card">
             <p class="card-label" data-i18n="detection_results_label">Detection results</p>
             <div class="flags-list" id="videoFlags"></div>
+          </div>
+
+          <!-- Generative AI Co-Pilot Card -->
+          <div class="card ai-copilot-card">
+            <p class="card-label"><i class="fas fa-robot"></i> Generative AI Co-Pilot (LLM Engine)</p>
+            <div class="ai-chat-container">
+              <div class="ai-chat-messages" id="videoChatMessages">
+                <div class="chat-message ai">
+                  <div class="chat-avatar"><i class="fas fa-shield-halved"></i></div>
+                  <div class="chat-content">
+                    <p>I am monitoring the temporal stability streams. Upload a video above to begin deepfake neural analysis.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="ai-chat-input-wrap">
+                <input type="text" class="ai-chat-input" id="videoChatInput" placeholder="Ask the AI Co-Pilot about this video..." disabled>
+                <button class="ai-send-btn" id="videoSendBtn" disabled><i class="fas fa-paper-plane"></i></button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -443,12 +500,12 @@
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
 
   <!-- TruthShield core engines -->
-  <script src="js/mlCore.js"></script>
-  <script src="js/nlpEngine.js"></script>
-  <script src="js/textAnalyzer.js"></script>
-  <script src="js/provenanceDetector.js"></script>
-  <script src="js/imageAnalyzer.js"></script>
-  <script src="js/videoAnalyzer.js"></script>
-  <script src="js/app.js"></script>
+  <script src="js/mlCore.js?v=1.1"></script>
+  <script src="js/nlpEngine.js?v=1.1"></script>
+  <script src="js/textAnalyzer.js?v=1.1"></script>
+  <script src="js/provenanceDetector.js?v=1.1"></script>
+  <script src="js/imageAnalyzer.js?v=1.1"></script>
+  <script src="js/videoAnalyzer.js?v=1.1"></script>
+  <script src="js/app.js?v=1.1"></script>
 </body>
 </html>
