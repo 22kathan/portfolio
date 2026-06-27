@@ -145,15 +145,15 @@ const TruthShield = (() => {
         animateBar('credibilityBar', 'credibilityValue', result.credibility);
         animateBar('grammarBar', 'grammarValue', result.quality);
 
-        // 3D Pie Chart for text analysis: Real vs Edited vs Fake
+        // 3D Pie Chart for text analysis: Real vs Fake
         const realVal = result.trustScore;
         const editVal = Math.round(((result.clickbait + result.sentiment) / 2) * (1 - realVal / 100));
         const fakeVal = 100 - realVal - editVal;
         draw3DPieChart('textPieChart3D', [
-          { label: 'Real / Authentic', value: realVal, color: '#3dba5c' },
-          { label: 'Edited / Sensationalized', value: editVal, color: '#f07a3a' },
-          { label: 'Fake / Misinformation', value: fakeVal, color: '#f05454' }
-        ], 'Text Authenticity Analysis');
+          { label: 'Real', value: realVal, color: '#3dba5c' },
+          { label: 'Suspicious', value: editVal, color: '#f07a3a' },
+          { label: 'Fake', value: fakeVal, color: '#f05454' }
+        ], 'Truth Graph');
 
         // Flags
         const flagsList = document.getElementById('flagsList');
@@ -279,13 +279,14 @@ const TruthShield = (() => {
         </div>
       `).join('');
 
-      // 3D Pie Chart for image analysis: Real vs Edited vs AI Generated
+      // 3D Pie Chart for image analysis: Real vs Fake
       const imgScores = result.provenance ? result.provenance.scores : { raw: 70, edit: 20, ai: 10 };
+      const imgRealPct = imgScores.raw;
+      const imgFakePct = imgScores.edit + imgScores.ai;
       draw3DPieChart('imagePieChart3D', [
-        { label: 'Real / Authentic', value: imgScores.raw, color: '#3dba5c' },
-        { label: 'Edited / Modified', value: imgScores.edit, color: '#f07a3a' },
-        { label: 'AI Generated', value: imgScores.ai, color: '#c084fc' }
-      ], 'Image Authenticity Origin');
+        { label: 'Real', value: imgRealPct, color: '#3dba5c' },
+        { label: 'Fake', value: imgFakePct, color: '#f05454' }
+      ], 'Truth Graph');
 
       // Metadata
       const meta = result.metadata;
@@ -430,13 +431,14 @@ const TruthShield = (() => {
         neuralVideoCard.style.display = 'none';
       }
 
-      // 3D Pie Chart for video analysis: Real vs Edited vs AI Generated
+      // 3D Pie Chart for video analysis: Real vs Fake
       const vidScores = result.provenance ? result.provenance.scores : { raw: 70, edit: 20, ai: 10 };
+      const vidRealPct = vidScores.raw;
+      const vidFakePct = vidScores.edit + vidScores.ai;
       draw3DPieChart('videoPieChart3D', [
-        { label: 'Real / Authentic', value: vidScores.raw, color: '#3dba5c' },
-        { label: 'Edited / Modified', value: vidScores.edit, color: '#f07a3a' },
-        { label: 'AI Generated / Deepfake', value: vidScores.ai, color: '#c084fc' }
-      ], 'Video Authenticity Origin');
+        { label: 'Real', value: vidRealPct, color: '#3dba5c' },
+        { label: 'Fake', value: vidFakePct, color: '#f05454' }
+      ], 'Truth Graph');
 
       // Flags
       document.getElementById('videoFlags').innerHTML = result.flags.map(f => `
