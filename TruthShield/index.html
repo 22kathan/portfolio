@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=1.2">
 </head>
 <body>
 
@@ -42,6 +42,23 @@
       </button>
     </div>
   </nav>
+
+  <!-- AI Engine Console Panel -->
+  <div class="ai-console-card" id="aiConsoleCard">
+    <div class="console-header">
+      <span><i class="fas fa-terminal"></i> AI Core Diagnostics</span>
+      <button class="console-close-btn" id="consoleCloseBtn" aria-label="Close Diagnostics"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div class="console-body">
+      <p class="console-intro">TruthShield uses client-side, hardware-accelerated neural networks. Below is the live status of the required model assets:</p>
+      <div class="console-steps-list" id="consoleStepsList">
+        <!-- Populated dynamically -->
+      </div>
+    </div>
+    <div class="console-footer">
+      <span class="console-version">TF.js v4.x · GPU WebGL Enabled</span>
+    </div>
+  </div>
 
   <main id="app-main">
 
@@ -189,18 +206,18 @@
 
           <!-- Generative AI Co-Pilot Card -->
           <div class="card ai-copilot-card">
-            <p class="card-label"><i class="fas fa-robot"></i> Generative AI Co-Pilot (LLM Engine)</p>
+            <p class="card-label"><i class="fas fa-robot"></i> <span data-i18n="ai_copilot_label">Generative AI Co-Pilot (LLM Engine)</span></p>
             <div class="ai-chat-container">
               <div class="ai-chat-messages" id="textChatMessages">
                 <div class="chat-message ai">
                   <div class="chat-avatar"><i class="fas fa-shield-halved"></i></div>
                   <div class="chat-content">
-                    <p>I am analyzing the neural patterns. Submit an article above to begin real-time verification.</p>
+                    <p data-i18n="ai_chat_init_text">I am analyzing the neural patterns. Submit an article above to begin real-time verification.</p>
                   </div>
                 </div>
               </div>
               <div class="ai-chat-input-wrap">
-                <input type="text" class="ai-chat-input" id="textChatInput" placeholder="Ask the AI Co-Pilot about this text..." disabled>
+                <input type="text" class="ai-chat-input" id="textChatInput" data-i18n-placeholder="ai_copilot_placeholder_text" placeholder="Ask the AI Co-Pilot about this text..." disabled>
                 <button class="ai-send-btn" id="textSendBtn" disabled><i class="fas fa-paper-plane"></i></button>
               </div>
             </div>
@@ -292,18 +309,18 @@
 
           <!-- Generative AI Co-Pilot Card -->
           <div class="card ai-copilot-card">
-            <p class="card-label"><i class="fas fa-robot"></i> Generative AI Co-Pilot (LLM Engine)</p>
+            <p class="card-label"><i class="fas fa-robot"></i> <span data-i18n="ai_copilot_label">Generative AI Co-Pilot (LLM Engine)</span></p>
             <div class="ai-chat-container">
               <div class="ai-chat-messages" id="imageChatMessages">
                 <div class="chat-message ai">
                   <div class="chat-avatar"><i class="fas fa-shield-halved"></i></div>
                   <div class="chat-content">
-                    <p>I am monitoring the visual forensic feeds. Upload an image above to begin neural analysis.</p>
+                    <p data-i18n="ai_chat_init_image">I am monitoring the visual forensic feeds. Upload an image above to begin neural analysis.</p>
                   </div>
                 </div>
               </div>
               <div class="ai-chat-input-wrap">
-                <input type="text" class="ai-chat-input" id="imageChatInput" placeholder="Ask the AI Co-Pilot about this image..." disabled>
+                <input type="text" class="ai-chat-input" id="imageChatInput" data-i18n-placeholder="ai_copilot_placeholder_image" placeholder="Ask the AI Co-Pilot about this image..." disabled>
                 <button class="ai-send-btn" id="imageSendBtn" disabled><i class="fas fa-paper-plane"></i></button>
               </div>
             </div>
@@ -387,18 +404,18 @@
 
           <!-- Generative AI Co-Pilot Card -->
           <div class="card ai-copilot-card">
-            <p class="card-label"><i class="fas fa-robot"></i> Generative AI Co-Pilot (LLM Engine)</p>
+            <p class="card-label"><i class="fas fa-robot"></i> <span data-i18n="ai_copilot_label">Generative AI Co-Pilot (LLM Engine)</span></p>
             <div class="ai-chat-container">
               <div class="ai-chat-messages" id="videoChatMessages">
                 <div class="chat-message ai">
                   <div class="chat-avatar"><i class="fas fa-shield-halved"></i></div>
                   <div class="chat-content">
-                    <p>I am monitoring the temporal stability streams. Upload a video above to begin deepfake neural analysis.</p>
+                    <p data-i18n="ai_chat_init_video">I am monitoring the temporal stability streams. Upload a video above to begin deepfake neural analysis.</p>
                   </div>
                 </div>
               </div>
               <div class="ai-chat-input-wrap">
-                <input type="text" class="ai-chat-input" id="videoChatInput" placeholder="Ask the AI Co-Pilot about this video..." disabled>
+                <input type="text" class="ai-chat-input" id="videoChatInput" data-i18n-placeholder="ai_copilot_placeholder_video" placeholder="Ask the AI Co-Pilot about this video..." disabled>
                 <button class="ai-send-btn" id="videoSendBtn" disabled><i class="fas fa-paper-plane"></i></button>
               </div>
             </div>
@@ -500,12 +517,12 @@
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
 
   <!-- TruthShield core engines -->
-  <script src="js/mlCore.js?v=1.1"></script>
-  <script src="js/nlpEngine.js?v=1.1"></script>
-  <script src="js/textAnalyzer.js?v=1.1"></script>
-  <script src="js/provenanceDetector.js?v=1.1"></script>
-  <script src="js/imageAnalyzer.js?v=1.1"></script>
-  <script src="js/videoAnalyzer.js?v=1.1"></script>
-  <script src="js/app.js?v=1.1"></script>
+  <script src="js/mlCore.js?v=1.2"></script>
+  <script src="js/nlpEngine.js?v=1.2"></script>
+  <script src="js/textAnalyzer.js?v=1.2"></script>
+  <script src="js/provenanceDetector.js?v=1.2"></script>
+  <script src="js/imageAnalyzer.js?v=1.2"></script>
+  <script src="js/videoAnalyzer.js?v=1.2"></script>
+  <script src="js/app.js?v=1.2"></script>
 </body>
 </html>

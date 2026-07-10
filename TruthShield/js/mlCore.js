@@ -20,6 +20,16 @@ class MLCoreController {
     // Pre-computed embeddings
     this.dbEmbeddings = []; // For misinfoDB
     this.stanceCentroids = {}; // For zero-shot stance detection
+
+    // Tracing checklist steps for model downloading
+    this.steps = {
+      tf_lib: { name: 'TensorFlow.js Engine', status: 'pending', desc: 'Loading deep learning core scripts' },
+      backend: { name: 'WebGL GPU Acceleration', status: 'pending', desc: 'Initializing GPU computing context' },
+      use_model: { name: 'Universal Sentence Encoder', status: 'pending', desc: 'Downloading sentence encoder weights (~25MB)' },
+      db_embeddings: { name: 'Semantic Embeddings', status: 'pending', desc: 'Precomputing database embeddings' },
+      mobilenet_model: { name: 'MobileNet V2 Classifier', status: 'pending', desc: 'Downloading image classifier weights (~15MB)' },
+      cnn_model: { name: 'Custom ELA CNN Anomalizer', status: 'pending', desc: 'Compiling local ELA anomaly CNN' }
+    };
   }
 
   registerStatusCallback(cb) {
@@ -40,7 +50,8 @@ class MLCoreController {
       error: this.loadError,
       hasTf: typeof window.tf !== 'undefined',
       hasUse: this.useModel !== null,
-      hasMobilenet: this.mobilenetModel !== null
+      hasMobilenet: this.mobilenetModel !== null,
+      steps: this.steps
     };
   }
 
@@ -57,35 +68,62 @@ class MLCoreController {
       console.log('MLCore: Initializing TensorFlow.js and loading models...');
       
       // 1. Wait for tf global to be loaded
+      this.steps.tf_lib.status = 'loading';
+      this.notifyStatusChange();
       await this.waitForGlobal('tf');
       this.tfLoaded = true;
+      this.steps.tf_lib.status = 'success';
+      this.notifyStatusChange();
       
       // Set backend to webgl for GPU acceleration, fallback to cpu if not available
+      this.steps.backend.status = 'loading';
+      this.notifyStatusChange();
       try {
         await tf.setBackend('webgl');
         console.log('MLCore: WebGL backend activated successfully.');
+        this.steps.backend.status = 'success';
+        this.steps.backend.desc = 'WebGL GPU acceleration active';
       } catch (e) {
         await tf.setBackend('cpu');
         console.log('MLCore: WebGL failed, falling back to CPU backend.');
+        this.steps.backend.status = 'success';
+        this.steps.backend.desc = 'CPU computing active (Fallback)';
       }
+      this.notifyStatusChange();
 
       // 2. Load Universal Sentence Encoder
+      this.steps.use_model.status = 'loading';
+      this.notifyStatusChange();
       console.log('MLCore: Loading Universal Sentence Encoder...');
       await this.waitForGlobal('use');
       this.useModel = await use.load();
       console.log('MLCore: Universal Sentence Encoder loaded.');
+      this.steps.use_model.status = 'success';
+      this.notifyStatusChange();
 
       // Pre-embed misinfo database & stance prototypes
+      this.steps.db_embeddings.status = 'loading';
+      this.notifyStatusChange();
       await this.precomputeEmbeddings();
+      this.steps.db_embeddings.status = 'success';
+      this.notifyStatusChange();
 
       // 3. Load MobileNet V2
+      this.steps.mobilenet_model.status = 'loading';
+      this.notifyStatusChange();
       console.log('MLCore: Loading MobileNet V2...');
       await this.waitForGlobal('mobilenet');
       this.mobilenetModel = await mobilenet.load();
       console.log('MLCore: MobileNet V2 loaded.');
+      this.steps.mobilenet_model.status = 'success';
+      this.notifyStatusChange();
 
       // 4. Initialize Custom Neural Edge Anomaly Detector (CNN)
+      this.steps.cnn_model.status = 'loading';
+      this.notifyStatusChange();
       this.initCNNAnomalizer();
+      this.steps.cnn_model.status = 'success';
+      this.notifyStatusChange();
 
       this.loaded = true;
       this.loading = false;
@@ -95,6 +133,14 @@ class MLCoreController {
       console.error('MLCore: Error loading models', err);
       this.loadError = err.message || 'Unknown initialization error';
       this.loading = false;
+      
+      // Set pending/loading steps to failed
+      Object.keys(this.steps).forEach(k => {
+        if (this.steps[k].status === 'loading' || this.steps[k].status === 'pending') {
+          this.steps[k].status = 'failed';
+        }
+      });
+      
       this.notifyStatusChange();
     }
   }

@@ -719,7 +719,14 @@ const TruthShield = (() => {
       quiz_opt_4_1: 'Verify with multiple sources',
       quiz_opt_4_2: 'Send to all contacts',
       quiz_opt_4_3: 'Forward to groups',
-      quiz_exp_4: 'Always cross-verify information with trusted sources before sharing.'
+      quiz_exp_4: 'Always cross-verify information with trusted sources before sharing.',
+      ai_copilot_label: 'Generative AI Co-Pilot (LLM Engine)',
+      ai_chat_init_text: 'I am analyzing the neural patterns. Submit an article above to begin real-time verification.',
+      ai_chat_init_image: 'I am monitoring the visual forensic feeds. Upload an image above to begin neural analysis.',
+      ai_chat_init_video: 'I am monitoring the temporal stability streams. Upload a video above to begin deepfake neural analysis.',
+      ai_copilot_placeholder_text: 'Ask the AI Co-Pilot about this text...',
+      ai_copilot_placeholder_image: 'Ask the AI Co-Pilot about this image...',
+      ai_copilot_placeholder_video: 'Ask the AI Co-Pilot about this video...'
     },
     hi: {
       nav_dashboard: 'डैशबोर्ड',
@@ -853,7 +860,14 @@ const TruthShield = (() => {
       quiz_opt_4_1: 'एकाधिक स्रोतों से सत्यापित करें',
       quiz_opt_4_2: 'सभी संपर्कों को भेजें',
       quiz_opt_4_3: 'समूहों को अग्रेषित करें',
-      quiz_exp_4: 'साझा करने से पहले हमेशा विश्वसनीय स्रोतों से जानकारी को क्रॉस-वेरीफाई करें।'
+      quiz_exp_4: 'साझा करने से पहले हमेशा विश्वसनीय स्रोतों से जानकारी को क्रॉस-वेरीफाई करें।',
+      ai_copilot_label: 'जेनरेटिव एआई को-पायलट (एलएलएम इंजन)',
+      ai_chat_init_text: 'मैं नर्वस पैटर्न का विश्लेषण कर रहा हूँ। वास्तविक समय सत्यापन शुरू करने के लिए ऊपर एक लेख सबमिट करें।',
+      ai_chat_init_image: 'मैं दृश्य फॉरेंसिक फीड की निगरानी कर रहा हूँ। तंत्रिका विश्लेषण शुरू करने के लिए ऊपर एक छवि अपलोड करें।',
+      ai_chat_init_video: 'मैं अस्थायी स्थिरता फीड की निगरानी कर रहा हूँ। डीपफेक तंत्रिका विश्लेषण शुरू करने के लिए ऊपर एक वीडियो अपलोड करें।',
+      ai_copilot_placeholder_text: 'इस पाठ के बारे में एआई को-पायलट से पूछें...',
+      ai_copilot_placeholder_image: 'इस छवि के बारे में एआई को-पायलट से पूछें...',
+      ai_copilot_placeholder_video: 'इस वीडियो के बारे में एआई को-पायलट से पूछें...'
     },
     gu: {
       nav_dashboard: 'ડેશબોર્ડ',
@@ -987,7 +1001,14 @@ const TruthShield = (() => {
       quiz_opt_4_1: 'બહુવિધ સ્રોતોથી ચકાસો',
       quiz_opt_4_2: 'બધા સંપર્કોને મોકલો',
       quiz_opt_4_3: 'ગ્રૂપમાં ફોરવર્ડ કરો',
-      quiz_exp_4: 'શેર કરતા પહેલા હંમેશા વિશ્વસનીય સ્રોતોથી માહિતીની ક્રોસ-ચકાસણી કરો।'
+      quiz_exp_4: 'શેર કરતા પહેલા હંમેશા વિશ્વસનીય સ્રોતોથી માહિતીની ક્રોસ-ચકાસણી કરો।',
+      ai_copilot_label: 'જનરેટિવ એઆઇ કો-પાયલોટ (એલએલએમ એન્જિન)',
+      ai_chat_init_text: 'હું ન્યુરલ પેટર્નનું વિશ્લેષણ કરી રહ્યો છું. રીઅલ-ટાઇમ ચકાસણી શરૂ કરવા માટે ઉપર એક લેખ સબમિટ કરો.',
+      ai_chat_init_image: 'હું દ્રશ્ય ફોરેન્સિક ફીડ્સ પર નજર રાખી રહ્યો છું. ન્યુરલ વિશ્લેષણ શરૂ કરવા માટે ઉપર એક છબી અપલોડ કરો.',
+      ai_chat_init_video: 'હું ટેમ્પોરલ સ્ટેબિલિટી ફીડ્સ પર નજર રાખી રહ્યો છું. ડીપફેક ન્યુરલ વિશ્લેષણ શરૂ કરવા માટે ઉપર એક વિડિઓ અપલોડ કરો.',
+      ai_copilot_placeholder_text: 'આ ટેક્સ્ટ વિશે એઆઇ કો-પાયલોટને પૂછો...',
+      ai_copilot_placeholder_image: 'આ છબી વિશે એઆઇ કો-પાયલોટને પૂછો...',
+      ai_copilot_placeholder_video: 'આ વિડિઓ વિશે એઆઇ કો-પાયલોટને પૂછો...'
     },
     ta: {
       nav_dashboard: 'டாஷ்போர்டு',
@@ -1121,7 +1142,14 @@ const TruthShield = (() => {
       quiz_opt_4_1: 'பல மூலங்களிலிருந்து சரிபார்க்கவும்',
       quiz_opt_4_2: 'அனைத்து தொடர்புகளுக்கும் அனுப்பவும்',
       quiz_opt_4_3: 'குழுக்களுக்குப் பகிரவும்',
-      quiz_exp_4: 'பகிர்வதற்கு முன் எப்போதும் நம்பகமான மூலங்களிலிருந்து தகவலைச் சரிபார்க்கவும்.'
+      quiz_exp_4: 'பகிர்வதற்கு முன் எப்போதும் நம்பகமான மூலங்களிலிருந்து தகவலைச் சரிபார்க்கவும்.',
+      ai_copilot_label: 'ஜெனரேட்டிவ் ஏஐ கோ-பைலட் (எல்எல்எம் இன்ஜின்)',
+      ai_chat_init_text: 'நான் நரம்பியல் வடிவங்களை பகுப்பாய்வு செய்கிறேன். நிகழ்நேர சரிபார்ப்பைத் தொடங்க மேலே ஒரு கட்டுரையைச் சமர்ப்பிக்கவும்.',
+      ai_chat_init_image: 'நான் காட்சி தடயவியல் ஊட்டங்களை கண்காணித்து வருகிறேன். நரம்பியல் பகுப்பாய்வைத் தொடங்க மேலே ஒரு படத்தை பதிவேற்றவும்.',
+      ai_chat_init_video: 'நான் தற்காலிக நிலைத்தன்மை ஊட்டங்களை கண்காணித்து வருகிறேன். டீப்ஃபேக் நரம்பியல் பகுப்பாய்வைத் தொடங்க மேலே ஒரு வீடியோவை பதிவேற்றவும்.',
+      ai_copilot_placeholder_text: 'இந்த உரையைப் பற்றி ஏஐ கோ-பைலட்டிடம் கேளுங்கள்...',
+      ai_copilot_placeholder_image: 'இந்த படத்தைப் பற்றி ஏஐ கோ-பைலட்டிடம் கேளுங்கள்...',
+      ai_copilot_placeholder_video: 'இந்த வீடியோவைப் பற்றி ஏஐ கோ-பைலட்டிடம் கேளுங்கள்...'
     }
   };
 
@@ -1678,21 +1706,97 @@ const TruthShield = (() => {
       </div>`).join('');
   }
 
+  // Flag to check if we bound toggle listeners
+  let consoleListenersBound = false;
+  let hasAutoOpened = false;
+
   function updateMLStatusUI(status) {
     const badge = document.getElementById('mlStatusBadge');
-    if (!badge) return;
+    const consoleCard = document.getElementById('aiConsoleCard');
+    if (!badge || !consoleCard) return;
 
     if (status.loaded) {
       badge.className = 'ml-status-badge active';
       badge.innerHTML = '<i class="fas fa-brain"></i> <span>AI Core: Active (WebGL)</span>';
-      toast('AI Neural Engine activated successfully!', 'info');
+      
+      // Auto-hide after 1.5 seconds if it was auto-opened
+      if (hasAutoOpened && consoleCard.classList.contains('show')) {
+        setTimeout(() => {
+          if (window.MLCore && window.MLCore.loaded) {
+            consoleCard.classList.remove('show');
+          }
+        }, 1500);
+      }
     } else if (status.loading) {
       badge.className = 'ml-status-badge loading';
       badge.innerHTML = '<i class="fas fa-brain spinner-pulse"></i> <span>Initializing AI...</span>';
+      
+      // Auto-open console card on first load
+      if (!hasAutoOpened) {
+        consoleCard.classList.add('show');
+        hasAutoOpened = true;
+      }
     } else if (status.error) {
       badge.className = 'ml-status-badge error';
       badge.innerHTML = '<i class="fas fa-triangle-exclamation"></i> <span>AI offline</span>';
       toast('AI Neural Engine failed to initialize: ' + status.error, 'error');
+    }
+
+    // Render console steps
+    const stepsList = document.getElementById('consoleStepsList');
+    if (stepsList && status.steps) {
+      stepsList.innerHTML = Object.entries(status.steps).map(([key, step]) => {
+        let statusIcon = '<i class="far fa-circle"></i>';
+        if (step.status === 'loading') {
+          statusIcon = '<i class="fas fa-spinner fa-spin"></i>';
+        } else if (step.status === 'success') {
+          statusIcon = '<i class="fas fa-check-circle"></i>';
+        } else if (step.status === 'failed') {
+          statusIcon = '<i class="fas fa-times-circle"></i>';
+        }
+
+        return `
+          <div class="console-step-item">
+            <div class="console-step-status ${step.status}">
+              ${statusIcon}
+            </div>
+            <div class="console-step-info">
+              <div class="console-step-title">
+                <span>${step.name}</span>
+                <span style="font-size:0.6rem;font-weight:normal;opacity:0.75">${step.status.toUpperCase()}</span>
+              </div>
+              <div class="console-step-desc">${step.desc}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Setup interactive toggling listeners once
+    if (!consoleListenersBound) {
+      const closeBtn = document.getElementById('consoleCloseBtn');
+
+      if (badge && consoleCard) {
+        badge.addEventListener('click', (e) => {
+          e.stopPropagation();
+          consoleCard.classList.toggle('show');
+        });
+      }
+
+      if (closeBtn && consoleCard) {
+        closeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          consoleCard.classList.remove('show');
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (consoleCard && !consoleCard.contains(e.target) && e.target !== badge) {
+          consoleCard.classList.remove('show');
+        }
+      });
+
+      consoleListenersBound = true;
     }
   }
 

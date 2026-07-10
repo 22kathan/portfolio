@@ -8,8 +8,18 @@ class VideoAnalyzer {
   }
 
   async analyze(file) {
-    const url = URL.createObjectURL(file);
     const video = document.getElementById('videoPlayer');
+    
+    // Revoke previous blob URL to prevent memory leak
+    if (video.src && video.src.startsWith('blob:')) {
+      try {
+        URL.revokeObjectURL(video.src);
+      } catch (e) {
+        console.warn("Failed to revoke object URL:", e);
+      }
+    }
+
+    const url = URL.createObjectURL(file);
     video.src = url;
 
     await new Promise((resolve, reject) => {
@@ -125,7 +135,7 @@ class VideoAnalyzer {
     const frames = [];
 
     const targetWidth = 320;
-    const aspect = video.videoHeight / video.videoWidth;
+    const aspect = (video.videoWidth && !isNaN(video.videoWidth)) ? (video.videoHeight / video.videoWidth) : 0.75;
     canvas.width = targetWidth;
     canvas.height = Math.round(targetWidth * aspect);
 
