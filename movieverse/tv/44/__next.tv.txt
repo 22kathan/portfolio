@@ -2,4 +2,4 @@
 2:I[39756,["/portfolio/movieverse/_next/static/chunks/3ean06dy0v0j3.js","/portfolio/movieverse/_next/static/chunks/0au1pcfzgvf2i.js","/portfolio/movieverse/_next/static/chunks/14mrh2-p_w84d.js","/portfolio/movieverse/_next/static/chunks/2m-uxqc_amag9.js"],"default"]
 3:I[37457,["/portfolio/movieverse/_next/static/chunks/3ean06dy0v0j3.js","/portfolio/movieverse/_next/static/chunks/0au1pcfzgvf2i.js","/portfolio/movieverse/_next/static/chunks/14mrh2-p_w84d.js","/portfolio/movieverse/_next/static/chunks/2m-uxqc_amag9.js"],"default"]
 4:[]
-0:{"rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"isPartial":false,"staleTime":300,"varyParams":"$W4","buildId":"xW6iZkK8-wjELA68wvMQ_"}
+0:{"rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"isPartial":false,"staleTime":300,"varyParams":"$W4","buildId":"ASAX2cfpTm5r5b6ddK9Jw"}
