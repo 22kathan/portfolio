@@ -1,2 +1,2 @@
-:HL["/portfolio/movieverse/_next/static/chunks/0u94nl-epem95.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"SgRAXoBnGFB_kNSvnNLjM"}
+:HL["/portfolio/movieverse/_next/static/chunks/37o_8splikysn.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"M1c1vPzNLzsPokPO6IUxv"}
