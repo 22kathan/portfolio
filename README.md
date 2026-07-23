@@ -6,12 +6,6 @@ Welcome to my digital space. I'm a Data Scientist and AI Engineer focused on bui
 
 ## 🚀 Featured Projects
 
-### [🎬 MovieVerse](https://github.com/22kathan/MovieVerse)
-**Industry-Grade Movie Streaming & Discovery Platform**
-*   Full-stack modern application utilizing **Next.js** and **TypeScript** with a polished "Dark Mode" aesthetic.
-*   Advanced user interactive features: watchlists, personal rating/review systems, dynamic social activity logs, and custom list creation.
-*   Robust caching and persistence layer built with **Prisma**, **PostgreSQL**, and **Redis** for state-of-the-art performance.
-
 ### [🛡️ TruthShield](https://github.com/22kathan/TruthShield)
 **AI-Driven Media Verification System**
 *   Client-side GPU-accelerated deep learning using **TensorFlow.js** (WebGL backend).
